@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Aparência da parte "preenchida" do SeekBar -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Cor da parte ativa (azul) -->
+    <solid android:color="#1E90FF" />
+
+    <!-- Bordas arredondadas -->
+    <corners android:radius="4dp" />
+
+    <!-- Altura da barra -->
+    <size android:height="8dp" />
+
+</shape>

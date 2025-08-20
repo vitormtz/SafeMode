@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Aparência personalizada do "botãozinho" do SeekBar -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Cor de fundo -->
+    <solid android:color="#1E90FF" />
+
+    <!-- Tamanho -->
+    <size
+        android:width="24dp"
+        android:height="24dp" />
+
+    <!-- Borda branca para destacar -->
+    <stroke
+        android:width="3dp"
+        android:color="#FFFFFF" />
+
+</shape>

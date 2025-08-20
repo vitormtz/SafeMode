@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout da tela principal do Safe Mode - VERSÃO SIMPLIFICADA SEM PERMISSÕES -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1F3A5F">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:background="#1F3A5F" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1F3A5F">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Cabeçalho -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="24dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center">
+
+                <!-- Logo -->
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/ic_safe_mode"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Título -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Safe Mode"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Descrição -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Defina onde seus apps devem funcionar"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+            <!-- Controles Principais -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Controles Principais"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Switch Principal do Safe Mode -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Safe Mode"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#424242" />
+
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/switch_safe_mode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <!-- Switch Controle por Localização -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/enable_location_control"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#424242"/>
+
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/switch_location_control"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Botões de Configuração -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Configurações"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Botão Selecionar Apps -->
+                <Button
+                    android:id="@+id/btn_select_apps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Selecionar apps para bloquear"
+                    android:textSize="16sp"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_rounded"
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:textAllCaps="false"/>
+
+                <!-- Botão Configurar Localização -->
+                <Button
+                    android:id="@+id/btn_set_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Configurar área permitida"
+                    android:textSize="16sp"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_rounded"
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp"
+                    android:textAllCaps="false"/>
+
+                <!-- Botão Configurações Gerais -->
+                <Button
+                    android:id="@+id/btn_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Configurações gerais"
+                    android:textSize="16sp"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_rounded"
+                    android:padding="16dp"
+                    android:textAllCaps="false"/>
+
+            </LinearLayout>
+
+            <!-- Informações da Localização Atual -->
+            <LinearLayout
+                android:id="@+id/layout_location_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="20dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status da Localização"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="16dp" />
+
+                <TextView
+                    android:id="@+id/text_current_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Localizando..."
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/text_distance_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dentro da área permitida"
+                    android:textSize="14sp"
+                    android:textColor="#4CAF50" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#1F3A5F" />
+
+</LinearLayout>

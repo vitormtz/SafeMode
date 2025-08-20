@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ripple_effect.xml - Efeito de ondulação para Android 5.0+ -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#40000000">
+
+    <!-- O item que vai receber o efeito ripple -->
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
+
+</ripple>

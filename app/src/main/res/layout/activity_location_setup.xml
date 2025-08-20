@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout da tela de configuração com Google Maps - BOTÕES REORGANIZADOS -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1F3A5F">
+
+    <!-- Espaçador para barra de status -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:background="#1F3A5F" />
+
+    <!-- Container principal com scroll CUSTOMIZADO -->
+    <com.example.safemode.MapFriendlyScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ✅ SEÇÃO DO MAPA (INALTERADA) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selecionar Área Segura"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Toque no mapa para marcar o centro da área onde o Safe Mode ficará desativado"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Container do Google Maps -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="#E0E0E0"
+                    android:layout_marginBottom="16dp">
+
+                    <!-- ✅ FRAGMENTO DO GOOGLE MAPS -->
+                    <fragment
+                        android:id="@+id/map_fragment"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <!-- Indicador de carregamento do mapa -->
+                    <LinearLayout
+                        android:id="@+id/map_loading"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="#FFFFFF"
+                        android:visibility="visible">
+
+                        <ProgressBar
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="16dp"
+                            android:indeterminateTint="#2196F3" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Carregando mapa..."
+                            android:textSize="16sp"
+                            android:textColor="#666666" />
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+                <!-- Informações da localização selecionada -->
+                <TextView
+                    android:id="@+id/text_selected_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Toque no mapa para selecionar uma localização"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:background="#F0F0F0"
+                    android:padding="12dp"
+                    android:gravity="center"
+                    android:minHeight="60dp"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- BOTÕES REORGANIZADOS - AGORA LADO A LADO -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Botão Minha Localização -->
+                    <Button
+                        android:id="@+id/btn_my_location"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Minha localização"
+                        android:textColor="@color/button_text_white"
+                        android:background="@drawable/button_green"
+                        android:padding="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:textAllCaps="false"/>
+
+                    <!-- 🆕 BOTÃO SALVAR - MOVIDO PARA FICAR LADO A LADO -->
+                    <Button
+                        android:id="@+id/btn_save_location"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Salvar localização"
+                        android:textColor="@color/button_text_white"
+                        android:background="@drawable/button_rounded"
+                        android:padding="12dp"
+                        android:layout_marginStart="8dp"
+                        android:enabled="false"
+                        android:alpha="0.5"
+                        android:textAllCaps="false" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ✅ SEÇÃO DO RAIO (INALTERADA) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Raio da Área Segura"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Define o tamanho da área ao redor do ponto selecionado"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Valor atual do raio -->
+                <TextView
+                    android:id="@+id/text_radius_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="100 metros"
+                    android:textSize="20sp"
+                    android:textColor="#2196F3"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:layout_gravity="center" />
+
+                <!-- Controle deslizante do raio -->
+                <SeekBar
+                    android:id="@+id/seekbar_radius"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="2000"
+                    android:min="50"
+                    android:progress="100"
+                    android:progressTint="#2196F3"
+                    android:thumbTint="#2196F3"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Labels min/max -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="50m"
+                        android:textSize="12sp"
+                        android:textColor="#999999" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2km"
+                        android:textSize="12sp"
+                        android:textColor="#999999" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.example.safemode.MapFriendlyScrollView>
+
+    <!-- Espaçador inferior -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#1F3A5F" />
+
+</LinearLayout>

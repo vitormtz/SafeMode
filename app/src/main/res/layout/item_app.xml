@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout para cada app na lista de seleção -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Ícone do App -->
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:scaleType="centerCrop" />
+
+    <!-- Informações do App -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Nome do App -->
+        <TextView
+            android:id="@+id/app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome do App"
+            android:textSize="16sp"
+            android:textColor="#212121"
+            android:textStyle="normal"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <!-- Nome do Pacote (geralmente escondido) -->
+        <TextView
+            android:id="@+id/app_package"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="com.exemplo.app"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginTop="2dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- Checkbox para bloquear/desbloquear -->
+    <CheckBox
+        android:id="@+id/checkbox_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:buttonTint="#2196F3"
+        android:clickable="false"
+        android:focusable="false" />
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- button_text_blue.xml - Cor do texto para botões com contorno -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Texto quando o botão está sendo pressionado (fica branco no fundo escuro) -->
+    <item android:state_pressed="true" android:color="@color/button_text_blue_pressed" />
+
+    <!-- Texto quando o botão está desabilitado -->
+    <item android:state_enabled="false" android:color="@color/button_text_blue_disabled" />
+
+    <!-- Texto normal (azul) -->
+    <item android:color="@color/button_text_blue" />
+
+</selector>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fundo personalizado para campos de texto (EditText) -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Estado focado (quando está sendo digitado) -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#F4F9FC" />
+            <corners android:radius="8dp" />
+            <stroke
+                android:width="2dp"
+                android:color="#1E90FF" />
+            <padding
+                android:left="12dp"
+                android:top="12dp"
+                android:right="12dp"
+                android:bottom="12dp" />
+        </shape>
+    </item>
+
+    <!-- Estado normal -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#F4F9FC" />
+            <corners android:radius="8dp" />
+            <stroke
+                android:width="1dp"
+                android:color="#D9E2EC" />
+            <padding
+                android:left="12dp"
+                android:top="12dp"
+                android:right="12dp"
+                android:bottom="12dp" />
+        </shape>
+    </item>
+
+</selector>

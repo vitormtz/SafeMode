@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout da tela de configurações - VERSÃO EXPANDIDA COM PERMISSÕES -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1F3A5F">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:background="#1F3A5F" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#1F3A5F">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Status das Permissões (MOVIDO DA TELA PRINCIPAL) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status das Permissões"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Permissão de Localização -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:id="@+id/icon_location_permission"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_location"
+                        app:tint="#F44336" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Localização"
+                        android:textSize="16sp"
+                        android:textColor="#212121"
+                        android:layout_marginStart="12dp" />
+
+                    <TextView
+                        android:id="@+id/text_location_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Negada"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#F44336" />
+
+                </LinearLayout>
+
+                <!-- Permissão de Overlay -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:id="@+id/icon_overlay_permission"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_overlay"
+                        app:tint="#F44336" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Sobreposição"
+                        android:textSize="16sp"
+                        android:textColor="#212121"
+                        android:layout_marginStart="12dp" />
+
+                    <TextView
+                        android:id="@+id/text_overlay_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Negada"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#F44336" />
+
+                </LinearLayout>
+
+                <!-- Permissão de Estatísticas -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:id="@+id/icon_usage_permission"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_usage_stats"
+                        app:tint="#F44336" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Estatísticas de Uso"
+                        android:textSize="16sp"
+                        android:textColor="#212121"
+                        android:layout_marginStart="12dp" />
+
+                    <TextView
+                        android:id="@+id/text_usage_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Negada"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#F44336" />
+
+                </LinearLayout>
+
+                <!-- Permissão de Acessibilidade -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:id="@+id/icon_accessibility_permission"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_accessibility"
+                        app:tint="#F44336" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Acessibilidade"
+                        android:textSize="16sp"
+                        android:textColor="#212121"
+                        android:layout_marginStart="12dp" />
+
+                    <TextView
+                        android:id="@+id/text_accessibility_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Inativo"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#F44336" />
+
+                </LinearLayout>
+
+                <!-- Botão de Permissões (MOVIDO DA TELA PRINCIPAL) -->
+                <Button
+                    android:id="@+id/btn_permissions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Configurar permissões"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_orange"
+                    android:padding="12dp"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+            <!-- Seção Estatísticas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estatísticas"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Apps Bloqueados -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_apps"
+                        android:layout_marginEnd="12dp"
+                        app:tint="#2196F3" />
+
+                    <TextView
+                        android:id="@+id/text_blocked_apps_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 apps selecionados para bloqueio"
+                        android:textSize="14sp"
+                        android:textColor="#666666" />
+
+                </LinearLayout>
+
+                <!-- Estatísticas de Hoje -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="top"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_usage_stats"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginTop="2dp"
+                        app:tint="#4CAF50" />
+
+                    <TextView
+                        android:id="@+id/text_today_stats"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hoje: 0 bloqueios\nMais bloqueado: Nenhum"
+                        android:textSize="14sp"
+                        android:textColor="#666666"
+                        android:lineSpacingExtra="2dp" />
+
+                </LinearLayout>
+
+                <!-- Botão Ver Histórico -->
+                <Button
+                    android:id="@+id/btn_view_logs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view_blocked_logs"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_rounded"
+                    android:padding="12dp"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#1F3A5F" />
+
+</LinearLayout>

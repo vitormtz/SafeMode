@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- button_outline.xml - Botão com contorno e estados -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Estado quando o botão está sendo pressionado -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <!-- Fundo escuro quando pressionado -->
+            <solid android:color="@color/blue_medium" />
+            <stroke android:width="2dp" android:color="@color/blue_pressed" />
+        </shape>
+    </item>
+
+    <!-- Estado quando o botão está desabilitado -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="@android:color/transparent" />
+            <stroke android:width="2dp" android:color="@color/button_disabled" />
+        </shape>
+    </item>
+
+    <!-- Estado normal do botão -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="@android:color/transparent" />
+            <stroke android:width="2dp" android:color="@color/blue_normal" />
+        </shape>
+    </item>
+
+</selector>

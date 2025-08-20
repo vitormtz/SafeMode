@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Nome do aplicativo -->
+    <string name="app_name">Safe Mode</string>
+
+    <!-- Descrição do serviço de acessibilidade -->
+    <string name="accessibility_service_description">
+        O Safe Mode monitora quando aplicativos selecionados são abertos para bloqueá-los quando você estiver fora da área permitida. Nenhuma informação pessoal é coletada ou enviada. Este serviço é essencial para o funcionamento do Safe Mode.
+    </string>
+
+    <!-- Tela Principal -->
+    <string name="main_title">Safe Mode</string>
+    <string name="main_subtitle">Controle inteligente de aplicativos por localização</string>
+    <string name="safe_mode_active">Ativo</string>
+    <string name="safe_mode_inactive">Inativo</string>
+    <string name="status_permissions">Status das Permissões</string>
+    <string name="configure_permissions">Configurar Permissões</string>
+    <string name="select_apps">Selecionar Apps para Bloquear</string>
+    <string name="set_location">Configurar Área Permitida</string>
+    <string name="general_settings">Configurações Gerais</string>
+
+    <!-- Permissões -->
+    <string name="permission_location">Localização</string>
+    <string name="permission_overlay">Sobreposição</string>
+    <string name="permission_accessibility">Acessibilidade</string>
+    <string name="permission_usage_stats">Estatísticas de Uso</string>
+    <string name="permission_granted">Concedida</string>
+    <string name="permission_denied">Negada</string>
+    <string name="permission_active">Ativo</string>
+    <string name="permission_inactive">Inativo</string>
+
+    <!-- Seleção de Apps -->
+    <string name="select_apps_title">Selecionar Apps para Bloquear</string>
+    <string name="select_apps_description">
+        Marque os aplicativos que devem ser bloqueados quando você estiver fora da área permitida.
+    </string>
+    <string name="loading_apps">Carregando aplicativos...</string>
+    <string name="no_apps_found">Nenhum aplicativo encontrado</string>
+    <string name="system_apps_hidden">Apps do sistema essenciais não aparecem nesta lista para sua segurança.</string>
+    <string name="app_will_be_blocked">%s será bloqueado</string>
+    <string name="app_will_not_be_blocked">%s não será mais bloqueado</string>
+    <string name="apps_loaded">Carregados %d aplicativos</string>
+
+    <!-- Configuração de Localização -->
+    <string name="location_setup_title">Configurar Localização</string>
+    <string name="current_location">Localização Atual</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="radius">Raio Permitido</string>
+    <string name="get_current_location">Obter Localização Atual</string>
+    <string name="save_location">Salvar Configurações</string>
+    <string name="test_location">Testar Localização</string>
+    <string name="getting_location">Obtendo localização atual...</string>
+    <string name="location_saved">Localização salva com sucesso!</string>
+    <string name="location_obtained">Localização obtida com sucesso!</string>
+    <string name="meters">metros</string>
+
+    <string name="map_loading">Carregando mapa...</string>
+    <string name="select_on_map">Toque no mapa para selecionar</string>
+    <string name="location_selected">Localização selecionada</string>
+    <string name="my_location">Minha Localização</string>
+    <string name="clear_selection">Limpar Seleção</string>
+    <string name="save_safe_area">Salvar Área Segura</string>
+    <string name="test_current_location">Testar Localização Atual</string>
+    <string name="radius_info">Raio da Área Segura</string>
+    <string name="map_instructions">Toque no mapa para marcar o centro da área onde o Safe Mode ficará desativado</string>
+    <string name="setup_complete">Configuração concluída! Área segura definida.</string>
+    <string name="setup_pending">Selecione uma localização no mapa para continuar</string>
+
+    <!-- Mensagens de Erro -->
+    <string name="error_no_location_permission">Permissão de localização é necessária</string>
+    <string name="error_invalid_coordinates">Por favor, insira coordenadas válidas</string>
+    <string name="error_latitude_range">Latitude deve estar entre -90 e 90</string>
+    <string name="error_longitude_range">Longitude deve estar entre -180 e 180</string>
+    <string name="error_empty_coordinates">Por favor, defina latitude e longitude</string>
+    <string name="error_getting_location">Erro ao obter localização: %s</string>
+    <string name="error_no_current_location">Primeiro obtenha a localização atual</string>
+    <string name="error_no_allowed_area">Configure primeiro uma área permitida</string>
+
+    <!-- Tela de Bloqueio -->
+    <string name="blocked_title">Aplicativo Bloqueado</string>
+    <string name="blocked_message">O aplicativo %s não pode ser usado no momento.\n\nVocê está fora da área permitida para uso deste aplicativo.</string>
+    <string name="blocked_button">OK, Entendi</string>
+    <string name="blocked_default_message">Este aplicativo não pode ser usado no momento.\n\nVocê está fora da área permitida.</string>
+
+    <!-- Status de Localização -->
+    <string name="location_status">Status da Localização</string>
+    <string name="locating">Localizando...</string>
+    <string name="inside_area">Dentro da área permitida</string>
+    <string name="outside_area">Fora da área permitida</string>
+    <string name="distance_to_center">Distância do centro: %.0f metros</string>
+    <string name="distance_from_area">Distância: %.0f metros</string>
+
+    <!-- Teste de Localização -->
+    <string name="location_test_inside">DENTRO da área permitida\nDistância do centro: %.0f metros</string>
+    <string name="location_test_outside">FORA da área permitida\nDistância: %.0f metros</string>
+
+    <!-- Configurações Gerais -->
+    <string name="settings_title">Configurações</string>
+    <string name="enable_location_control">Controle por Localização</string>
+    <string name="enable_location_control_description">Bloquear apps quando fora da área permitida</string>
+    <string name="view_blocked_logs">Ver histórico de bloqueios</string>
+    <string name="clear_all_data">Limpar Todos os Dados</string>
+    <string name="about">Sobre o Safe Mode</string>
+
+    <!-- Mensagens Gerais -->
+    <string name="all_permissions_granted">Todas as permissões já foram concedidas!</string>
+    <string name="permissions_needed">Você precisa dar todas as permissões primeiro!</string>
+    <string name="safe_mode_enabled">Safe Mode ativado!</string>
+    <string name="safe_mode_disabled">Safe Mode desativado!</string>
+    <string name="location_permission_granted">Permissão de localização concedida!</string>
+    <string name="location_permission_denied">Permissão de localização negada!</string>
+    <string name="accessibility_instruction">Ative o Safe Mode na lista de serviços de acessibilidade</string>
+    <string name="usage_access_instruction">Ative o Safe Mode na lista de acesso ao uso</string>
+
+    <!-- Formatos de Coordenadas -->
+    <string name="coordinates_format">Lat: %.6f\nLng: %.6f\nPrecisão: %.0f metros</string>
+
+    <!-- Notificações -->
+    <string name="notification_title">Safe Mode Ativo</string>
+    <string name="notification_description">Monitorando localização e aplicativos</string>
+
+    <!-- Sobre -->
+    <string name="about_description">
+        Safe Mode é um aplicativo que permite controlar o uso de outros aplicativos
+        baseado na sua localização geográfica. Ideal para ambientes de trabalho,
+        estudo ou controle parental.
+        \n\nVersão: 1.0
+        \n\nEste aplicativo respeita sua privacidade e não coleta dados pessoais.
+    </string>
+</resources>
+
+    <!-- Este arquivo vai em res/values/strings.xml -->

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Aparência do checkbox quando não está marcado -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Fundo transparente -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Borda -->
+    <stroke
+        android:width="2dp"
+        android:color="#D9E2EC" />
+
+    <!-- Bordas arredondadas -->
+    <corners android:radius="4dp" />
+
+    <!-- Tamanho -->
+    <size
+        android:width="20dp"
+        android:height="20dp" />
+
+</shape>

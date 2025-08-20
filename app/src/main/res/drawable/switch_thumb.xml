@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Aparência personalizada do "bolinha" do switch -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Estado ativo (ligado) -->
+    <item android:state_checked="true">
+        <shape android:shape="oval">
+            <solid android:color="#FFFFFF" />
+            <size
+                android:width="20dp"
+                android:height="20dp" />
+            <stroke
+                android:width="2dp"
+                android:color="#1E90FF" />
+        </shape>
+    </item>
+
+    <!-- Estado inativo (desligado) -->
+    <item android:state_checked="false">
+        <shape android:shape="oval">
+            <solid android:color="#FFFFFF" />
+            <size
+                android:width="20dp"
+                android:height="20dp" />
+            <stroke
+                android:width="2dp"
+                android:color="#D9E2EC" />
+        </shape>
+    </item>
+
+</selector>

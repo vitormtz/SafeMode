@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- button_green.xml - Botão verde com estados -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Estado quando o botão está sendo pressionado -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <!-- Verde bem mais escuro quando pressionado -->
+            <solid android:color="@color/green_pressed" />
+            <stroke android:width="1dp" android:color="@color/green_pressed" />
+        </shape>
+    </item>
+
+    <!-- Estado quando o botão está desabilitado -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <solid android:color="@color/button_disabled" />
+            <stroke android:width="1dp" android:color="@color/button_disabled" />
+        </shape>
+    </item>
+
+    <!-- Estado normal do botão -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
+            <!-- Verde normal -->
+            <solid android:color="@color/green_normal" />
+            <stroke android:width="1dp" android:color="@color/green_normal" />
+        </shape>
+    </item>
+
+</selector>
