@@ -1,34 +1,108 @@
-# Gradle files
+# Arquivos gerados automaticamente pela IDE
+*.iml
 .gradle/
-build/
-
-# Local configuration file (sdk path, etc)
-local.properties
-
-# Log/OS Files
-*.log
-
-# Android Studio generated files and folders
-captures/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/captures/
 .externalNativeBuild/
 .cxx/
-*.aab
-*.apk
-output-metadata.json
 
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+# Configurações específicas do workspace
+/.idea/workspace.xml
+/.idea/tasks.xml
+/.idea/gradle.xml
+/.idea/assetWizardSettings.xml
+/.idea/dictionaries
+/.idea/libraries
+/.idea/jarRepositories.xml
+/.idea/modules.xml
+/.idea/deploymentTargetDropDown.xml
+/.idea/compiler.xml
+/.idea/misc.xml
+/.idea/vcs.xml
+/.idea/runConfigurations.xml
 
-# Keystore files
+# Cache do Android Studio
+/.idea/caches
+/.idea/modules.xml
+/.idea/navEditor.xml
+
+# Diretórios de compilação
+/app/build/
+build/
+/out/
+
+# Propriedades locais
+local.properties
+
+# versione suas chaves
 *.jks
 *.keystore
+/app/release/
+/app/debug/
+keystore.properties
+signing.properties
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+# Arquivos temporários do sistema
+*.tmp
+*.temp
+*.swp
+*~
+.tmp/
 
-# Android Profiling
+# Arquivos de log
+*.log
+/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+.directory
+.Trash-*
+
+# APKs gerados
+*.apk
+*.aab
+output.json
+
+# Arquivos de backup
+*.bak
+*.backup
+*.old
+
+# Relatórios do lint
+/app/lint/
+lint/
+/lint-results-*.html
+/lint-results-*.xml
+
+# Resultados de testes
+/androidTest/
+/test/
+/app/androidTest/
+/app/test/
+
 *.hprof
+
+
+# Força a inclusão de arquivos importantes mesmo que correspondam aos padrões acima
+!gradle/wrapper/gradle-wrapper.jar
+!.gitignore
+
+# Arquivos específicos do projeto que não devem ser versionados
+secrets.properties
