@@ -337,4 +337,9 @@ public class LockScreenActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(0, 0);
     }
+
+    @Override
+    public void onBackPressed() {
+        // Bloqueia o botão voltar
+    }
 }
