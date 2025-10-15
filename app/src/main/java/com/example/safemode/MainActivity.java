@@ -9,6 +9,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Switch;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,11 +20,15 @@ public class MainActivity extends AppCompatActivity {
 
     private Switch switchSafeMode;
     private Switch switchLocationControl;
+    private Switch switchLockScreen;
     private Button btnSelectApps;
     private Button btnSetLocation;
     private Button btnSettings;
+    private Button btnSavePin;
+    private android.widget.EditText etPin;
 
     private AppPreferences preferences;
+    private PinManager pinManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +85,15 @@ public class MainActivity extends AppCompatActivity {
         try {
             switchSafeMode = findViewById(R.id.switch_safe_mode);
             switchLocationControl = findViewById(R.id.switch_location_control);
+            switchLockScreen = findViewById(R.id.switch_lock_screen);
             btnSelectApps = findViewById(R.id.btn_select_apps);
             btnSetLocation = findViewById(R.id.btn_set_location);
             btnSettings = findViewById(R.id.btn_settings);
+            btnSavePin = findViewById(R.id.btn_save_pin);
+            etPin = findViewById(R.id.et_pin);
 
             preferences = new AppPreferences(this);
+            pinManager = new PinManager(this);
 
         } catch (Exception e) {
         }
@@ -137,6 +147,24 @@ public class MainActivity extends AppCompatActivity {
                 btnSettings.setOnClickListener(v -> {
                     Intent intent = new Intent(this, SettingsActivity.class);
                     startActivity(intent);
+                });
+            }
+
+            // Switch de bloqueio de tela
+            if (switchLockScreen != null) {
+                switchLockScreen.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked) {
+                        enableLockScreen();
+                    } else {
+                        disableLockScreen();
+                    }
+                });
+            }
+
+            // Botão Salvar PIN
+            if (btnSavePin != null) {
+                btnSavePin.setOnClickListener(v -> {
+                    savePinConfiguration();
                 });
             }
 
@@ -307,6 +335,84 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // ===== MÉTODOS DE BLOQUEIO DE TELA =====
+
+    /**
+     * Ativa o bloqueio de tela
+     */
+    private void enableLockScreen() {
+        try {
+            // Verificar se tem PIN configurado
+            if (!pinManager.hasPin()) {
+                Toast.makeText(this, "Configure um PIN primeiro!", Toast.LENGTH_SHORT).show();
+                if (switchLockScreen != null) {
+                    switchLockScreen.setChecked(false);
+                }
+                return;
+            }
+
+            preferences.setLockScreenEnabled(true);
+
+            // Iniciar serviço de bloqueio
+            Intent serviceIntent = new Intent(this, LockScreenService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent);
+            } else {
+                startService(serviceIntent);
+            }
+
+            Toast.makeText(this, "Bloqueio de tela ativado!", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao ativar bloqueio", Toast.LENGTH_SHORT).show();
+            if (switchLockScreen != null) {
+                switchLockScreen.setChecked(false);
+            }
+        }
+    }
+
+    /**
+     * Desativa o bloqueio de tela
+     */
+    private void disableLockScreen() {
+        try {
+            preferences.setLockScreenEnabled(false);
+
+            // Parar serviço de bloqueio
+            Intent serviceIntent = new Intent(this, LockScreenService.class);
+            stopService(serviceIntent);
+
+            Toast.makeText(this, "Bloqueio de tela desativado!", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao desativar bloqueio", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Salva a configuração do PIN
+     */
+    private void savePinConfiguration() {
+        try {
+            String pin = etPin.getText().toString();
+
+            if (pin.length() != 4) {
+                Toast.makeText(this, "PIN deve ter 4 dígitos!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (pinManager.setPin(pin)) {
+                Toast.makeText(this, "PIN configurado com sucesso!", Toast.LENGTH_SHORT).show();
+                etPin.setText("");
+            } else {
+                Toast.makeText(this, "Erro ao salvar PIN", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao configurar PIN", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
      * Mostra mensagem na tela
      */
@@ -389,6 +495,33 @@ public class MainActivity extends AppCompatActivity {
                     switchLocationControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
                         preferences.setLocationEnabled(isChecked);
+                    });
+                }
+            }
+
+            // ===== CONFIGURAR SWITCH DE BLOQUEIO DE TELA =====
+            boolean lockScreenEnabled = preferences.isLockScreenEnabled();
+            if (switchLockScreen != null) {
+                boolean currentLockScreenState = switchLockScreen.isChecked();
+
+                if (currentLockScreenState != lockScreenEnabled) {
+                    switchLockScreen.setOnCheckedChangeListener(null);
+                    switchLockScreen.setChecked(lockScreenEnabled);
+
+                    switchLockScreen.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            enableLockScreen();
+                        } else {
+                            disableLockScreen();
+                        }
+                    });
+                } else {
+                    switchLockScreen.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            enableLockScreen();
+                        } else {
+                            disableLockScreen();
+                        }
                     });
                 }
             }

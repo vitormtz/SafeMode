@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:padding="24dp">
+
+    <!-- Logo e Título -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Logo -->
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_safe_mode"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="Logo SafeMode" />
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Safe Mode"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Subtítulo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Digite seu PIN para desbloquear"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:alpha="0.8"
+            android:layout_marginBottom="48dp" />
+
+        <!-- Campos de PIN -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/pin1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/pin_field_background"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_margin="8dp" />
+
+            <EditText
+                android:id="@+id/pin2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/pin_field_background"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_margin="8dp" />
+
+            <EditText
+                android:id="@+id/pin3"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/pin_field_background"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_margin="8dp" />
+
+            <EditText
+                android:id="@+id/pin4"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/pin_field_background"
+                android:gravity="center"
+                android:inputType="numberPassword"
+                android:maxLength="1"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_margin="8dp" />
+
+        </LinearLayout>
+
+        <!-- Mensagem de erro -->
+        <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PIN incorreto!"
+            android:textSize="14sp"
+            android:textColor="#FF5252"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- Rodapé com informação -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Protegido por SafeMode"
+        android:textSize="12sp"
+        android:textColor="@android:color/white"
+        android:alpha="0.6"
+        android:layout_marginBottom="16dp" />
+
+</RelativeLayout>

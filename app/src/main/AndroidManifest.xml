@@ -3,32 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.safemode">
 
-    <!-- Para ver todos os apps instalados no Android 11+ -->
+    <!-- Permissão para ver todos os apps instalados no Android -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
-    <!-- Permissão para serviço em primeiro plano de localização -->
+    <!-- Permissão para serviço de localização -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
-    <!-- Permissões de acesso à localização (pelo menos uma é necessária) -->
+    <!-- Permissões de acesso à localização -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!-- Permissão para iniciar o serviço em primeiro plano (geral) -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <!-- Se targetSDK >= 33, adicione também a permissão POST_NOTIFICATIONS -->
+    <!-- Se SDK >= 33, adiciona também a permissão POST_NOTIFICATIONS -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-
-    <!-- Permissões para serviço em primeiro plano -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
-        tools:targetApi="34" />
 
     <!-- Permissões para manter o app funcionando -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
+        tools:targetApi="34" />
 
-    <!-- Permissões necessárias para o Safe Mode -->
+    <!-- Permissões necessárias -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
         tools:targetApi="29" />
@@ -36,9 +32,12 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
-    <!-- ✅ CORREÇÃO: Permissão correta para serviço de acessibilidade -->
+    <!-- Permissão para serviço de acessibilidade -->
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
         tools:ignore="ProtectedPermissions" />
+
+    <!-- Permissões para bloqueio de tela -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
         android:allowBackup="true"
@@ -61,6 +60,20 @@
             android:clearTaskOnLaunch="true"
             android:finishOnTaskLaunch="true"
             android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <activity
+            android:name=".LockScreenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:taskAffinity=""
+            android:noHistory="false"
+            android:clearTaskOnLaunch="false"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
 
         <!-- Activities -->
         <activity
@@ -108,7 +121,6 @@
             android:name=".BlockVerificationService"
             android:exported="false" />
 
-        <!-- Outros serviços já existentes -->
         <service
             android:name=".LocationService"
             android:exported="false"
@@ -123,7 +135,15 @@
             android:name=".BlockOverlayService"
             android:exported="false" />
 
-        <!-- Boot receiver -->
+        <service
+            android:name=".LockScreenService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Lock screen protection" />
+        </service>
+
         <receiver
             android:name=".BootReceiver"
             android:exported="true">

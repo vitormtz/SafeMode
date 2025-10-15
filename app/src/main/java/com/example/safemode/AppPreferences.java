@@ -6,10 +6,6 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Classe para guardar as configurações do usuário - VERSÃO COM DEBUG AVANÇADO
- * Adiciona logs detalhados para identificar problema na comparação
- */
 public class AppPreferences {
 
     private static final String TAG = "AppPreferences";
@@ -20,6 +16,7 @@ public class AppPreferences {
     private static final String KEY_ALLOWED_LONGITUDE = "allowed_longitude";
     private static final String KEY_ALLOWED_RADIUS = "allowed_radius";
     private static final String KEY_LOCATION_ENABLED = "location_enabled";
+    private static final String KEY_LOCK_SCREEN_ENABLED = "lock_screen_enabled";
 
     private SharedPreferences preferences;
 
@@ -27,10 +24,7 @@ public class AppPreferences {
         preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    /**
-     * Salva quais apps devem ser bloqueados - VERSÃO CORRIGIDA
-     */
-    public void setBlockedApps(Set<String> blockedApps) {
+     public void setBlockedApps(Set<String> blockedApps) {
         Log.d(TAG, "💾 ===== SALVANDO APPS BLOQUEADOS =====");
         Log.d(TAG, "💾 Quantidade: " + blockedApps.size());
 
@@ -287,6 +281,16 @@ public class AppPreferences {
         }
     }
 
+
+    public void setLockScreenEnabled(boolean enabled) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(KEY_LOCK_SCREEN_ENABLED, enabled);
+        editor.apply();
+    }
+
+    public boolean isLockScreenEnabled() {
+        return preferences.getBoolean(KEY_LOCK_SCREEN_ENABLED, false);
+    }
 
     public void clearAllPreferences() {
         SharedPreferences.Editor editor = preferences.edit();
