@@ -17,6 +17,8 @@ public class AppPreferences {
     private static final String KEY_ALLOWED_RADIUS = "allowed_radius";
     private static final String KEY_LOCATION_ENABLED = "location_enabled";
     private static final String KEY_LOCK_SCREEN_ENABLED = "lock_screen_enabled";
+    private static final String KEY_HIDDEN_APPS = "hidden_apps";
+    private static final String KEY_HIDE_MODE_ACTIVE = "hide_mode_active";
 
     private SharedPreferences preferences;
 
@@ -296,5 +298,83 @@ public class AppPreferences {
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.apply();
+    }
+
+    // ===== MÉTODOS PARA APLICATIVOS OCULTOS =====
+
+    public void setHiddenApps(Set<String> hiddenApps) {
+        Log.d(TAG, "💾 ===== SALVANDO APPS OCULTOS =====");
+        Log.d(TAG, "💾 Quantidade: " + hiddenApps.size());
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(KEY_HIDDEN_APPS);
+        editor.apply();
+
+        Set<String> cleanSet = new HashSet<>();
+        for (String app : hiddenApps) {
+            String cleanApp = app.trim();
+            cleanSet.add(cleanApp);
+            Log.d(TAG, "💾 App oculto: [" + cleanApp + "]");
+        }
+
+        editor.putStringSet(KEY_HIDDEN_APPS, cleanSet);
+        editor.apply();
+
+        Log.d(TAG, "✅ Apps ocultos salvos: " + cleanSet.size() + " apps");
+        Log.d(TAG, "💾 ===== FIM SALVAMENTO APPS OCULTOS =====");
+    }
+
+    public Set<String> getHiddenApps() {
+        Set<String> originalSet = preferences.getStringSet(KEY_HIDDEN_APPS, new HashSet<>());
+        Set<String> copySet = new HashSet<>(originalSet);
+
+        Log.d(TAG, "📋 ===== CARREGANDO APPS OCULTOS =====");
+        Log.d(TAG, "📋 Quantidade carregada: " + copySet.size());
+
+        int i = 1;
+        for (String app : copySet) {
+            Log.d(TAG, "📋 App oculto " + i + ": [" + app + "]");
+            i++;
+        }
+
+        Log.d(TAG, "📋 ===== FIM CARREGAMENTO APPS OCULTOS =====");
+        return copySet;
+    }
+
+    public boolean isAppHidden(String packageName) {
+        String cleanPackageName = packageName.trim();
+        Set<String> hiddenApps = getHiddenApps();
+        return hiddenApps.contains(cleanPackageName);
+    }
+
+    public void addHiddenApp(String packageName) {
+        Log.d(TAG, "➕ Adicionando app à lista de ocultos: [" + packageName + "]");
+        String cleanPackageName = packageName.trim();
+        Set<String> hiddenApps = getHiddenApps();
+        hiddenApps.add(cleanPackageName);
+        setHiddenApps(hiddenApps);
+        Log.d(TAG, "✅ App adicionado aos ocultos: [" + cleanPackageName + "]");
+    }
+
+    public void removeHiddenApp(String packageName) {
+        Log.d(TAG, "➖ Removendo app da lista de ocultos: [" + packageName + "]");
+        String cleanPackageName = packageName.trim();
+        Set<String> hiddenApps = getHiddenApps();
+        hiddenApps.remove(cleanPackageName);
+        setHiddenApps(hiddenApps);
+        Log.d(TAG, "✅ App removido dos ocultos: [" + cleanPackageName + "]");
+    }
+
+    public void setHideModeActive(boolean active) {
+        Log.d(TAG, "⚙️ Definindo modo oculto ativo: " + active);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(KEY_HIDE_MODE_ACTIVE, active);
+        editor.apply();
+    }
+
+    public boolean isHideModeActive() {
+        boolean active = preferences.getBoolean(KEY_HIDE_MODE_ACTIVE, false);
+        Log.d(TAG, "❓ Modo oculto está ativo? " + active);
+        return active;
     }
 }
