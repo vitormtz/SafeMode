@@ -165,16 +165,30 @@ public class LockScreenActivity extends AppCompatActivity {
                            pin4.getText().toString();
 
         if (enteredPin.length() == 4) {
-            if (pinManager.verifyPin(enteredPin)) {
-                unlockScreen();
+            int pinType = pinManager.verifyPinType(enteredPin);
+
+            if (pinType == 1) {
+                // PIN principal - desativa modo oculto
+                unlockScreen(false);
+            } else if (pinType == 2) {
+                // PIN secundário - ativa modo oculto
+                unlockScreen(true);
             } else {
                 showError();
             }
         }
     }
 
-    private void unlockScreen() {
-        Toast.makeText(this, "Desbloqueado!", Toast.LENGTH_SHORT).show();
+    private void unlockScreen(boolean activateHideMode) {
+        AppPreferences prefs = new AppPreferences(this);
+        prefs.setHideModeActive(activateHideMode);
+
+        if (activateHideMode) {
+            Toast.makeText(this, "Desbloqueado - Modo privado ativado", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Desbloqueado!", Toast.LENGTH_SHORT).show();
+        }
+
         finish();
     }
 
