@@ -25,7 +25,11 @@ public class MainActivity extends AppCompatActivity {
     private Button btnSetLocation;
     private Button btnSettings;
     private Button btnSavePin;
+    private Button btnSaveSecondaryPin;
+    private Button btnSelectHiddenApps;
+    private Button btnSetDefaultLauncher;
     private android.widget.EditText etPin;
+    private android.widget.EditText etSecondaryPin;
 
     private AppPreferences preferences;
     private PinManager pinManager;
@@ -90,7 +94,11 @@ public class MainActivity extends AppCompatActivity {
             btnSetLocation = findViewById(R.id.btn_set_location);
             btnSettings = findViewById(R.id.btn_settings);
             btnSavePin = findViewById(R.id.btn_save_pin);
+            btnSaveSecondaryPin = findViewById(R.id.btn_save_secondary_pin);
+            btnSelectHiddenApps = findViewById(R.id.btn_select_hidden_apps);
+            btnSetDefaultLauncher = findViewById(R.id.btn_set_default_launcher);
             etPin = findViewById(R.id.et_pin);
+            etSecondaryPin = findViewById(R.id.et_secondary_pin);
 
             preferences = new AppPreferences(this);
             pinManager = new PinManager(this);
@@ -165,6 +173,27 @@ public class MainActivity extends AppCompatActivity {
             if (btnSavePin != null) {
                 btnSavePin.setOnClickListener(v -> {
                     savePinConfiguration();
+                });
+            }
+
+            // Botão Salvar PIN Secundário
+            if (btnSaveSecondaryPin != null) {
+                btnSaveSecondaryPin.setOnClickListener(v -> {
+                    saveSecondaryPinConfiguration();
+                });
+            }
+
+            // Botão Selecionar Apps para Ocultar
+            if (btnSelectHiddenApps != null) {
+                btnSelectHiddenApps.setOnClickListener(v -> {
+                    openHiddenAppsSelection();
+                });
+            }
+
+            // Botão Definir como Launcher Padrão
+            if (btnSetDefaultLauncher != null) {
+                btnSetDefaultLauncher.setOnClickListener(v -> {
+                    openLauncherSettings();
                 });
             }
 
@@ -414,8 +443,87 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Mostra mensagem na tela
+     * Salva a configuração do PIN secundário
      */
+    private void saveSecondaryPinConfiguration() {
+        try {
+            String pin = etSecondaryPin.getText().toString();
+
+            if (pin.length() != 4) {
+                Toast.makeText(this, "PIN secundário deve ter 4 dígitos!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!pinManager.hasPin()) {
+                Toast.makeText(this, "Configure o PIN principal primeiro!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (pin.equals(etPin.getText().toString())) {
+                Toast.makeText(this, "PIN secundário deve ser diferente do principal!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (pinManager.setSecondaryPin(pin)) {
+                Toast.makeText(this, "PIN secundário configurado com sucesso!", Toast.LENGTH_SHORT).show();
+                etSecondaryPin.setText("");
+            } else {
+                Toast.makeText(this, "Erro ao salvar PIN secundário", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao configurar PIN secundário", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Abre a tela de seleção de apps para ocultar
+     */
+    private void openHiddenAppsSelection() {
+        try {
+            if (!pinManager.hasSecondaryPin()) {
+                Toast.makeText(this, "Configure o PIN secundário primeiro!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Intent intent = new Intent(this, HiddenAppsSelectionActivity.class);
+            startActivity(intent);
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao abrir seleção de apps", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Abre as configurações do sistema para definir o launcher padrão
+     */
+    private void openLauncherSettings() {
+        try {
+            // Tentar abrir as configurações de aplicativos padrão
+            Intent intent = new Intent(android.provider.Settings.ACTION_HOME_SETTINGS);
+
+            Toast.makeText(this,
+                "Selecione 'SafeMode Launcher' como app de início padrão",
+                Toast.LENGTH_LONG).show();
+
+            startActivity(intent);
+
+        } catch (Exception e) {
+            // Se não conseguir abrir as configurações de HOME, tentar abrir as configurações gerais de apps padrão
+            try {
+                Intent fallbackIntent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+
+                Toast.makeText(this,
+                    "Procure por 'App de início' e selecione 'SafeMode Launcher'",
+                    Toast.LENGTH_LONG).show();
+
+                startActivity(fallbackIntent);
+
+            } catch (Exception e2) {
+                Toast.makeText(this, "Erro ao abrir configurações de launcher", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     protected void onResume() {
