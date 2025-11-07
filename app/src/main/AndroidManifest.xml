@@ -75,6 +75,21 @@
             android:clearTaskOnLaunch="false"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
 
+        <!-- SafeMode Launcher -->
+        <activity
+            android:name=".SafeModeLauncherActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:stateNotNeeded="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <!-- Activities -->
         <activity
             android:name=".MainActivity"
@@ -102,6 +117,12 @@
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="Configurações"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".HiddenAppsSelectionActivity"
+            android:exported="false"
+            android:label="Apps para Ocultar"
             android:parentActivityName=".MainActivity" />
 
         <service
