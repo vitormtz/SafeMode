@@ -3,9 +3,13 @@ package com.example.safemode;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,16 +25,24 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
 
     private RecyclerView recyclerView;
     private AppListAdapter adapter;
+    private LinearLayout containerApps;
+    private LinearLayout loadingLayout;
+    private LinearLayout layoutEmpty;
     private ProgressBar progressBar;
-    private TextView tvTitle;
-    private Button btnSave;
-    private Button btnBack;
+    private TextView containerTitle;
+    private Button btnRetry;
     private AppPreferences preferences;
     private List<AppInfo> appList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        setupSystemBars();
         setContentView(R.layout.activity_hidden_apps_selection);
 
         preferences = new AppPreferences(this);
@@ -41,15 +53,31 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         loadInstalledApps();
     }
 
+    private void setupSystemBars() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getWindow();
+                window.setFlags(
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                );
+            }
+        } catch (Exception e) {
+        }
+    }
+
     private void initializeViews() {
         recyclerView = findViewById(R.id.recycler_view_apps);
+        containerApps = findViewById(R.id.container_apps);
+        loadingLayout = findViewById(R.id.loading_layout);
+        layoutEmpty = findViewById(R.id.layout_empty);
         progressBar = findViewById(R.id.progress_bar);
-        tvTitle = findViewById(R.id.tv_title);
-        btnSave = findViewById(R.id.btn_save);
-        btnBack = findViewById(R.id.btn_back);
+        containerTitle = findViewById(R.id.container_title);
+        btnRetry = findViewById(R.id.btn_retry);
 
-        btnSave.setOnClickListener(v -> saveHiddenApps());
-        btnBack.setOnClickListener(v -> finish());
+        if (btnRetry != null) {
+            btnRetry.setOnClickListener(v -> loadInstalledApps());
+        }
     }
 
     private void setupRecyclerView() {
@@ -59,8 +87,16 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
     }
 
     private void loadInstalledApps() {
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
+        // Mostrar loading e esconder container
+        if (loadingLayout != null) {
+            loadingLayout.setVisibility(View.VISIBLE);
+        }
+        if (containerApps != null) {
+            containerApps.setVisibility(View.GONE);
+        }
+        if (layoutEmpty != null) {
+            layoutEmpty.setVisibility(View.GONE);
+        }
 
         new Thread(() -> {
             List<AppInfo> apps = getInstalledApps();
@@ -69,8 +105,22 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
                 appList.clear();
                 appList.addAll(apps);
                 adapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
+
+                // Esconder loading
+                if (loadingLayout != null) {
+                    loadingLayout.setVisibility(View.GONE);
+                }
+
+                // Mostrar container com apps ou mensagem de vazio
+                if (apps.isEmpty()) {
+                    if (layoutEmpty != null) {
+                        layoutEmpty.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (containerApps != null) {
+                        containerApps.setVisibility(View.VISIBLE);
+                    }
+                }
             });
         }).start();
     }
@@ -101,6 +151,19 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         return apps;
     }
 
+    @Override
+    public void onAppToggled(AppInfo appInfo, boolean isBlocked) {
+        // Listener para quando um app é marcado/desmarcado
+        // Não precisa fazer nada aqui, pois o estado já é atualizado no adapter
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Salvar automaticamente quando o usuário sair da tela
+        saveHiddenApps();
+    }
+
     private void saveHiddenApps() {
         try {
             Set<String> hiddenAppsSet = new java.util.HashSet<>();
@@ -113,18 +176,8 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
 
             preferences.setHiddenApps(hiddenAppsSet);
 
-            Toast.makeText(this, "Apps para ocultar configurados: " + hiddenAppsSet.size(), Toast.LENGTH_SHORT).show();
-            finish();
-
         } catch (Exception e) {
-            Toast.makeText(this, "Erro ao salvar apps", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onAppToggled(AppInfo appInfo, boolean isBlocked) {
-        // Listener para quando um app é marcado/desmarcado
-        // Não precisa fazer nada aqui, pois o estado já é atualizado no adapter
     }
 }
