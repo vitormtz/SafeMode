@@ -360,19 +360,6 @@
                     android:textColor="@color/button_text_white"
                     android:background="@drawable/button_rounded"
                     android:padding="16dp"
-                    android:layout_marginBottom="12dp"
-                    android:textAllCaps="false"/>
-
-                <!-- Botão Definir como Launcher Padrão -->
-                <Button
-                    android:id="@+id/btn_set_default_launcher"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Definir como launcher padrão"
-                    android:textSize="16sp"
-                    android:textColor="@color/button_text_blue"
-                    android:background="@drawable/button_outline"
-                    android:padding="16dp"
                     android:textAllCaps="false"/>
 
             </LinearLayout>

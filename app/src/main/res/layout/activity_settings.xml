@@ -182,6 +182,42 @@
 
                 </LinearLayout>
 
+                <!-- Launcher Padrão (NOVA OPÇÃO) -->
+                <LinearLayout
+                    android:id="@+id/layout_launcher_option"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:id="@+id/icon_launcher_status"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_home"
+                        app:tint="#F44336" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Launcher Padrão"
+                        android:textSize="16sp"
+                        android:textColor="#212121"
+                        android:layout_marginStart="12dp" />
+
+                    <TextView
+                        android:id="@+id/text_launcher_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Não Definido"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="#F44336" />
+
+                </LinearLayout>
+
                 <!-- Botão de Permissões (MOVIDO DA TELA PRINCIPAL) -->
                 <Button
                     android:id="@+id/btn_permissions"

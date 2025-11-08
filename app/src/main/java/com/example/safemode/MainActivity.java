@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btnSavePin;
     private Button btnSaveSecondaryPin;
     private Button btnSelectHiddenApps;
-    private Button btnSetDefaultLauncher;
     private android.widget.EditText etPin;
     private android.widget.EditText etSecondaryPin;
 
@@ -96,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
             btnSavePin = findViewById(R.id.btn_save_pin);
             btnSaveSecondaryPin = findViewById(R.id.btn_save_secondary_pin);
             btnSelectHiddenApps = findViewById(R.id.btn_select_hidden_apps);
-            btnSetDefaultLauncher = findViewById(R.id.btn_set_default_launcher);
             etPin = findViewById(R.id.et_pin);
             etSecondaryPin = findViewById(R.id.et_secondary_pin);
 
@@ -187,13 +185,6 @@ public class MainActivity extends AppCompatActivity {
             if (btnSelectHiddenApps != null) {
                 btnSelectHiddenApps.setOnClickListener(v -> {
                     openHiddenAppsSelection();
-                });
-            }
-
-            // Botão Definir como Launcher Padrão
-            if (btnSetDefaultLauncher != null) {
-                btnSetDefaultLauncher.setOnClickListener(v -> {
-                    openLauncherSettings();
                 });
             }
 
@@ -491,37 +482,6 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             Toast.makeText(this, "Erro ao abrir seleção de apps", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Abre as configurações do sistema para definir o launcher padrão
-     */
-    private void openLauncherSettings() {
-        try {
-            // Tentar abrir as configurações de aplicativos padrão
-            Intent intent = new Intent(android.provider.Settings.ACTION_HOME_SETTINGS);
-
-            Toast.makeText(this,
-                "Selecione 'SafeMode Launcher' como app de início padrão",
-                Toast.LENGTH_LONG).show();
-
-            startActivity(intent);
-
-        } catch (Exception e) {
-            // Se não conseguir abrir as configurações de HOME, tentar abrir as configurações gerais de apps padrão
-            try {
-                Intent fallbackIntent = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-
-                Toast.makeText(this,
-                    "Procure por 'App de início' e selecione 'SafeMode Launcher'",
-                    Toast.LENGTH_LONG).show();
-
-                startActivity(fallbackIntent);
-
-            } catch (Exception e2) {
-                Toast.makeText(this, "Erro ao abrir configurações de launcher", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 

@@ -40,16 +40,19 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView textTodayStats;
     private Button btnViewLogs;
     private Button btnPermissions;
+    private android.widget.LinearLayout layoutLauncherOption;
 
     // Elementos de status das permissões
     private ImageView iconLocationPermission;
     private ImageView iconOverlayPermission;
     private ImageView iconAccessibilityPermission;
     private ImageView iconUsagePermission;
+    private ImageView iconLauncherStatus;
     private TextView textLocationStatus;
     private TextView textOverlayStatus;
     private TextView textAccessibilityStatus;
     private TextView textUsageStatus;
+    private TextView textLauncherStatus;
 
     // Classes auxiliares
     private AppPreferences preferences;
@@ -102,17 +105,20 @@ public class SettingsActivity extends AppCompatActivity {
             textTodayStats = findViewById(R.id.text_today_stats);
             btnViewLogs = findViewById(R.id.btn_view_logs);
             btnPermissions = findViewById(R.id.btn_permissions);
+            layoutLauncherOption = findViewById(R.id.layout_launcher_option);
 
             // Elementos de status das permissões
             iconLocationPermission = findViewById(R.id.icon_location_permission);
             iconOverlayPermission = findViewById(R.id.icon_overlay_permission);
             iconAccessibilityPermission = findViewById(R.id.icon_accessibility_permission);
             iconUsagePermission = findViewById(R.id.icon_usage_permission);
+            iconLauncherStatus = findViewById(R.id.icon_launcher_status);
 
             textLocationStatus = findViewById(R.id.text_location_status);
             textOverlayStatus = findViewById(R.id.text_overlay_status);
             textAccessibilityStatus = findViewById(R.id.text_accessibility_status);
             textUsageStatus = findViewById(R.id.text_usage_status);
+            textLauncherStatus = findViewById(R.id.text_launcher_status);
 
             // Inicializar classes auxiliares
             preferences = new AppPreferences(this);
@@ -208,8 +214,9 @@ public class SettingsActivity extends AppCompatActivity {
             boolean hasOverlay = hasOverlayPermission();
             boolean hasAccessibility = hasAccessibilityPermission();
             boolean hasUsageStats = hasUsageStatsPermission();
+            boolean isLauncher = isDefaultLauncher();
 
-            updatePermissionStatus(hasLocation, hasOverlay, hasAccessibility, hasUsageStats);
+            updatePermissionStatus(hasLocation, hasOverlay, hasAccessibility, hasUsageStats, isLauncher);
 
         } catch (Exception e) {
         }
@@ -245,6 +252,28 @@ public class SettingsActivity extends AppCompatActivity {
      */
     private boolean hasUsageStatsPermission() {
         return UsageStatsUtils.hasUsageStatsPermission(this);
+    }
+
+    /**
+     * Verifica se o SafeMode está definido como launcher padrão
+     */
+    private boolean isDefaultLauncher() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+
+            android.content.pm.ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent,
+                android.content.pm.PackageManager.MATCH_DEFAULT_ONLY);
+
+            if (resolveInfo != null && resolveInfo.activityInfo != null) {
+                String currentLauncher = resolveInfo.activityInfo.packageName;
+                return currentLauncher.equals(getPackageName());
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -288,7 +317,13 @@ public class SettingsActivity extends AppCompatActivity {
                 return;
             }
 
-            // Se chegou aqui, todas as permissões já foram concedidas
+            // Se todas as permissões básicas estão OK, verificar o launcher
+            if (!isDefaultLauncher()) {
+                openLauncherSettings();
+                return;
+            }
+
+            // Se chegou aqui, todas as permissões já foram concedidas (incluindo launcher)
             showMessage("Todas as permissões já foram concedidas!");
 
         } catch (Exception e) {
@@ -299,7 +334,7 @@ public class SettingsActivity extends AppCompatActivity {
      * Atualiza o status visual das permissões na interface
      */
     private void updatePermissionStatus(boolean location, boolean overlay,
-                                        boolean accessibility, boolean usageStats) {
+                                        boolean accessibility, boolean usageStats, boolean isLauncher) {
 
         try {
             // Permissão de Localização
@@ -317,6 +352,10 @@ public class SettingsActivity extends AppCompatActivity {
             // Permissão de Estatísticas
             updatePermissionIcon(iconUsagePermission, usageStats);
             updatePermissionText(textUsageStatus, usageStats ? "Concedida" : "Negada", usageStats);
+
+            // Status do Launcher
+            updatePermissionIcon(iconLauncherStatus, isLauncher);
+            updatePermissionText(textLauncherStatus, isLauncher ? "Definido" : "Não Definido", isLauncher);
 
 
         } catch (Exception e) {
@@ -521,6 +560,38 @@ public class SettingsActivity extends AppCompatActivity {
      */
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Abre as configurações do sistema para definir o launcher padrão
+     * Este método só é chamado quando todas as outras permissões já foram concedidas
+     */
+    private void openLauncherSettings() {
+        try {
+            // Abrir as configurações de launcher
+            Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+
+            Toast.makeText(this,
+                "Selecione 'SafeMode Launcher' como app de início padrão",
+                Toast.LENGTH_LONG).show();
+
+            startActivity(intent);
+
+        } catch (Exception e) {
+            // Se não conseguir abrir as configurações de HOME, tentar abrir as configurações gerais de apps padrão
+            try {
+                Intent fallbackIntent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+
+                Toast.makeText(this,
+                    "Procure por 'App de início' e selecione 'SafeMode Launcher'",
+                    Toast.LENGTH_LONG).show();
+
+                startActivity(fallbackIntent);
+
+            } catch (Exception e2) {
+                Toast.makeText(this, "Erro ao abrir configurações de launcher", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     /**
