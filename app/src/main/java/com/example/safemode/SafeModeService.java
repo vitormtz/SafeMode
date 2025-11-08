@@ -181,7 +181,7 @@ public class SafeModeService extends Service implements LocationManager.Location
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setSmallIcon(R.drawable.ic_safe_mode)
+                .setSmallIcon(R.drawable.ic_logo_safe_mode)
                 .setColor(iconColor)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true) // Não pode ser removida pelo usuário

@@ -59,7 +59,7 @@ public class LockScreenService extends Service {
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Safe Mode - Bloqueio de Tela")
                 .setContentText("Proteção ativa")
-                .setSmallIcon(R.drawable.ic_safe_mode)
+                .setSmallIcon(R.drawable.ic_logo_safe_mode)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setOngoing(true)
                 .build();
