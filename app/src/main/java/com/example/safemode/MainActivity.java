@@ -320,6 +320,28 @@ public class MainActivity extends AppCompatActivity {
         return AccessibilityUtils.isAccessibilityServiceEnabled(this, SafeModeAccessibilityService.class);
     }
 
+    /**
+     * Verifica se o SafeMode está definido como launcher padrão
+     */
+    private boolean isDefaultLauncher() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+
+            android.content.pm.ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent,
+                android.content.pm.PackageManager.MATCH_DEFAULT_ONLY);
+
+            if (resolveInfo != null && resolveInfo.activityInfo != null) {
+                String currentLauncher = resolveInfo.activityInfo.packageName;
+                return currentLauncher.equals(getPackageName());
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     // ===== MÉTODOS ORIGINAIS (SEM ALTERAÇÃO) =====
 
     /**
@@ -362,9 +384,64 @@ public class MainActivity extends AppCompatActivity {
      */
     private void enableLockScreen() {
         try {
+            // Verificar se o app está definido como launcher padrão
+            if (!isDefaultLauncher()) {
+                // Criar diálogo informando que precisa definir como launcher primeiro
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("Launcher Padrão Necessário")
+                    .setMessage("Para ativar o bloqueio de tela, você precisa definir o SafeMode como launcher padrão.\n\n" +
+                        "Isso é necessário para garantir que o bloqueio funcione corretamente quando a tela for ligada.\n\n" +
+                        "Deseja ir para as configurações agora?")
+                    .setPositiveButton("Ir para Configurações", (dialogInterface, which) -> {
+                        // Ir para a tela de configurações
+                        Intent intent = new Intent(this, SettingsActivity.class);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("Cancelar", (dialogInterface, which) -> {
+                        // Reverter o switch se cancelar
+                        if (switchLockScreen != null) {
+                            switchLockScreen.setChecked(false);
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .create();
+
+                dialog.show();
+
+                // Personalizar cor de fundo
+                GradientDrawable gradient = new GradientDrawable();
+                gradient.setColors(new int[]{
+                    getResources().getColor(R.color.primary_dark_blue),
+                    getResources().getColor(R.color.blue_medium)
+                });
+                gradient.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
+                gradient.setCornerRadius(20f);
+                dialog.getWindow().setBackgroundDrawable(gradient);
+
+                // Personalizar cor dos botões
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.white));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(android.R.color.white));
+
+                // Reverter o switch
+                if (switchLockScreen != null) {
+                    switchLockScreen.setChecked(false);
+                }
+
+                return;
+            }
+
             // Verificar se tem PIN configurado
             if (!pinManager.hasPin()) {
                 Toast.makeText(this, "Configure um PIN primeiro!", Toast.LENGTH_SHORT).show();
+                if (switchLockScreen != null) {
+                    switchLockScreen.setChecked(false);
+                }
+                return;
+            }
+
+            // Verificar se tem PIN secundário configurado
+            if (!pinManager.hasSecondaryPin()) {
+                Toast.makeText(this, "Configure o PIN secundário primeiro!", Toast.LENGTH_SHORT).show();
                 if (switchLockScreen != null) {
                     switchLockScreen.setChecked(false);
                 }
@@ -421,6 +498,15 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
+            // Verificar se já existe um PIN secundário configurado e se é igual ao novo PIN principal
+            if (pinManager.hasSecondaryPin()) {
+                // Comparar o novo PIN principal com o PIN secundário salvo
+                if (pinManager.verifySecondaryPin(pin)) {
+                    Toast.makeText(this, "PIN principal não pode ser igual ao PIN secundário!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
             if (pinManager.setPin(pin)) {
                 Toast.makeText(this, "PIN configurado com sucesso!", Toast.LENGTH_SHORT).show();
                 etPin.setText("");
@@ -450,7 +536,8 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if (pin.equals(etPin.getText().toString())) {
+            // Verificar se o PIN secundário é igual ao PIN principal salvo
+            if (pinManager.verifyPin(pin)) {
                 Toast.makeText(this, "PIN secundário deve ser diferente do principal!", Toast.LENGTH_SHORT).show();
                 return;
             }
