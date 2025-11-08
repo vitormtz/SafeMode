@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Layout da tela para selecionar apps para ocultar - VERSÃO COM CONTAINER -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,85 +12,145 @@
         android:layout_height="28dp"
         android:background="#1F3A5F" />
 
-    <!-- Cabeçalho -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/card_background"
-        android:padding="20dp"
-        android:layout_margin="16dp">
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Selecionar Apps para Ocultar"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#212121"
-            android:gravity="center"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Estes apps serão ocultados quando você usar o PIN secundário"
-            android:textSize="14sp"
-            android:textColor="#666666"
-            android:gravity="center" />
-
-    </LinearLayout>
-
-    <!-- Loading -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:visibility="gone" />
-
-    <!-- Lista de Apps -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_apps"
+    <!-- Conteúdo principal -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginHorizontal="16dp"
-        android:visibility="visible" />
+        android:padding="16dp">
 
-    <!-- Botões -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center">
+        <!-- Container LinearLayout para os Apps -->
+        <LinearLayout
+            android:id="@+id/container_apps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/card_background"
+            android:padding="20dp"
+            android:elevation="4dp"
+            android:visibility="gone">
 
-        <Button
-            android:id="@+id/btn_back"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Cancelar"
-            android:textColor="@color/button_text_white"
-            android:background="@drawable/button_red"
-            android:layout_marginEnd="8dp"
-            android:textAllCaps="false" />
+            <!-- Título do Container -->
+            <TextView
+                android:id="@+id/container_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selecionar Apps para Ocultar"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#212121"
+                android:layout_marginBottom="8dp"
+                android:drawablePadding="8dp" />
 
-        <Button
-            android:id="@+id/btn_save"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Salvar"
-            android:textColor="@color/button_text_white"
-            android:background="@drawable/button_green"
-            android:layout_marginStart="8dp"
-            android:textAllCaps="false" />
+            <!-- Descrição do que fazer -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Marque os aplicativos que serão ocultados quando você usar o PIN secundário."
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:lineSpacingExtra="2dp"
+                android:layout_marginBottom="16dp" />
 
-    </LinearLayout>
+            <!-- Linha separadora -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#E0E0E0"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Lista de Apps DENTRO do Container -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_apps"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scrollbars="vertical"
+                android:clipToPadding="false"
+                android:padding="4dp" />
+
+        </LinearLayout>
+
+        <!-- Indicador de Carregamento -->
+        <LinearLayout
+            android:id="@+id/loading_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="visible"
+            android:background="@drawable/card_background"
+            android:padding="32dp">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="16dp"
+                android:indeterminateTint="#2196F3" />
+
+            <TextView
+                android:id="@+id/text_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Carregando aplicativos..."
+                android:textSize="16sp"
+                android:textColor="#666666"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Mensagem quando não há apps -->
+        <LinearLayout
+            android:id="@+id/layout_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="32dp"
+            android:background="@drawable/card_background">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_apps"
+                android:layout_marginBottom="16dp"
+                app:tint="#CCCCCC" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="😔 Nenhum aplicativo encontrado"
+                android:textSize="18sp"
+                android:textColor="#666666"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Não foi possível carregar a lista de aplicativos instalados no seu dispositivo."
+                android:textSize="14sp"
+                android:textColor="#999999"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp" />
+
+            <!-- Botão para tentar novamente -->
+            <Button
+                android:id="@+id/btn_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔄 Tentar Novamente"
+                android:textColor="#2196F3"
+                android:background="@drawable/button_outline"
+                android:layout_marginTop="16dp"
+                android:padding="12dp"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
