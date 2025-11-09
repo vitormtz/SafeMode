@@ -97,7 +97,7 @@
 
     <!-- Configurações Gerais -->
     <string name="settings_title">Configurações</string>
-    <string name="enable_location_control">Controle por Localização</string>
+    <string name="enable_location_control">Bloqueio por Localização</string>
     <string name="enable_location_control_description">Bloquear apps quando fora da área permitida</string>
     <string name="view_blocked_logs">Ver histórico de bloqueios</string>
     <string name="clear_all_data">Limpar Todos os Dados</string>

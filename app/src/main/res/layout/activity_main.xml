@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Layout da tela principal do Safe Mode - VERSÃO SIMPLIFICADA SEM PERMISSÕES -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,6 +6,7 @@
     android:orientation="vertical"
     android:background="#1F3A5F">
 
+    <!-- Status Bar Spacer -->
     <View
         android:layout_width="match_parent"
         android:layout_height="28dp"
@@ -16,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#1F3A5F">
+        android:background="#1F3A5F"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,68 +25,68 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Cabeçalho -->
+            <!-- ======== CABEÇALHO ======== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/card_background"
                 android:padding="24dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
 
-                <!-- Logo -->
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:src="@drawable/ic_logo_safe_mode"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="12dp"
+                    android:contentDescription="@string/app_name" />
 
-                <!-- Título -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Safe Mode"
-                    android:textSize="28sp"
+                    android:text="@string/app_name"
+                    android:textSize="26sp"
                     android:textStyle="bold"
                     android:textColor="#212121"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="6dp" />
 
-                <!-- Descrição -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Defina onde seus apps devem funcionar"
-                    android:textSize="14sp"
+                    android:text="Proteção e controle de aplicativos"
+                    android:textSize="13sp"
                     android:textColor="#666666"
                     android:gravity="center" />
 
             </LinearLayout>
 
-            <!-- Controles Principais -->
+            <!-- ======== BLOQUEIO DE APLICATIVOS ======== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/card_background"
                 android:padding="20dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Controles Principais"
+                    android:text="Bloqueio de Aplicativos"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#212121"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Switch Principal do Safe Mode -->
+                <!-- Safe Mode Switch -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:background="@drawable/edittext_background"
+                    android:padding="12dp"
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
@@ -100,7 +101,14 @@
                             android:text="Safe Mode"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="#424242" />
+                            android:textColor="#212121" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ativar proteção de aplicativos"
+                            android:textSize="12sp"
+                            android:textColor="#666666" />
 
                     </LinearLayout>
 
@@ -111,12 +119,28 @@
 
                 </LinearLayout>
 
-                <!-- Switch Controle por Localização -->
+                <!-- Botão Selecionar Apps para Bloquear -->
+                <Button
+                    android:id="@+id/btn_select_apps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Selecionar apps para bloquear"
+                    android:textSize="15sp"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_rounded"
+                    android:padding="16dp"
+                    android:layout_marginBottom="24dp"
+                    android:textAllCaps="false"/>
+
+                <!-- Location Control Switch -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:background="@drawable/edittext_background"
+                    android:padding="12dp"
+                    android:layout_marginBottom="16dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -130,7 +154,14 @@
                             android:text="@string/enable_location_control"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="#424242"/>
+                            android:textColor="#212121"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/enable_location_control_description"
+                            android:textSize="12sp"
+                            android:textColor="#666666"/>
 
                     </LinearLayout>
 
@@ -141,32 +172,46 @@
 
                 </LinearLayout>
 
+                <!-- Botão Configurar Área Permitida -->
+                <Button
+                    android:id="@+id/btn_set_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Configurar área permitida"
+                    android:textSize="15sp"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_rounded"
+                    android:padding="16dp"
+                    android:textAllCaps="false"/>
+
             </LinearLayout>
 
-            <!-- Bloqueio de Tela -->
+            <!-- ======== OCULTAÇÃO DE APLICATIVOS ======== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/card_background"
                 android:padding="20dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bloqueio de Tela"
+                    android:text="Ocultação de Aplicativos"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#212121"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Switch Bloqueio de Tela -->
+                <!-- Lock Screen Switch -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:background="@drawable/edittext_background"
+                    android:padding="12dp"
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
@@ -178,15 +223,15 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Ativar Bloqueio"
+                            android:text="Ativar Ocultação com PIN"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="#424242" />
+                            android:textColor="#212121" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Bloquear dispositivo ao ligar tela"
+                            android:text="Mostrar tela de bloqueio com PIN alternativo"
                             android:textSize="12sp"
                             android:textColor="#666666" />
 
@@ -199,21 +244,30 @@
 
                 </LinearLayout>
 
-                <!-- Campo PIN -->
+                <!-- PIN Principal -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Configurar PIN"
+                    android:text="PIN Principal"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#424242"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PIN para desbloquear a tela"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
                     android:layout_marginBottom="8dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
 
                     <EditText
                         android:id="@+id/et_pin"
@@ -224,9 +278,10 @@
                         android:inputType="numberPassword"
                         android:maxLength="4"
                         android:background="@drawable/edittext_background"
-                        android:padding="12dp"
+                        android:padding="14dp"
                         android:textColor="#212121"
-                        android:textColorHint="#999999" />
+                        android:textColorHint="#999999"
+                        android:importantForAutofill="no" />
 
                     <Button
                         android:id="@+id/btn_save_pin"
@@ -235,31 +290,34 @@
                         android:text="Salvar"
                         android:textColor="@color/button_text_white"
                         android:background="@drawable/button_rounded"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
                         android:layout_marginStart="8dp"
                         android:textAllCaps="false" />
 
                 </LinearLayout>
 
-                <!-- Campo PIN Secundário -->
+                <!-- Divider -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#E0E0E0"
-                    android:layout_marginVertical="16dp" />
+                    android:layout_marginVertical="12dp" />
 
+                <!-- PIN Secundário -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PIN Secundário (Ocultar Apps)"
+                    android:text="PIN Secundário"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#424242"
-                    android:layout_marginBottom="4dp" />
+                    android:textColor="#212121"
+                    android:layout_marginBottom="8dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PIN alternativo para esconder aplicativos"
+                    android:text="PIN alternativo para ocultar aplicativos selecionados"
                     android:textSize="12sp"
                     android:textColor="#666666"
                     android:layout_marginBottom="8dp" />
@@ -269,7 +327,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="16dp">
 
                     <EditText
                         android:id="@+id/et_secondary_pin"
@@ -280,9 +338,10 @@
                         android:inputType="numberPassword"
                         android:maxLength="4"
                         android:background="@drawable/edittext_background"
-                        android:padding="12dp"
+                        android:padding="14dp"
                         android:textColor="#212121"
-                        android:textColorHint="#999999" />
+                        android:textColorHint="#999999"
+                        android:importantForAutofill="no" />
 
                     <Button
                         android:id="@+id/btn_save_secondary_pin"
@@ -291,6 +350,8 @@
                         android:text="Salvar"
                         android:textColor="@color/button_text_white"
                         android:background="@drawable/button_rounded"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
                         android:layout_marginStart="8dp"
                         android:textAllCaps="false" />
 
@@ -302,65 +363,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Selecionar apps para ocultar"
-                    android:textSize="14sp"
-                    android:textColor="@color/button_text_blue"
-                    android:background="@drawable/button_outline"
-                    android:padding="12dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_rounded"
+                    android:padding="14dp"
                     android:textAllCaps="false" />
 
             </LinearLayout>
 
-            <!-- Botões de Configuração -->
+            <!-- ======== CONFIGURAÇÕES GERAIS ======== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/card_background"
                 android:padding="20dp"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Configurações"
+                    android:text="Configurações Gerais"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#212121"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Botão Selecionar Apps -->
-                <Button
-                    android:id="@+id/btn_select_apps"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Selecionar apps para bloquear"
-                    android:textSize="16sp"
-                    android:textColor="@color/button_text_white"
-                    android:background="@drawable/button_rounded"
-                    android:padding="16dp"
-                    android:layout_marginBottom="12dp"
-                    android:textAllCaps="false"/>
-
-                <!-- Botão Configurar Localização -->
-                <Button
-                    android:id="@+id/btn_set_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Configurar área permitida"
-                    android:textSize="16sp"
-                    android:textColor="@color/button_text_white"
-                    android:background="@drawable/button_rounded"
-                    android:padding="16dp"
-                    android:layout_marginBottom="12dp"
-                    android:textAllCaps="false"/>
-
-                <!-- Botão Configurações Gerais -->
+                <!-- Botão Configurações e Permissões -->
                 <Button
                     android:id="@+id/btn_settings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Configurações gerais"
-                    android:textSize="16sp"
+                    android:text="Configurações e permissões"
+                    android:textSize="15sp"
                     android:textColor="@color/button_text_white"
                     android:background="@drawable/button_rounded"
                     android:padding="16dp"
@@ -368,7 +403,7 @@
 
             </LinearLayout>
 
-            <!-- Informações da Localização Atual -->
+            <!-- ======== STATUS DA LOCALIZAÇÃO ======== -->
             <LinearLayout
                 android:id="@+id/layout_location_info"
                 android:layout_width="match_parent"
@@ -387,22 +422,41 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="16dp" />
 
-                <TextView
-                    android:id="@+id/text_current_location"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Localizando..."
-                    android:textSize="14sp"
-                    android:textColor="#666666"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/edittext_background"
+                    android:padding="12dp">
 
-                <TextView
-                    android:id="@+id/text_distance_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dentro da área permitida"
-                    android:textSize="14sp"
-                    android:textColor="#4CAF50" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_current_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Localizando..."
+                            android:textSize="14sp"
+                            android:textColor="#212121"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/text_distance_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Dentro da área permitida"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#4CAF50" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -410,6 +464,7 @@
 
     </ScrollView>
 
+    <!-- Bottom Navigation Spacer -->
     <View
         android:layout_width="match_parent"
         android:layout_height="48dp"
