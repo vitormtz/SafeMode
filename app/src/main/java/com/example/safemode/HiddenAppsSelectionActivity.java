@@ -135,6 +135,12 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         for (ApplicationInfo appInfo : installedApps) {
             if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
                 String packageName = appInfo.packageName;
+
+                // Não mostrar o próprio SafeMode na lista de apps para ocultar
+                if (packageName.equals(getPackageName())) {
+                    continue;
+                }
+
                 String appName = appInfo.loadLabel(pm).toString();
                 Drawable icon = appInfo.loadIcon(pm);
 
