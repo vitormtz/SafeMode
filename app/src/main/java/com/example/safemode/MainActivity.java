@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -128,6 +131,16 @@ public class MainActivity extends AppCompatActivity {
             // Switch de controle por localização
             if (switchLocationControl != null) {
                 switchLocationControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked) {
+                        // Verificar se tem permissão de localização
+                        if (!hasLocationPermission()) {
+                            // Mostrar diálogo pedindo permissão
+                            showLocationPermissionDialog();
+                            // Reverter o switch
+                            switchLocationControl.setChecked(false);
+                            return;
+                        }
+                    }
                     preferences.setLocationEnabled(isChecked);
                 });
             }
@@ -204,16 +217,17 @@ public class MainActivity extends AppCompatActivity {
             // Verificar todas as permissões necessárias
             boolean hasLocation = hasLocationPermission();
             boolean hasOverlay = hasOverlayPermission();
+            boolean hasUsageStats = hasUsageStatsPermission();
             boolean hasAccessibility = hasAccessibilityPermission();
 
             // Se todas as permissões estão OK, ativar normalmente
-            if (hasLocation && hasOverlay && hasAccessibility) {
+            if (hasLocation && hasOverlay && hasUsageStats && hasAccessibility) {
                 enableSafeMode();
                 return;
             }
 
             // Se faltam permissões, mostrar aviso e redirecionar
-            showPermissionsDialog(hasLocation, hasOverlay, hasAccessibility);
+            showPermissionsDialog(hasLocation, hasOverlay, hasUsageStats, hasAccessibility);
 
         } catch (Exception e) {
 
@@ -225,70 +239,103 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * ✅ NOVO: Mostra diálogo explicando quais permissões faltam
+     * Mostra diálogo customizado explicando quais permissões faltam
      */
-    /**
-     * ✅ NOVO: Mostra diálogo explicando quais permissões faltam - COM COR PERSONALIZADA
-     */
-    private void showPermissionsDialog(boolean hasLocation, boolean hasOverlay, boolean hasAccessibility) {
+    private void showPermissionsDialog(boolean hasLocation, boolean hasOverlay, boolean hasUsageStats, boolean hasAccessibility) {
         try {
-            // Criar lista das permissões que faltam
-            StringBuilder missingPermissions = new StringBuilder();
+            // Inflar o layout customizado
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_permissions, null);
 
-            if (!hasLocation) {
-                missingPermissions.append("• Acesso à localização\n");
-            }
-            if (!hasOverlay) {
-                missingPermissions.append("• Exibir sobre outros apps\n" +
-                        "• Estatísticas de uso\n");
-            }
-            if (!hasAccessibility) {
-                missingPermissions.append("• Serviço de acessibilidade\n");
-            }
+            // Referenciar os cards de permissões
+            androidx.cardview.widget.CardView locationCard = dialogView.findViewById(R.id.locationPermissionCard);
+            androidx.cardview.widget.CardView overlayCard = dialogView.findViewById(R.id.overlayPermissionCard);
+            androidx.cardview.widget.CardView usageStatsCard = dialogView.findViewById(R.id.usageStatsPermissionCard);
+            androidx.cardview.widget.CardView accessibilityCard = dialogView.findViewById(R.id.accessibilityPermissionCard);
 
-            String message = "Para que o Safe Mode funcione corretamente, você precisa conceder as seguintes permissões:\n\n" +
-                    missingPermissions.toString() +
-                    "\nDeseja ir para as configurações agora?";
+            // Mostrar apenas os cards das permissões que faltam
+            locationCard.setVisibility(!hasLocation ? View.VISIBLE : View.GONE);
+            overlayCard.setVisibility(!hasOverlay ? View.VISIBLE : View.GONE);
+            usageStatsCard.setVisibility(!hasUsageStats ? View.VISIBLE : View.GONE);
+            accessibilityCard.setVisibility(!hasAccessibility ? View.VISIBLE : View.GONE);
 
-            // ✅ CRIAR O DIÁLOGO
+            // Criar o diálogo customizado
             AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle("Permissões Necessárias")
-                    .setMessage(message)
-                    .setPositiveButton("Ir para Configurações", (dialogInterface, which) -> {
-                        // Ir para a tela de configurações onde pode configurar tudo
-                        Intent intent = new Intent(this, SettingsActivity.class);
-                        startActivity(intent);
-                    })
-                    .setNegativeButton("Cancelar", (dialogInterface, which) -> {
-                        // Reverter o switch se cancelar
-                        if (switchSafeMode != null) {
-                            switchSafeMode.setChecked(false);
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setView(dialogView)
+                    .setCancelable(false)
                     .create();
 
-            // ✅ PERSONALIZAR COR DE FUNDO DIRETO NO CÓDIGO
-            dialog.show();
-             GradientDrawable gradient = new GradientDrawable();
-             gradient.setColors(new int[]{
-                getResources().getColor(R.color.primary_dark_blue),
-                 getResources().getColor(R.color.blue_medium)
-            });
-            gradient.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-            gradient.setCornerRadius(20f);
-            dialog.getWindow().setBackgroundDrawable(gradient);
+            // Configurar os botões
+            Button btnGoToSettings = dialogView.findViewById(R.id.btnGoToSettings);
+            Button btnCancel = dialogView.findViewById(R.id.btnCancel);
 
-            // ✅ PERSONALIZAR COR DO TEXTO DOS BOTÕES (opcional)
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.white));
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(android.R.color.white));
+            btnGoToSettings.setOnClickListener(v -> {
+                // Ir para a tela de configurações
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+            });
+
+            btnCancel.setOnClickListener(v -> {
+                // Reverter o switch se cancelar
+                if (switchSafeMode != null) {
+                    switchSafeMode.setChecked(false);
+                }
+                dialog.dismiss();
+            });
+
+            // Configurar o fundo transparente para o diálogo
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            dialog.show();
 
         } catch (Exception e) {
-
             // Reverter o switch
             if (switchSafeMode != null) {
                 switchSafeMode.setChecked(false);
             }
+        }
+    }
+
+    /**
+     * Mostra diálogo pedindo permissão de localização
+     */
+    private void showLocationPermissionDialog() {
+        try {
+            // Inflar o layout customizado
+            View dialogView = getLayoutInflater().inflate(R.layout.dialog_location_permission, null);
+
+            // Criar o diálogo customizado
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setView(dialogView)
+                    .setCancelable(false)
+                    .create();
+
+            // Configurar os botões
+            Button btnGoToSettings = dialogView.findViewById(R.id.btnGoToSettings);
+            Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+
+            btnGoToSettings.setOnClickListener(v -> {
+                // Ir para a tela de configurações
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                dialog.dismiss();
+            });
+
+            btnCancel.setOnClickListener(v -> {
+                dialog.dismiss();
+            });
+
+            // Configurar o fundo transparente para o diálogo
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            dialog.show();
+
+        } catch (Exception e) {
+            // Silenciar erro
         }
     }
 
@@ -318,6 +365,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean hasAccessibilityPermission() {
         return AccessibilityUtils.isAccessibilityServiceEnabled(this, SafeModeAccessibilityService.class);
+    }
+
+    /**
+     * Verifica se tem permissão de estatísticas de uso
+     */
+    private boolean hasUsageStatsPermission() {
+        return UsageStatsUtils.hasUsageStatsPermission(this);
     }
 
     /**
@@ -386,41 +440,40 @@ public class MainActivity extends AppCompatActivity {
         try {
             // Verificar se o app está definido como launcher padrão
             if (!isDefaultLauncher()) {
-                // Criar diálogo informando que precisa definir como launcher primeiro
+                // Inflar o layout customizado
+                View dialogView = getLayoutInflater().inflate(R.layout.dialog_launcher_required, null);
+
+                // Criar o diálogo customizado
                 AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle("Launcher Padrão Necessário")
-                    .setMessage("Para ativar o bloqueio de tela, você precisa definir o SafeMode como launcher padrão.\n\n" +
-                        "Isso é necessário para garantir que o bloqueio funcione corretamente quando a tela for ligada.\n\n" +
-                        "Deseja ir para as configurações agora?")
-                    .setPositiveButton("Ir para Configurações", (dialogInterface, which) -> {
-                        // Ir para a tela de configurações
-                        Intent intent = new Intent(this, SettingsActivity.class);
-                        startActivity(intent);
-                    })
-                    .setNegativeButton("Cancelar", (dialogInterface, which) -> {
-                        // Reverter o switch se cancelar
-                        if (switchLockScreen != null) {
-                            switchLockScreen.setChecked(false);
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .create();
+                        .setView(dialogView)
+                        .setCancelable(false)
+                        .create();
+
+                // Configurar os botões
+                Button btnGoToSettings = dialogView.findViewById(R.id.btnGoToSettings);
+                Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+
+                btnGoToSettings.setOnClickListener(v -> {
+                    // Ir para a tela de configurações
+                    Intent intent = new Intent(this, SettingsActivity.class);
+                    startActivity(intent);
+                    dialog.dismiss();
+                });
+
+                btnCancel.setOnClickListener(v -> {
+                    // Reverter o switch se cancelar
+                    if (switchLockScreen != null) {
+                        switchLockScreen.setChecked(false);
+                    }
+                    dialog.dismiss();
+                });
+
+                // Configurar o fundo transparente para o diálogo
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                }
 
                 dialog.show();
-
-                // Personalizar cor de fundo
-                GradientDrawable gradient = new GradientDrawable();
-                gradient.setColors(new int[]{
-                    getResources().getColor(R.color.primary_dark_blue),
-                    getResources().getColor(R.color.blue_medium)
-                });
-                gradient.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-                gradient.setCornerRadius(20f);
-                dialog.getWindow().setBackgroundDrawable(gradient);
-
-                // Personalizar cor dos botões
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.white));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(android.R.color.white));
 
                 // Reverter o switch
                 if (switchLockScreen != null) {
@@ -581,6 +634,8 @@ public class MainActivity extends AppCompatActivity {
             if (isFirstRun()) {
                 preferences.setSafeModeEnabled(false);
                 preferences.setLocationEnabled(false);
+                preferences.setBlockedApps(new HashSet<>()); // Limpar lista de apps bloqueados
+                preferences.setHiddenApps(new HashSet<>()); // Limpar lista de apps ocultos
             }
 
             // Ler os valores das preferências (agora garantidamente corretos)
@@ -640,7 +695,16 @@ public class MainActivity extends AppCompatActivity {
 
                     // Restaurar listener
                     switchLocationControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
+                        if (isChecked) {
+                            // Verificar se tem permissão de localização
+                            if (!hasLocationPermission()) {
+                                // Mostrar diálogo pedindo permissão
+                                showLocationPermissionDialog();
+                                // Reverter o switch
+                                switchLocationControl.setChecked(false);
+                                return;
+                            }
+                        }
                         preferences.setLocationEnabled(isChecked);
                     });
 
@@ -648,7 +712,16 @@ public class MainActivity extends AppCompatActivity {
 
                     // Garantir que o listener está correto
                     switchLocationControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
+                        if (isChecked) {
+                            // Verificar se tem permissão de localização
+                            if (!hasLocationPermission()) {
+                                // Mostrar diálogo pedindo permissão
+                                showLocationPermissionDialog();
+                                // Reverter o switch
+                                switchLocationControl.setChecked(false);
+                                return;
+                            }
+                        }
                         preferences.setLocationEnabled(isChecked);
                     });
                 }
@@ -705,19 +778,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 🆕 NOVO MÉTODO: Verifica se é a primeira execução do app
+     * 🆕 NOVO MÉTODO: Verifica se é a primeira execução do app ou se foi reinstalado
      * É como perguntar: "é a primeira vez que este app está rodando?"
      */
     private boolean isFirstRun() {
         try {
             // Usar SharedPreferences para verificar se já rodou antes
             android.content.SharedPreferences prefs = getSharedPreferences("app_state", MODE_PRIVATE);
-            boolean isFirst = prefs.getBoolean("is_first_run", true);
 
+            // Verificar se o app foi instalado/reinstalado comparando com timestamp de instalação
+            long installTime = getPackageManager().getPackageInfo(getPackageName(), 0).firstInstallTime;
+            long lastKnownInstallTime = prefs.getLong("last_install_time", 0);
+
+            boolean isFirst = (lastKnownInstallTime != installTime);
 
             if (isFirst) {
-                // Marcar que já não é mais a primeira vez
-                prefs.edit().putBoolean("is_first_run", false).apply();
+                // Marcar que já não é mais a primeira vez e salvar timestamp de instalação
+                prefs.edit()
+                    .putBoolean("is_first_run", false)
+                    .putLong("last_install_time", installTime)
+                    .apply();
             }
 
             return isFirst;
