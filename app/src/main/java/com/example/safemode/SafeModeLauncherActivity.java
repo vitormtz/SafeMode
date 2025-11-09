@@ -13,7 +13,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -33,7 +32,6 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
     private EditText searchBar;
     private TextView tvTime;
     private TextView tvDate;
-    private ImageButton btnSettings;
     private AppPreferences preferences;
     private List<LauncherAppInfo> allApps;
     private BroadcastReceiver packageChangeReceiver;
@@ -59,9 +57,6 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         searchBar = findViewById(R.id.search_bar);
         tvTime = findViewById(R.id.tv_time);
         tvDate = findViewById(R.id.tv_date);
-        btnSettings = findViewById(R.id.btn_settings);
-
-        btnSettings.setOnClickListener(v -> openSafeModeSettings());
     }
 
     private void setupRecyclerView() {
@@ -129,8 +124,8 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         for (ResolveInfo resolveInfo : resolveInfos) {
             String packageName = resolveInfo.activityInfo.packageName;
 
-            // Não mostrar o próprio SafeMode na lista
-            if (packageName.equals(getPackageName())) {
+            // Se modo oculto ativo, ocultar o próprio SafeMode
+            if (isHideModeActive && packageName.equals(getPackageName())) {
                 continue;
             }
 
