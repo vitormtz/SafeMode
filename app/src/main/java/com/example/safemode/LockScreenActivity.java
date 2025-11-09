@@ -183,12 +183,6 @@ public class LockScreenActivity extends AppCompatActivity {
         AppPreferences prefs = new AppPreferences(this);
         prefs.setHideModeActive(activateHideMode);
 
-        if (activateHideMode) {
-            Toast.makeText(this, "Desbloqueado - Modo privado ativado", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Desbloqueado!", Toast.LENGTH_SHORT).show();
-        }
-
         finish();
     }
 
