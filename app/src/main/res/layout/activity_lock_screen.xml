@@ -10,7 +10,8 @@
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
         android:orientation="vertical"
         android:gravity="center">
 
@@ -115,17 +116,4 @@
             android:visibility="gone" />
 
     </LinearLayout>
-
-    <!-- Rodapé com informação -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Protegido por SafeMode"
-        android:textSize="12sp"
-        android:textColor="@android:color/white"
-        android:alpha="0.6"
-        android:layout_marginBottom="16dp" />
-
 </RelativeLayout>
