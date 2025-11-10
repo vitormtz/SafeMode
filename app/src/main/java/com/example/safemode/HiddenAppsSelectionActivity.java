@@ -128,19 +128,31 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
     private List<AppInfo> getInstalledApps() {
         List<AppInfo> apps = new ArrayList<>();
         PackageManager pm = getPackageManager();
-        List<ApplicationInfo> installedApps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+
+        // ✅ BUG FIX: Usar Intent para pegar APENAS apps com launcher (visíveis ao usuário)
+        android.content.Intent mainIntent = new android.content.Intent(android.content.Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(android.content.Intent.CATEGORY_LAUNCHER);
+        List<android.content.pm.ResolveInfo> launchableApps = pm.queryIntentActivities(mainIntent, 0);
 
         Set<String> hiddenApps = preferences.getHiddenApps();
 
-        for (ApplicationInfo appInfo : installedApps) {
-            if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                String packageName = appInfo.packageName;
+        for (android.content.pm.ResolveInfo resolveInfo : launchableApps) {
+            String packageName = resolveInfo.activityInfo.packageName;
 
-                // Não mostrar o próprio SafeMode na lista de apps para ocultar
-                if (packageName.equals(getPackageName())) {
-                    continue;
-                }
+            // Não mostrar o próprio SafeMode na lista de apps para ocultar
+            if (packageName.equals(getPackageName())) {
+                continue;
+            }
 
+            // ✅ BUG FIX: Não mostrar apps críticos do sistema
+            if (isCriticalSystemApp(packageName)) {
+                continue;
+            }
+
+            try {
+                ApplicationInfo appInfo = pm.getApplicationInfo(packageName, 0);
+
+                // ✅ PERMITIR apps do sistema (como Galeria) serem ocultados
                 String appName = appInfo.loadLabel(pm).toString();
                 Drawable icon = appInfo.loadIcon(pm);
 
@@ -149,12 +161,42 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
                 AppInfo info = new AppInfo(packageName, appName, icon);
                 info.isBlocked = isHidden;
                 apps.add(info);
+            } catch (PackageManager.NameNotFoundException e) {
+                // App não encontrado, pular
             }
         }
 
         Collections.sort(apps, (a, b) -> a.appName.compareToIgnoreCase(b.appName));
 
         return apps;
+    }
+
+    /**
+     * Verifica se é um app crítico do sistema que não deve ser ocultado
+     */
+    private boolean isCriticalSystemApp(String packageName) {
+        String[] criticalSystemApps = {
+                "com.android.systemui",
+                "android",
+                "com.android.phone",
+                "com.android.settings",
+                "com.android.launcher",
+                "com.android.dialer",
+                "com.google.android.gms",
+                "com.android.packageinstaller",
+                "com.android.launcher3",
+                "com.sec.android.app.launcher",
+                "com.android.emergency",
+                "com.android.incallui"
+        };
+
+        for (String criticalApp : criticalSystemApps) {
+            if (packageName.equals(criticalApp) || packageName.startsWith(criticalApp + ".")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
