@@ -61,15 +61,16 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
                 return;
             }
 
-            // ✅ NOVA LÓGICA: Verificar modo oculto primeiro
+            // ✅ CORREÇÃO: Verificar modo oculto primeiro
             boolean isHideModeActive = preferences.isHideModeActive();
 
             if (isHideModeActive) {
                 // Se modo oculto ativo, bloquear apps da lista de ocultos
                 if (preferences.isAppHidden(packageName)) {
                     blockAppWithActivity(packageName);
+                    return; // App oculto foi bloqueado, não precisa continuar
                 }
-                return;
+                // ✅ BUG FIX: Não retornar aqui! Continuar para verificar apps bloqueados normais
             }
 
             // Verificar se está na lista de bloqueados (lógica normal)
