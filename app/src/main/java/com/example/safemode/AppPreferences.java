@@ -27,14 +27,12 @@ public class AppPreferences {
      public void setBlockedApps(Set<String> blockedApps) {
         SharedPreferences.Editor editor = preferences.edit();
 
-        // Remover a chave primeiro, depois salvar
         editor.remove(KEY_BLOCKED_APPS);
         editor.apply();
 
-        // Criar uma nova cópia do Set com strings "limpas"
         Set<String> cleanSet = new HashSet<>();
         for (String app : blockedApps) {
-            String cleanApp = app.trim(); // Remove espaços
+            String cleanApp = app.trim();
             cleanSet.add(cleanApp);
         }
 
@@ -42,22 +40,15 @@ public class AppPreferences {
         editor.apply();
     }
 
-    /**
-     * Pega a lista de apps bloqueados
-     */
     public Set<String> getBlockedApps() {
         Set<String> originalSet = preferences.getStringSet(KEY_BLOCKED_APPS, new HashSet<>());
         Set<String> copySet = new HashSet<>(originalSet);
         return copySet;
     }
 
-    /**
-     * Verifica se um app específico está bloqueado
-     */
     public boolean isAppBlocked(String packageName) {
-        // Limpar o package name de entrada
-        String cleanPackageName = packageName.trim();
 
+        String cleanPackageName = packageName.trim();
         Set<String> blockedApps = getBlockedApps();
 
         boolean found = false;
@@ -67,25 +58,17 @@ public class AppPreferences {
                 break;
             }
         }
-
         return found;
     }
 
-    /**
-     * Adiciona um app à lista de bloqueados
-     */
     public void addBlockedApp(String packageName) {
-        // Limpar o package name
-        String cleanPackageName = packageName.trim();
 
+        String cleanPackageName = packageName.trim();
         Set<String> blockedApps = getBlockedApps();
         blockedApps.add(cleanPackageName);
         setBlockedApps(blockedApps);
     }
 
-    /**
-     * Remove um app da lista de bloqueados
-     */
     public void removeBlockedApp(String packageName) {
         String cleanPackageName = packageName.trim();
         Set<String> blockedApps = getBlockedApps();
@@ -104,12 +87,6 @@ public class AppPreferences {
         return enabled;
     }
 
-    public void setAllowedLatitude(double latitude) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(KEY_ALLOWED_LATITUDE, String.valueOf(latitude)); // ← STRING
-        editor.apply();
-    }
-
     public double getAllowedLatitude() {
         try {
             String latString = preferences.getString(KEY_ALLOWED_LATITUDE, "0.0");
@@ -120,12 +97,6 @@ public class AppPreferences {
         }
     }
 
-    public void setAllowedLongitude(double longitude) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(KEY_ALLOWED_LONGITUDE, String.valueOf(longitude)); // ← STRING
-        editor.apply();
-    }
-
     public double getAllowedLongitude() {
         try {
             String lngString = preferences.getString(KEY_ALLOWED_LONGITUDE, "0.0");
@@ -134,13 +105,6 @@ public class AppPreferences {
         } catch (Exception e) {
             return 0.0;
         }
-    }
-
-
-    public void setAllowedRadius(int radiusInMeters) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(KEY_ALLOWED_RADIUS, radiusInMeters);
-        editor.apply();
     }
 
     public int getAllowedRadius() {
@@ -162,8 +126,6 @@ public class AppPreferences {
     public void setAllowedLocation(double latitude, double longitude, int radiusInMeters) {
         try {
             SharedPreferences.Editor editor = preferences.edit();
-
-            // Salvar como STRING para manter precisão total
             editor.putString(KEY_ALLOWED_LATITUDE, String.valueOf(latitude));
             editor.putString(KEY_ALLOWED_LONGITUDE, String.valueOf(longitude));
             editor.putInt(KEY_ALLOWED_RADIUS, radiusInMeters);
@@ -172,10 +134,9 @@ public class AppPreferences {
             editor.commit();
 
         } catch (Exception e) {
-            // Erro ao salvar
+            e.printStackTrace();
         }
     }
-
 
     public void setLockScreenEnabled(boolean enabled) {
         SharedPreferences.Editor editor = preferences.edit();
@@ -186,14 +147,6 @@ public class AppPreferences {
     public boolean isLockScreenEnabled() {
         return preferences.getBoolean(KEY_LOCK_SCREEN_ENABLED, false);
     }
-
-    public void clearAllPreferences() {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.apply();
-    }
-
-    // ===== MÉTODOS PARA APLICATIVOS OCULTOS =====
 
     public void setHiddenApps(Set<String> hiddenApps) {
         SharedPreferences.Editor editor = preferences.edit();
@@ -220,20 +173,6 @@ public class AppPreferences {
         String cleanPackageName = packageName.trim();
         Set<String> hiddenApps = getHiddenApps();
         return hiddenApps.contains(cleanPackageName);
-    }
-
-    public void addHiddenApp(String packageName) {
-        String cleanPackageName = packageName.trim();
-        Set<String> hiddenApps = getHiddenApps();
-        hiddenApps.add(cleanPackageName);
-        setHiddenApps(hiddenApps);
-    }
-
-    public void removeHiddenApp(String packageName) {
-        String cleanPackageName = packageName.trim();
-        Set<String> hiddenApps = getHiddenApps();
-        hiddenApps.remove(cleanPackageName);
-        setHiddenApps(hiddenApps);
     }
 
     public void setHideModeActive(boolean active) {
