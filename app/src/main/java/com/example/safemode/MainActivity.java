@@ -19,8 +19,6 @@ import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
-
     private Switch switchSafeMode;
     private Switch switchLocationControl;
     private Switch switchLockScreen;

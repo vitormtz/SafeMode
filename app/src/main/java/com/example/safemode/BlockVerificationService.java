@@ -10,8 +10,6 @@ import android.os.IBinder;
  * Monitora se o bloqueio está funcionando corretamente e força correção se necessário
  */
 public class BlockVerificationService extends Service {
-
-    private static final String TAG = "BlockVerificationService";
     private static final int MAX_VERIFICATION_ATTEMPTS = 5; // Máximo 5 tentativas
     private static final long VERIFICATION_INTERVAL = 1000; // Verificar a cada 1 segundo
     private static final long TOTAL_VERIFICATION_TIME = 10000; // Verificar por 10 segundos total

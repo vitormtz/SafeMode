@@ -9,7 +9,6 @@ import android.view.accessibility.AccessibilityEvent;
  */
 public class SafeModeAccessibilityService extends android.accessibilityservice.AccessibilityService {
 
-    private static final String TAG = "SafeModeAccessibility";
     private AppPreferences preferences;
     private LocationManager locationManager;
     private long lastLocationUpdate = 0;

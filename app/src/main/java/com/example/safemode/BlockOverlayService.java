@@ -18,8 +18,6 @@ import android.widget.TextView;
  * Agora usa o novo layout que parece uma mensagem de erro do sistema
  */
 public class BlockOverlayService extends Service {
-
-    private static final String TAG = "BlockOverlayService";
     private WindowManager windowManager;
     private View overlayView;
     private String blockedPackageName;

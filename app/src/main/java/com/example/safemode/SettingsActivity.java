@@ -27,8 +27,6 @@ import org.json.JSONObject;
  */
 public class SettingsActivity extends AppCompatActivity {
 
-    private static final String TAG = "SettingsActivity";
-
     // Códigos de request para permissões
     private static final int PERMISSION_REQUEST_LOCATION = 1001;
     private static final int PERMISSION_REQUEST_OVERLAY = 1002;

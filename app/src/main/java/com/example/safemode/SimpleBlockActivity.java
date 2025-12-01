@@ -15,7 +15,6 @@ import android.widget.TextView;
  */
 public class SimpleBlockActivity extends Activity {
 
-    private static final String TAG = "SimpleBlockActivity";
     private Handler autoCloseHandler;
     private static boolean isCurrentlyShowing = false; // Flag para evitar duplicatas
     private static long lastCloseTime = 0; // Tempo da última vez que fechou

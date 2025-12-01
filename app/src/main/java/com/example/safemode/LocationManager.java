@@ -7,8 +7,6 @@ import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 
 public class LocationManager implements LocationListener {
-
-    private static final String TAG = "LocationManager";
     private Context context;
     private android.location.LocationManager systemLocationManager;
     private AppPreferences preferences;
