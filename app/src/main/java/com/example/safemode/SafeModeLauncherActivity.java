@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -157,15 +158,21 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         if (query.isEmpty()) {
             filteredApps.addAll(allApps);
         } else {
-            String lowerQuery = query.toLowerCase();
+            String normalizedQuery = removeAccents(query.toLowerCase());
             for (LauncherAppInfo app : allApps) {
-                if (app.appName.toLowerCase().contains(lowerQuery)) {
+                String normalizedAppName = removeAccents(app.appName.toLowerCase());
+                if (normalizedAppName.contains(normalizedQuery)) {
                     filteredApps.add(app);
                 }
             }
         }
 
         adapter.updateApps(filteredApps);
+    }
+
+    private String removeAccents(String text) {
+        String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
+        return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
     private void launchApp(LauncherAppInfo app) {
