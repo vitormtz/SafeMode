@@ -6,6 +6,10 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 
+/**
+ * Classe responsável por gerenciar a localização do dispositivo e verificar se está dentro de uma área permitida.
+ * Implementa LocationListener para receber atualizações de localização em tempo real.
+ */
 public class LocationManager implements LocationListener {
     private Context context;
     private android.location.LocationManager systemLocationManager;
@@ -16,11 +20,13 @@ public class LocationManager implements LocationListener {
     private static final long UPDATE_INTERVAL = 15000;
     private static final float MIN_DISTANCE = 5;
 
+    // Interface de callback para notificar mudanças de localização
     public interface LocationUpdateListener {
         void onLocationChanged(boolean isInsideAllowedArea);
         void onLocationError(String error);
     }
 
+    // Construtor que inicializa o LocationManager com contexto e preferências
     public LocationManager(Context context) {
         this.context = context;
         this.systemLocationManager = (android.location.LocationManager)
@@ -28,10 +34,12 @@ public class LocationManager implements LocationListener {
         this.preferences = new AppPreferences(context);
     }
 
+    // Define o listener para receber atualizações de localização
     public void setLocationUpdateListener(LocationUpdateListener listener) {
         this.listener = listener;
     }
 
+    // Obtém a localização uma única vez de todos os provedores disponíveis
     public void getLocationOnce() {
 
         try {
@@ -58,6 +66,7 @@ public class LocationManager implements LocationListener {
         }
     }
 
+    // Requisita localização de todos os provedores disponíveis (GPS, Network, Passive)
     private void requestLocationFromAllProviders() {
 
         try {
@@ -118,6 +127,7 @@ public class LocationManager implements LocationListener {
         }
     }
 
+    // LocationListener interno para receber uma única atualização de localização
     private class SingleUpdateLocationListener implements android.location.LocationListener {
         private String providerName;
 
@@ -125,6 +135,7 @@ public class LocationManager implements LocationListener {
             this.providerName = providerName;
         }
 
+        // Recebe atualização de localização e verifica se é melhor que a atual
         @Override
         public void onLocationChanged(Location location) {
 
@@ -143,6 +154,7 @@ public class LocationManager implements LocationListener {
         public void onProviderDisabled(String provider) {}
     }
 
+    // Verifica se uma localização é melhor que a atual baseada em tempo e precisão
     private boolean isBetterLocation(Location location, Location currentBestLocation) {
         if (currentBestLocation == null) {
             return true;
@@ -175,6 +187,7 @@ public class LocationManager implements LocationListener {
         return false;
     }
 
+    // Inicia atualizações contínuas de localização dos provedores GPS e Network
     public void startLocationUpdates() {
 
         try {
@@ -225,6 +238,7 @@ public class LocationManager implements LocationListener {
         }
     }
 
+    // Para as atualizações contínuas de localização
     public void stopLocationUpdates() {
         try {
             systemLocationManager.removeUpdates(this);
@@ -232,6 +246,7 @@ public class LocationManager implements LocationListener {
         }
     }
 
+    // Verifica se a localização atual está fora da área permitida
     public boolean isOutsideAllowedArea() {
 
         if (!preferences.isLocationEnabled()) {
@@ -272,10 +287,12 @@ public class LocationManager implements LocationListener {
         return isOutside;
     }
 
+    // Retorna a localização atual armazenada
     public Location getCurrentLocation() {
         return currentLocation;
     }
 
+    // Callback chamado quando a localização muda
     @Override
     public void onLocationChanged(Location location) {
 
@@ -290,11 +307,13 @@ public class LocationManager implements LocationListener {
         }
     }
 
+    // Callback chamado quando um provedor de localização é habilitado
     @Override
     public void onProviderEnabled(String provider) {
         requestSingleLocationUpdate();
     }
 
+    // Callback chamado quando um provedor de localização é desabilitado
     @Override
     public void onProviderDisabled(String provider) {
         if (listener != null) {
@@ -302,21 +321,25 @@ public class LocationManager implements LocationListener {
         }
     }
 
+    // Requisita uma única atualização de localização
     public void requestSingleLocationUpdate() {
         getLocationOnce();
     }
 
+    // Verifica se o app tem permissão de localização
     private boolean hasLocationPermission() {
         return ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == android.content.pm.PackageManager.PERMISSION_GRANTED;
     }
 
+    // Verifica se pelo menos um provedor de localização está habilitado
     private boolean isLocationEnabled() {
         return systemLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER) ||
                 systemLocationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER);
     }
 
+    // Retorna a melhor última localização conhecida de todos os provedores
     private Location getBestLastKnownLocation() {
         try {
             Location lastGPS = null;

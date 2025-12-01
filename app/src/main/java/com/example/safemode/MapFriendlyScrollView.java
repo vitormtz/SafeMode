@@ -6,26 +6,36 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ScrollView;
 
+/**
+ * ScrollView customizado que permite interação com mapas dentro de uma área scrollável.
+ * Detecta toques na área do mapa e desabilita o scroll do container para permitir
+ * que o usuário interaja diretamente com o mapa (zoom, pan, etc).
+ */
 public class MapFriendlyScrollView extends ScrollView {
 
     private View mapContainer;
 
+    // Construtor básico
     public MapFriendlyScrollView(Context context) {
         super(context);
     }
 
+    // Construtor com atributos XML
     public MapFriendlyScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    // Construtor com atributos XML e estilo
     public MapFriendlyScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
+    // Define a view do container do mapa para detectar toques
     public void setMapContainer(View mapContainer) {
         this.mapContainer = mapContainer;
     }
 
+    // Intercepta eventos de toque para permitir interação com o mapa
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         try {
@@ -44,6 +54,7 @@ public class MapFriendlyScrollView extends ScrollView {
         }
     }
 
+    // Verifica se o toque ocorreu dentro da área do mapa
     private boolean isTouchInsideMapArea(MotionEvent event) {
         try {
             if (mapContainer == null) {
