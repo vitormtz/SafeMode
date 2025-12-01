@@ -31,7 +31,6 @@ public class BlockLogger {
      * É como escrever no diário: "Bloqueei o WhatsApp às 14:30"
      */
     public void logBlock(String packageName, long timestamp) {
-
         try {
             // Criar um novo registro
             JSONObject logEntry = new JSONObject();
@@ -55,7 +54,6 @@ public class BlockLogger {
             saveLogEntries(existingLogs);
 
         } catch (JSONException e) {
-            android.util.Log.e("BlockLogger", "Erro ao salvar log: " + e.getMessage());
         }
     }
 
@@ -63,7 +61,6 @@ public class BlockLogger {
      * Pega todos os registros de bloqueio
      */
     public List<JSONObject> getLogEntries() {
-
         List<JSONObject> entries = new ArrayList<>();
 
         try {
@@ -75,7 +72,6 @@ public class BlockLogger {
             }
 
         } catch (JSONException e) {
-            android.util.Log.e("BlockLogger", "Erro ao ler logs: " + e.getMessage());
         }
 
         return entries;
@@ -85,7 +81,6 @@ public class BlockLogger {
      * Pega registros de um período específico
      */
     public List<JSONObject> getLogEntriesInPeriod(long startTime, long endTime) {
-
         List<JSONObject> allEntries = getLogEntries();
         List<JSONObject> filteredEntries = new ArrayList<>();
 
@@ -97,7 +92,6 @@ public class BlockLogger {
                 }
             }
         } catch (JSONException e) {
-            android.util.Log.e("BlockLogger", "Erro ao filtrar logs: " + e.getMessage());
         }
 
         return filteredEntries;
@@ -107,7 +101,6 @@ public class BlockLogger {
      * Conta quantas vezes um app foi bloqueado
      */
     public int getBlockCountForApp(String packageName) {
-
         List<JSONObject> entries = getLogEntries();
         int count = 0;
 
@@ -118,7 +111,6 @@ public class BlockLogger {
                 }
             }
         } catch (JSONException e) {
-            android.util.Log.e("BlockLogger", "Erro ao contar bloqueios: " + e.getMessage());
         }
 
         return count;
@@ -128,7 +120,6 @@ public class BlockLogger {
      * Pega estatísticas dos bloqueios de hoje
      */
     public JSONObject getTodayStats() {
-
         JSONObject stats = new JSONObject();
 
         try {
@@ -143,7 +134,6 @@ public class BlockLogger {
             stats.put("most_blocked_app", getMostBlockedApp(todayEntries));
 
         } catch (JSONException e) {
-            android.util.Log.e("BlockLogger", "Erro ao gerar estatísticas: " + e.getMessage());
         }
 
         return stats;
@@ -160,7 +150,6 @@ public class BlockLogger {
      * Limpa registros antigos (mais de 30 dias)
      */
     public void cleanOldLogs() {
-
         long thirtyDaysAgo = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000);
         List<JSONObject> entries = getLogEntries();
         List<JSONObject> recentEntries = new ArrayList<>();
@@ -176,7 +165,6 @@ public class BlockLogger {
             saveLogEntries(recentEntries);
 
         } catch (JSONException e) {
-            android.util.Log.e("BlockLogger", "Erro ao limpar logs antigos: " + e.getMessage());
         }
     }
 
@@ -184,7 +172,6 @@ public class BlockLogger {
      * Salva a lista de registros
      */
     private void saveLogEntries(List<JSONObject> entries) {
-
         try {
             JSONArray jsonArray = new JSONArray();
             for (JSONObject entry : entries) {
@@ -196,7 +183,6 @@ public class BlockLogger {
                     .apply();
 
         } catch (Exception e) {
-            android.util.Log.e("BlockLogger", "Erro ao salvar logs: " + e.getMessage());
         }
     }
 
@@ -204,7 +190,6 @@ public class BlockLogger {
      * Pega o nome amigável do app
      */
     private String getAppName(String packageName) {
-
         try {
             android.content.pm.PackageManager pm = context.getPackageManager();
             android.content.pm.ApplicationInfo appInfo = pm.getApplicationInfo(packageName, 0);
@@ -240,7 +225,6 @@ public class BlockLogger {
      * Conta quantos apps únicos foram bloqueados
      */
     private int getUniqueAppsCount(List<JSONObject> entries) {
-
         java.util.Set<String> uniqueApps = new java.util.HashSet<>();
 
         try {
@@ -248,7 +232,6 @@ public class BlockLogger {
                 uniqueApps.add(entry.getString("package_name"));
             }
         } catch (JSONException e) {
-            android.util.Log.e("BlockLogger", "Erro ao contar apps únicos: " + e.getMessage());
         }
 
         return uniqueApps.size();
@@ -258,7 +241,6 @@ public class BlockLogger {
      * Encontra o app mais bloqueado em uma lista de registros
      */
     private String getMostBlockedApp(List<JSONObject> entries) {
-
         java.util.Map<String, Integer> appCounts = new java.util.HashMap<>();
 
         try {
@@ -282,7 +264,6 @@ public class BlockLogger {
             return mostBlockedApp != null ? getAppName(mostBlockedApp) : "Nenhum";
 
         } catch (JSONException e) {
-            android.util.Log.e("BlockLogger", "Erro ao encontrar app mais bloqueado: " + e.getMessage());
             return "Erro";
         }
     }
