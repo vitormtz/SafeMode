@@ -7,20 +7,12 @@ import android.content.Context;
 import android.os.Build;
 import java.util.List;
 
-/**
- * Utilitários para trabalhar com estatísticas de uso de apps
- * É como ter um contador que vê quais apps são mais usados
- */
 public class UsageStatsUtils {
 
-    /**
-     * Verifica se temos permissão para ver estatísticas de uso
-     * É como perguntar: "posso ver o relatório de uso dos apps?"
-     */
     public static boolean hasUsageStatsPermission(Context context) {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return true; // Versões antigas não precisam dessa permissão
+            return true;
         }
 
         try {
@@ -38,10 +30,6 @@ public class UsageStatsUtils {
         }
     }
 
-    /**
-     * Pega o app que está em primeiro plano agora
-     * É como perguntar: "qual app está sendo usado agora?"
-     */
     public static String getCurrentForegroundApp(Context context) {
 
         if (!hasUsageStatsPermission(context)) {
@@ -58,10 +46,9 @@ public class UsageStatsUtils {
 
             long currentTime = System.currentTimeMillis();
 
-            // Pegar estatísticas dos últimos 10 segundos
             List<UsageStats> usageStatsList = usageStatsManager.queryUsageStats(
                     UsageStatsManager.INTERVAL_BEST,
-                    currentTime - 10000, // 10 segundos atrás
+                    currentTime - 10000,
                     currentTime
             );
 
@@ -69,7 +56,6 @@ public class UsageStatsUtils {
                 return null;
             }
 
-            // Encontrar o app usado mais recentemente
             UsageStats mostRecentApp = null;
             for (UsageStats usageStats : usageStatsList) {
                 if (mostRecentApp == null ||
@@ -85,9 +71,6 @@ public class UsageStatsUtils {
         }
     }
 
-    /**
-     * Método para versões antigas do Android (antes do Lollipop)
-     */
     private static String getForegroundAppLegacy(Context context) {
 
         try {
@@ -102,43 +85,8 @@ public class UsageStatsUtils {
             }
 
         } catch (Exception e) {
-            // Ignorar erros em versões antigas
         }
 
         return null;
-    }
-
-    /**
-     * Verifica se um app específico está em primeiro plano
-     */
-    public static boolean isAppInForeground(Context context, String packageName) {
-
-        String currentApp = getCurrentForegroundApp(context);
-        return packageName != null && packageName.equals(currentApp);
-    }
-
-    /**
-     * Pega uma lista dos apps mais usados
-     */
-    public static List<UsageStats> getMostUsedApps(Context context, long startTime, long endTime) {
-
-        if (!hasUsageStatsPermission(context) ||
-                Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            return null;
-        }
-
-        try {
-            UsageStatsManager usageStatsManager = (UsageStatsManager)
-                    context.getSystemService(Context.USAGE_STATS_SERVICE);
-
-            return usageStatsManager.queryUsageStats(
-                    UsageStatsManager.INTERVAL_DAILY,
-                    startTime,
-                    endTime
-            );
-
-        } catch (Exception e) {
-            return null;
-        }
     }
 }
