@@ -38,7 +38,6 @@ public class SafeModeService extends Service implements LocationManager.Location
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         // Verificar se o Safe Mode está ativo
         if (!preferences.isSafeModeEnabled()) {
             stopSelf();
@@ -74,12 +73,9 @@ public class SafeModeService extends Service implements LocationManager.Location
      * É como ligar o "radar" que vigia onde você está
      */
     private void startLocationMonitoring() {
-
         if (!isLocationMonitoringActive) {
             locationManager.startLocationUpdates();
             isLocationMonitoringActive = true;
-
-            android.util.Log.d("SafeModeService", "Monitoramento de localização iniciado");
         }
     }
 
@@ -87,7 +83,6 @@ public class SafeModeService extends Service implements LocationManager.Location
      * Para o monitoramento de localização
      */
     private void stopLocationMonitoring() {
-
         if (isLocationMonitoringActive) {
             locationManager.stopLocationUpdates();
             isLocationMonitoringActive = false;
@@ -100,21 +95,19 @@ public class SafeModeService extends Service implements LocationManager.Location
      */
     @Override
     public void onLocationChanged(boolean isInsideAllowedArea) {
-
         // Atualizar notificação com status atual
         updateNotification(isInsideAllowedArea);
     }
 
     @Override
     public void onLocationError(String error) {
-        android.util.Log.e("SafeModeService", "Erro de localização: " + error);
+        // Erro de localização
     }
 
     /**
      * Cria o canal de notificação (necessário para Android 8+)
      */
     private void createNotificationChannel() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
@@ -141,7 +134,6 @@ public class SafeModeService extends Service implements LocationManager.Location
      * Atualiza a notificação com o status atual
      */
     private void updateNotification(boolean isInsideAllowedArea) {
-
         Notification notification = createNotificationWithStatus(isInsideAllowedArea);
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -152,7 +144,6 @@ public class SafeModeService extends Service implements LocationManager.Location
      * Cria notificação com status específico
      */
     private Notification createNotificationWithStatus(boolean isInsideAllowedArea) {
-
         // Intent para abrir o app quando clicar na notificação
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -194,13 +185,11 @@ public class SafeModeService extends Service implements LocationManager.Location
      * Método público para verificar se o serviço está rodando
      */
     public static boolean isRunning(android.content.Context context) {
-
         android.app.ActivityManager manager = (android.app.ActivityManager)
                 context.getSystemService(android.content.Context.ACTIVITY_SERVICE);
 
         for (android.app.ActivityManager.RunningServiceInfo service :
                 manager.getRunningServices(Integer.MAX_VALUE)) {
-
             if (SafeModeService.class.getName().equals(service.service.getClassName())) {
                 return true;
             }
