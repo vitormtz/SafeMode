@@ -12,12 +12,9 @@ public class LocationManager implements LocationListener {
     private AppPreferences preferences;
     private Location currentLocation;
     private LocationUpdateListener listener;
-    private long lastLocationTime = 0;
-
-    // ✅ NOVO: Configurações melhoradas
-    private static final long LOCATION_MAX_AGE = 300000; // 5 minutos
-    private static final long UPDATE_INTERVAL = 15000; // 15 segundos
-    private static final float MIN_DISTANCE = 5; // 5 metros
+    private static final long LOCATION_MAX_AGE = 300000;
+    private static final long UPDATE_INTERVAL = 15000;
+    private static final float MIN_DISTANCE = 5;
 
     public interface LocationUpdateListener {
         void onLocationChanged(boolean isInsideAllowedArea);
@@ -35,9 +32,6 @@ public class LocationManager implements LocationListener {
         this.listener = listener;
     }
 
-    /**
-     * ✅ MÉTODO MELHORADO: Obtém localização uma vez com múltiplas tentativas
-     */
     public void getLocationOnce() {
 
         try {
@@ -55,7 +49,6 @@ public class LocationManager implements LocationListener {
                 return;
             }
 
-            // ✅ NOVA ESTRATÉGIA: Tentar múltiplas fontes simultaneamente
             requestLocationFromAllProviders();
 
         } catch (SecurityException e) {
@@ -65,13 +58,9 @@ public class LocationManager implements LocationListener {
         }
     }
 
-    /**
-     * ✅ NOVO MÉTODO: Solicita localização de todos os provedores disponíveis
-     */
     private void requestLocationFromAllProviders() {
 
         try {
-            // Primeiro, tentar última localização conhecida mais recente
             Location bestLastKnown = getBestLastKnownLocation();
             if (bestLastKnown != null) {
                 long age = System.currentTimeMillis() - bestLastKnown.getTime();
@@ -80,12 +69,9 @@ public class LocationManager implements LocationListener {
                     return;
                 }
             }
-
-            // Se não tem localização recente, solicitar nova de múltiplos provedores
             boolean gpsRequested = false;
             boolean networkRequested = false;
 
-            // ✅ Tentar GPS se disponível
             if (systemLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
                 try {
                     systemLocationManager.requestSingleUpdate(
@@ -98,7 +84,6 @@ public class LocationManager implements LocationListener {
                 }
             }
 
-            // ✅ Tentar Network se disponível
             if (systemLocationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)) {
                 try {
                     systemLocationManager.requestSingleUpdate(
@@ -111,7 +96,6 @@ public class LocationManager implements LocationListener {
                 }
             }
 
-            // ✅ Tentar Passive como fallback
             try {
                 systemLocationManager.requestSingleUpdate(
                         android.location.LocationManager.PASSIVE_PROVIDER,
@@ -134,9 +118,6 @@ public class LocationManager implements LocationListener {
         }
     }
 
-    /**
-     * ✅ NOVA CLASSE: Listener para uma única atualização
-     */
     private class SingleUpdateLocationListener implements android.location.LocationListener {
         private String providerName;
 
@@ -147,7 +128,6 @@ public class LocationManager implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
 
-            // Usar a localização se for melhor que a atual
             if (isBetterLocation(location, currentLocation)) {
                 LocationManager.this.onLocationChanged(location);
             }
@@ -195,9 +175,6 @@ public class LocationManager implements LocationListener {
         return false;
     }
 
-    /**
-     * ✅ MÉTODO MELHORADO: Inicia monitoramento contínuo
-     */
     public void startLocationUpdates() {
 
         try {
@@ -215,13 +192,11 @@ public class LocationManager implements LocationListener {
                 return;
             }
 
-            // Primeiro obter localização atual
             Location bestLocation = getBestLastKnownLocation();
             if (bestLocation != null) {
                 onLocationChanged(bestLocation);
             }
 
-            // ✅ Iniciar monitoramento melhorado de GPS
             if (systemLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
                 systemLocationManager.requestLocationUpdates(
                         android.location.LocationManager.GPS_PROVIDER,
@@ -231,11 +206,10 @@ public class LocationManager implements LocationListener {
                 );
             }
 
-            // ✅ Iniciar monitoramento melhorado de Network
             if (systemLocationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)) {
                 systemLocationManager.requestLocationUpdates(
                         android.location.LocationManager.NETWORK_PROVIDER,
-                        UPDATE_INTERVAL * 2, // Network menos frequente
+                        UPDATE_INTERVAL * 2,
                         MIN_DISTANCE * 2,
                         this
                 );
@@ -251,9 +225,6 @@ public class LocationManager implements LocationListener {
         }
     }
 
-    /**
-     * Para de monitorar a localização
-     */
     public void stopLocationUpdates() {
         try {
             systemLocationManager.removeUpdates(this);
@@ -263,36 +234,29 @@ public class LocationManager implements LocationListener {
 
     public boolean isOutsideAllowedArea() {
 
-        // Se o controle por localização está desligado, sempre permitir
         if (!preferences.isLocationEnabled()) {
             return false;
         }
 
-        // ✅ CORREÇÃO PRINCIPAL: Se não temos localização atual, ASSUMIR QUE ESTÁ FORA
         if (currentLocation == null) {
-            // Tentar obter localização rapidamente
             getLocationOnce();
-            return true; // ← CORRIGIDO: Bloquear quando não tem localização
+            return true;
         }
 
-        // Verificar se a localização é muito antiga
         long locationAge = System.currentTimeMillis() - currentLocation.getTime();
         if (locationAge > LOCATION_MAX_AGE) {
-            getLocationOnce(); // Tentar obter nova
-            return true; // ← CORRIGIDO: Bloquear quando localização é muito antiga
+            getLocationOnce();
+            return true;
         }
 
-        // Calcular a distância até o centro da área permitida
         double allowedLat = preferences.getAllowedLatitude();
         double allowedLng = preferences.getAllowedLongitude();
         int allowedRadius = preferences.getAllowedRadius();
 
-        // Se não há área definida, sempre permitir
         if (allowedLat == 0.0 && allowedLng == 0.0) {
             return false;
         }
 
-        // Calcular distância em metros
         float[] results = new float[1];
         Location.distanceBetween(
                 currentLocation.getLatitude(),
@@ -308,45 +272,29 @@ public class LocationManager implements LocationListener {
         return isOutside;
     }
 
-    /**
-     * Pega a localização atual (se disponível)
-     */
     public Location getCurrentLocation() {
         return currentLocation;
     }
 
-    /**
-     * Chamado quando a localização muda
-     */
     @Override
     public void onLocationChanged(Location location) {
 
-        // ✅ Só atualizar se a nova localização for melhor
         if (isBetterLocation(location, currentLocation)) {
             currentLocation = location;
-            lastLocationTime = System.currentTimeMillis();
 
-            // Verificar se estamos dentro ou fora da área
             boolean isOutside = isOutsideAllowedArea();
 
-            // Avisar quem está interessado
             if (listener != null) {
                 listener.onLocationChanged(!isOutside);
             }
         }
     }
 
-    /**
-     * Chamado quando um provedor de localização é ligado
-     */
     @Override
     public void onProviderEnabled(String provider) {
         requestSingleLocationUpdate();
     }
 
-    /**
-     * Chamado quando um provedor de localização é desligado
-     */
     @Override
     public void onProviderDisabled(String provider) {
         if (listener != null) {
@@ -354,61 +302,45 @@ public class LocationManager implements LocationListener {
         }
     }
 
-    /**
-     * Pede uma única atualização de localização (mais rápido)
-     */
     public void requestSingleLocationUpdate() {
         getLocationOnce();
     }
 
-    /**
-     * Verifica se temos permissão de localização
-     */
     private boolean hasLocationPermission() {
         return ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == android.content.pm.PackageManager.PERMISSION_GRANTED;
     }
 
-    /**
-     * Verifica se o GPS está ligado
-     */
     private boolean isLocationEnabled() {
         return systemLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER) ||
                 systemLocationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER);
     }
 
-    /**
-     * ✅ MÉTODO MELHORADO: Pega a melhor última localização conhecida
-     */
     private Location getBestLastKnownLocation() {
         try {
             Location lastGPS = null;
             Location lastNetwork = null;
             Location lastPassive = null;
 
-            // Tentar GPS
             try {
                 lastGPS = systemLocationManager.getLastKnownLocation(
                         android.location.LocationManager.GPS_PROVIDER);
             } catch (SecurityException e) {
             }
 
-            // Tentar Network
             try {
                 lastNetwork = systemLocationManager.getLastKnownLocation(
                         android.location.LocationManager.NETWORK_PROVIDER);
             } catch (SecurityException e) {
             }
 
-            // Tentar Passive
             try {
                 lastPassive = systemLocationManager.getLastKnownLocation(
                         android.location.LocationManager.PASSIVE_PROVIDER);
             } catch (SecurityException e) {
             }
 
-            // Encontrar a melhor localização
             Location best = null;
 
             if (lastGPS != null) {
