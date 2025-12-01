@@ -13,12 +13,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Service responsável por exibir um overlay de bloqueio sobre aplicativos bloqueados.
+ * Fecha o app bloqueado, exibe uma mensagem de aviso e redireciona para a tela inicial.
+ */
 public class BlockOverlayService extends Service {
     private WindowManager windowManager;
     private View overlayView;
     private String blockedPackageName;
     private Handler timeoutHandler;
 
+    // Inicializa o service e o WindowManager
     @Override
     public void onCreate() {
         super.onCreate();
@@ -27,6 +32,7 @@ public class BlockOverlayService extends Service {
         timeoutHandler = new Handler();
     }
 
+    // Recebe a intent com o package do app bloqueado e agenda o fechamento
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -43,6 +49,7 @@ public class BlockOverlayService extends Service {
         return START_NOT_STICKY;
     }
 
+    // Cria e exibe o overlay de bloqueio na tela
     private void createOverlay() {
         try {
 
@@ -65,6 +72,7 @@ public class BlockOverlayService extends Service {
         }
     }
 
+    // Cria os parâmetros da janela do overlay
     private WindowManager.LayoutParams createWindowParams() {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
 
@@ -94,6 +102,7 @@ public class BlockOverlayService extends Service {
         return params;
     }
 
+    // Configura a mensagem de bloqueio exibida no overlay
     private void setupBlockMessage() {
         try {
             TextView textoErro = overlayView.findViewById(R.id.textoErro);
@@ -109,6 +118,7 @@ public class BlockOverlayService extends Service {
         }
     }
 
+    // Configura os botões do overlay e seus listeners
     private void setupButtons() {
         try {
             Button btnInfoApp = overlayView.findViewById(R.id.btnInfoApp);
@@ -131,6 +141,7 @@ public class BlockOverlayService extends Service {
         }
     }
 
+    // Agenda o fechamento do aplicativo bloqueado após um delay
     private void scheduleAppClosure() {
         try {
 
@@ -150,6 +161,7 @@ public class BlockOverlayService extends Service {
         }
     }
 
+    // Fecha o aplicativo bloqueado redirecionando para a tela inicial
     private void closeBlockedApp() {
         try {
 
@@ -165,6 +177,7 @@ public class BlockOverlayService extends Service {
         }
     }
 
+    // Agenda a criação do overlay após um delay
     private void scheduleOverlayCreation() {
         try {
 
@@ -177,6 +190,8 @@ public class BlockOverlayService extends Service {
             stopSelf();
         }
     }
+
+    // Agenda a remoção automática do overlay após 15 segundos
     private void scheduleRemoval() {
         try {
             if (timeoutHandler != null) {
@@ -192,6 +207,7 @@ public class BlockOverlayService extends Service {
         }
     }
 
+    // Remove o overlay da tela e para o service
     private void removeOverlay() {
         try {
 
@@ -211,6 +227,7 @@ public class BlockOverlayService extends Service {
         stopSelf();
     }
 
+    // Redireciona o usuário para a tela inicial
     private void goToHome() {
         try {
 
@@ -224,6 +241,7 @@ public class BlockOverlayService extends Service {
         }
     }
 
+    // Retorna o nome do aplicativo a partir do package name
     private String getAppName(String packageName) {
         if (packageName == null || packageName.isEmpty()) {
             return "Sistema Android";
@@ -241,6 +259,7 @@ public class BlockOverlayService extends Service {
         }
     }
 
+    // Limpa recursos quando o service é destruído
     @Override
     public void onDestroy() {
         try {
@@ -259,6 +278,7 @@ public class BlockOverlayService extends Service {
         super.onDestroy();
     }
 
+    // Retorna null pois este service não é bindable
     @Override
     public IBinder onBind(Intent intent) {
         return null;

@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
+/**
+ * Service responsável por verificar se o bloqueio de um aplicativo está funcionando corretamente.
+ * Monitora se o app bloqueado está sendo exibido e força o bloqueio caso necessário.
+ */
 public class BlockVerificationService extends Service {
     private static final int MAX_VERIFICATION_ATTEMPTS = 5;
     private static final long VERIFICATION_INTERVAL = 1000;
@@ -14,12 +18,14 @@ public class BlockVerificationService extends Service {
     private int verificationAttempts = 0;
     private long verificationStartTime;
 
+    // Inicializa o service e o handler de verificação
     @Override
     public void onCreate() {
         super.onCreate();
         verificationHandler = new Handler();
     }
 
+    // Recebe o package do app alvo e inicia o ciclo de verificação
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -47,6 +53,7 @@ public class BlockVerificationService extends Service {
         return START_NOT_STICKY;
     }
 
+    // Inicia o ciclo de verificação periódica do bloqueio
     private void startVerificationCycle() {
         try {
             long currentTime = System.currentTimeMillis();
@@ -83,6 +90,7 @@ public class BlockVerificationService extends Service {
         }
     }
 
+    // Verifica se o aplicativo alvo está bloqueado
     private boolean checkIfAppIsBlocked() {
         try {
 
@@ -98,6 +106,7 @@ public class BlockVerificationService extends Service {
         }
     }
 
+    // Verifica se a mensagem de bloqueio está sendo exibida
     private boolean checkIfMessageIsShowing() {
         try {
 
@@ -110,6 +119,7 @@ public class BlockVerificationService extends Service {
         }
     }
 
+    // Força o bloqueio correto abrindo a SimpleBlockActivity
     private void forceCorrectBlocking() {
         try {
 
@@ -125,6 +135,7 @@ public class BlockVerificationService extends Service {
         }
     }
 
+    // Finaliza o processo de verificação e para o service
     private void finishVerification(boolean successful) {
         try {
 
@@ -134,6 +145,7 @@ public class BlockVerificationService extends Service {
         }
     }
 
+    // Retorna o package name do aplicativo atualmente em foreground
     private String getCurrentForegroundApp() {
         try {
             return UsageStatsUtils.getCurrentForegroundApp(this);
@@ -142,6 +154,7 @@ public class BlockVerificationService extends Service {
         }
     }
 
+    // Limpa recursos quando o service é destruído
     @Override
     public void onDestroy() {
         try {
@@ -156,6 +169,7 @@ public class BlockVerificationService extends Service {
         super.onDestroy();
     }
 
+    // Retorna null pois este service não é bindable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
