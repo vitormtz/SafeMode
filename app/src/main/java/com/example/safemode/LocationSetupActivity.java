@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -39,7 +38,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class LocationSetupActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "LocationSetupMaps";
     private static final int PERMISSION_REQUEST_LOCATION = 1001;
     private MapFriendlyScrollView scrollView;
     private LinearLayout mapLoadingLayout;
@@ -91,7 +89,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 if (mapContainer != null) {
                     scrollView.setMapContainer(mapContainer);
                 } else {
-
                     // Tentar novamente após um delay
                     new android.os.Handler().postDelayed(() -> {
                         View delayedMapContainer = mapFragment.getView();
@@ -103,6 +100,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
+            // Erro ao configurar scroll view
         }
     }
 
@@ -126,7 +124,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      * Inicializa os elementos da interface
      */
     private void initializeViews() {
-
         try {
             // Elementos da interface
             scrollView = findViewById(R.id.scroll_view);
@@ -153,8 +150,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             // Configurar o ScrollView customizado para não interferir com o mapa
             setupMapFriendlyScrollView();
 
-
         } catch (Exception e) {
+            // Erro ao inicializar views
         }
     }
 
@@ -174,6 +171,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
+            // Erro ao inicializar mapa
         }
     }
 
@@ -182,7 +180,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      */
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
-
         try {
             googleMap = map;
 
@@ -206,8 +203,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             // Carregar área salva (se existir)
             loadSavedArea();
 
-
         } catch (Exception e) {
+            // Erro ao configurar mapa
         }
     }
 
@@ -236,7 +233,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
 
         } catch (SecurityException e) {
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao configurar mapa: " + e.getMessage());
         }
     }
 
@@ -244,8 +240,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      * ✅ NOVO: Chamado quando usuário clica no mapa
      */
     private void onMapClick(LatLng latLng) {
-        Log.d(TAG, "📍 Usuário clicou no mapa: " + latLng.latitude + ", " + latLng.longitude);
-
         try {
             // Salvar a localização selecionada
             selectedLatLng = latLng;
@@ -262,10 +256,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             // Habilitar botões
             enableActionButtons(true);
 
-            Log.d(TAG, "✅ Localização selecionada e interface atualizada");
-
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao processar clique no mapa: " + e.getMessage());
+            // Erro ao processar clique no mapa
         }
     }
 
@@ -285,10 +277,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             // Removido: .title("Área Segura")
             // Removido: .snippet("Centro da área onde o Safe Mode ficará desativado")
 
-            Log.d(TAG, "📌 Marcador atualizado na posição: " + latLng);
-
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao atualizar marcador: " + e.getMessage());
+            // Erro ao atualizar marcador
         }
     }
 
@@ -316,10 +306,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
 
             safeAreaCircle = googleMap.addCircle(circleOptions);
 
-            Log.d(TAG, "🔵 Círculo da área atualizado - raio: " + currentRadius + "m");
-
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao atualizar círculo: " + e.getMessage());
+            // Erro ao atualizar círculo
         }
     }
 
@@ -340,7 +328,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao atualizar informações: " + e.getMessage());
+            // Erro ao atualizar informações
         }
     }
 
@@ -361,7 +349,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao atualizar botões: " + e.getMessage());
+            // Erro ao atualizar botões
         }
     }
 
@@ -378,10 +366,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 updateRadiusText(currentRadius);
             }
 
-            Log.d(TAG, "📚 Configurações carregadas - raio: " + currentRadius);
-
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao carregar configurações: " + e.getMessage());
+            // Erro ao carregar configurações
         }
     }
 
@@ -394,8 +380,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             double savedLng = preferences.getAllowedLongitude();
 
             if (savedLat != 0.0 && savedLng != 0.0) {
-                Log.d(TAG, "📍 Carregando área salva: " + savedLat + ", " + savedLng);
-
                 LatLng savedLocation = new LatLng(savedLat, savedLng);
                 selectedLatLng = savedLocation;
 
@@ -410,7 +394,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao carregar área salva: " + e.getMessage());
+            // Erro ao carregar área salva
         }
     }
 
@@ -451,10 +435,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 public void onStopTrackingTouch(SeekBar seekBar) {}
             });
 
-            Log.d(TAG, "✅ Listeners configurados");
-
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao configurar listeners: " + e.getMessage());
+            // Erro ao configurar listeners
         }
     }
 
@@ -462,8 +444,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      * ✅ NOVO: Vai para a localização atual do usuário
      */
     private void goToCurrentLocation() {
-        Log.d(TAG, "🎯 Obtendo localização atual...");
-
         if (!hasLocationPermission()) {
             requestLocationPermission();
             return;
@@ -477,12 +457,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                         if (location != null) {
                             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                            Log.d(TAG, "📍 Localização atual obtida: " + currentLatLng);
-
                             // Mover câmera para localização atual
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16));
-                        } else {
-                            Log.w(TAG, "⚠️ Localização atual é null");
                         }
 
                         // Restaurar botão
@@ -490,23 +466,18 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                         btnMyLocation.setText("Minha localização");
                     })
                     .addOnFailureListener(e -> {
-                        Log.e(TAG, "❌ Erro ao obter localização: " + e.getMessage());
-
                         // Restaurar botão
                         btnMyLocation.setEnabled(true);
                         btnMyLocation.setText("Minha localização");
                     });
 
         } catch (SecurityException e) {
-            Log.e(TAG, "❌ Erro de permissão: " + e.getMessage());
             requestLocationPermission();
 
             // Restaurar botão
             btnMyLocation.setEnabled(true);
             btnMyLocation.setText("Minha localização");
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro geral: " + e.getMessage());
-
             // Restaurar botão
             btnMyLocation.setEnabled(true);
             btnMyLocation.setText("Minha localização");
@@ -517,8 +488,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      * ✅ NOVO: Limpa a seleção atual
      */
     private void clearSelection() {
-        Log.d(TAG, "🗑️ Limpando seleção...");
-
         try {
             // Limpar variáveis
             selectedLatLng = null;
@@ -541,10 +510,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             enableActionButtons(false);
 
             showMessage("Seleção limpa");
-            Log.d(TAG, "✅ Seleção limpa com sucesso");
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao limpar seleção: " + e.getMessage());
+            // Erro ao limpar seleção
         }
     }
 
@@ -552,8 +520,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      * Salva as configurações da área segura
      */
     private void saveLocationSettings() {
-        Log.d(TAG, "💾 Salvando configurações da área segura...");
-
         try {
             if (selectedLatLng == null) {
                 showMessage("Selecione uma localização no mapa primeiro");
@@ -578,14 +544,11 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
 
             if (saveSuccess) {
                 showMessage("Localização salva com sucesso!");
-                Log.d(TAG, "✅ Configurações salvas com sucesso");
             } else {
                 showMessage("Erro ao salvar localização");
-                Log.e(TAG, "❌ Falha na verificação do salvamento");
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao salvar: " + e.getMessage());
             showMessage("Erro ao salvar: " + e.getMessage());
         }
     }
@@ -605,7 +568,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             textRadiusValue.setText(radiusText);
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao atualizar texto do raio: " + e.getMessage());
+            // Erro ao atualizar texto do raio
         }
     }
 
@@ -631,7 +594,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      */
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        Log.d(TAG, "💬 Mensagem: " + message);
     }
 
     /**
@@ -644,7 +606,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         if (requestCode == PERMISSION_REQUEST_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 showMessage("Permissão de localização concedida!");
-                Log.d(TAG, "✅ Permissão concedida");
 
                 // Tentar configurar localização no mapa novamente
                 try {
@@ -652,11 +613,10 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                         googleMap.setMyLocationEnabled(true);
                     }
                 } catch (SecurityException e) {
-                    Log.w(TAG, "⚠️ Ainda sem permissão após concessão");
+                    // Erro de permissão
                 }
             } else {
                 showMessage("Permissão de localização negada!");
-                Log.w(TAG, "❌ Permissão negada");
             }
         }
     }
@@ -667,8 +627,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
     @Override
     protected void onDestroy() {
         try {
-            Log.d(TAG, "🔚 Destruindo LocationSetupActivity...");
-
             // Limpar referências
             if (selectedLocationMarker != null) {
                 selectedLocationMarker.remove();
@@ -683,11 +641,10 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             selectedLatLng = null;
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro no onDestroy: " + e.getMessage());
+            // Erro no onDestroy
         }
 
         super.onDestroy();
-        Log.d(TAG, "✅ LocationSetupActivity destruída");
     }
 
     /**
@@ -698,8 +655,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         super.onResume();
 
         try {
-            Log.d(TAG, "🔄 Activity resumida");
-
             // Verificar se o mapa ainda está funcionando
             if (googleMap != null && selectedLatLng != null) {
                 // Recriar marcador e círculo se necessário
@@ -712,7 +667,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro no onResume: " + e.getMessage());
+            // Erro no onResume
         }
     }
 
@@ -722,7 +677,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "⏸️ Activity pausada");
     }
 
     /**
@@ -730,8 +684,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      */
     private void forceUIUpdate() {
         try {
-            Log.d(TAG, "🔄 Forçando atualização da UI...");
-
             if (selectedLatLng != null) {
                 updateLocationInfo();
                 enableActionButtons(true);
@@ -753,10 +705,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             // Atualizar texto do raio
             updateRadiusText(currentRadius);
 
-            Log.d(TAG, "✅ UI atualizada com sucesso");
-
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao atualizar UI: " + e.getMessage());
+            // Erro ao atualizar UI
         }
     }
 
@@ -768,12 +718,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             boolean hasLocation = selectedLatLng != null;
             boolean hasValidRadius = currentRadius >= 50 && currentRadius <= 2000;
 
-            Log.d(TAG, "🔍 Verificando configuração - Localização: " + hasLocation + ", Raio: " + hasValidRadius);
-
             return hasLocation && hasValidRadius;
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao verificar configuração: " + e.getMessage());
             return false;
         }
     }
@@ -787,13 +734,11 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 // Calcular zoom apropriado baseado no raio
                 float zoom = calculateZoomLevel(currentRadius);
 
-                Log.d(TAG, "🎯 Centralizando mapa - Zoom: " + zoom);
-
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, zoom));
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao centralizar mapa: " + e.getMessage());
+            // Erro ao centralizar mapa
         }
     }
 
@@ -820,7 +765,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao calcular zoom: " + e.getMessage());
             return 15.0f; // Zoom padrão em caso de erro
         }
     }
@@ -859,7 +803,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                     .show();
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao mostrar resumo: " + e.getMessage());
+            // Erro ao mostrar resumo
         }
     }
 
@@ -868,8 +812,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
      */
     private void handleMapError(String errorMessage) {
         try {
-            Log.e(TAG, "🗺️ Erro no Google Maps: " + errorMessage);
-
             // Mostrar layout de erro ao invés do mapa
             if (mapLoadingLayout != null) {
                 mapLoadingLayout.setVisibility(View.VISIBLE);
@@ -897,7 +839,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             showMessage("Erro no mapa: " + errorMessage);
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao tratar erro do mapa: " + e.getMessage());
+            // Erro ao tratar erro do mapa
         }
     }
 
@@ -929,11 +871,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 return false;
             }
 
-            Log.d(TAG, "✅ Validação passou - pronto para salvar");
             return true;
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro na validação: " + e.getMessage());
             showMessage("Erro na validação: " + e.getMessage());
             return false;
         }
@@ -970,7 +910,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                     .show();
 
         } catch (Exception e) {
-            Log.e(TAG, "❌ Erro ao mostrar confirmação: " + e.getMessage());
             // Se der erro no diálogo, salvar diretamente
             saveLocationSettings();
         }
