@@ -21,6 +21,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import org.json.JSONObject;
 
+/**
+ * Activity de configurações do aplicativo SafeMode.
+ * Gerencia permissões necessárias, exibe status de configurações, estatísticas de bloqueio
+ * e permite ao usuário visualizar histórico de bloqueios e configurar o launcher padrão.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_LOCATION = 1001;
@@ -45,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
     private AppPreferences preferences;
     private BlockLogger blockLogger;
 
+    // Inicializa a activity e configura views e permissões
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         checkAllPermissions();
     }
 
+    // Configura as barras do sistema para tela cheia
     private void setupSystemBars() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -76,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Inicializa todas as views do layout
     private void initializeViews() {
 
         try {
@@ -104,6 +112,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Carrega as configurações atuais e estatísticas
     private void loadCurrentSettings() {
 
         try {
@@ -117,6 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Carrega as estatísticas de bloqueios do dia atual
     private void loadTodayStats() {
         try {
             JSONObject stats = blockLogger.getTodayStats();
@@ -141,6 +151,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Configura os listeners dos botões
     private void setupListeners() {
 
         try {
@@ -164,6 +175,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Verifica o status de todas as permissões necessárias
     private void checkAllPermissions() {
 
         try {
@@ -179,11 +191,13 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Verifica se a permissão de localização foi concedida
     private boolean hasLocationPermission() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED;
     }
 
+    // Verifica se a permissão de sobreposição foi concedida
     private boolean hasOverlayPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return Settings.canDrawOverlays(this);
@@ -191,14 +205,17 @@ public class SettingsActivity extends AppCompatActivity {
         return true;
     }
 
+    // Verifica se o serviço de acessibilidade está habilitado
     private boolean hasAccessibilityPermission() {
         return AccessibilityUtils.isAccessibilityServiceEnabled(this, SafeModeAccessibilityService.class);
     }
 
+    // Verifica se a permissão de estatísticas de uso foi concedida
     private boolean hasUsageStatsPermission() {
         return UsageStatsUtils.hasUsageStatsPermission(this);
     }
 
+    // Verifica se o aplicativo está definido como launcher padrão do sistema
     private boolean isDefaultLauncher() {
         try {
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -218,6 +235,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Solicita todas as permissões necessárias sequencialmente
     private void requestAllPermissions() {
 
         try {
@@ -254,6 +272,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Atualiza os ícones e textos de status de todas as permissões
     private void updatePermissionStatus(boolean location, boolean overlay,
                                         boolean accessibility, boolean usageStats, boolean isLauncher) {
 
@@ -278,6 +297,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Atualiza o ícone da permissão com cor verde ou vermelha
     private void updatePermissionIcon(ImageView icon, boolean hasPermission) {
         if (icon != null) {
             try {
@@ -290,6 +310,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Atualiza o texto de status da permissão com cor verde ou vermelha
     private void updatePermissionText(TextView textView, String text, boolean hasPermission) {
         if (textView != null) {
             try {
@@ -303,6 +324,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Processa o resultado da solicitação de permissões
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -320,6 +342,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Verifica permissões após retornar de outras activities
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -333,6 +356,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Exibe o histórico de bloqueios dos últimos 7 dias
     private void showBlockLogs() {
 
         try {
@@ -398,6 +422,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Solicita confirmação antes de limpar o histórico de bloqueios
     private void confirmClearLogs() {
 
         try {
@@ -437,10 +462,12 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Exibe uma mensagem toast
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    // Abre as configurações de launcher padrão do sistema
     private void openLauncherSettings() {
         try {
             Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
@@ -457,6 +484,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Recarrega configurações e verifica permissões ao retomar a activity
     @Override
     protected void onResume() {
         super.onResume();

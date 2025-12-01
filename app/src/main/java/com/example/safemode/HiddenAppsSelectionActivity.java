@@ -18,6 +18,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Activity responsável por permitir ao usuário selecionar quais aplicativos devem ser ocultados.
+ * Exibe uma lista de apps instalados e permite marcar/desmarcar para ocultar.
+ */
 public class HiddenAppsSelectionActivity extends AppCompatActivity implements AppListAdapter.OnAppToggleListener {
 
     private RecyclerView recyclerView;
@@ -29,6 +33,7 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
     private AppPreferences preferences;
     private List<AppInfo> appList;
 
+    // Inicializa a activity, configura views e carrega lista de aplicativos
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,7 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         loadInstalledApps();
     }
 
+    // Configura as barras do sistema para tela cheia
     private void setupSystemBars() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -61,6 +67,7 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         }
     }
 
+    // Inicializa as views da interface
     private void initializeViews() {
         recyclerView = findViewById(R.id.recycler_view_apps);
         containerApps = findViewById(R.id.container_apps);
@@ -73,12 +80,14 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         }
     }
 
+    // Configura o RecyclerView com adapter e layout manager
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new AppListAdapter(appList, this);
         recyclerView.setAdapter(adapter);
     }
 
+    // Carrega os aplicativos instalados em uma thread separada
     private void loadInstalledApps() {
         if (loadingLayout != null) {
             loadingLayout.setVisibility(View.VISIBLE);
@@ -115,6 +124,7 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         }).start();
     }
 
+    // Retorna a lista de aplicativos instalados com launcher intent
     private List<AppInfo> getInstalledApps() {
         List<AppInfo> apps = new ArrayList<>();
         PackageManager pm = getPackageManager();
@@ -156,6 +166,7 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         return apps;
     }
 
+    // Verifica se um aplicativo é crítico para o sistema e não deve ser ocultado
     private boolean isCriticalSystemApp(String packageName) {
         String[] criticalSystemApps = {
                 "com.android.systemui",
@@ -181,16 +192,19 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         return false;
     }
 
+    // Callback chamado quando um app é marcado/desmarcado (não implementado)
     @Override
     public void onAppToggled(AppInfo appInfo, boolean isBlocked) {
     }
 
+    // Salva os aplicativos ocultos quando a activity é pausada
     @Override
     protected void onPause() {
         super.onPause();
         saveHiddenApps();
     }
 
+    // Salva a lista de aplicativos marcados como ocultos nas preferências
     private void saveHiddenApps() {
         try {
             Set<String> hiddenAppsSet = new java.util.HashSet<>();
