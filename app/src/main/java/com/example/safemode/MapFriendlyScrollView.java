@@ -95,29 +95,4 @@ public class MapFriendlyScrollView extends ScrollView {
             return false;
         }
     }
-
-    /**
-     * Método adicional para debug - mostra onde está o toque
-     */
-    private void debugTouchPosition(MotionEvent event) {
-        try {
-            float touchX = event.getRawX();
-            float touchY = event.getRawY();
-
-            if (mapContainer != null) {
-                int[] mapLocation = new int[2];
-                mapContainer.getLocationOnScreen(mapLocation);
-
-                android.util.Log.d("MapFriendlyScrollView",
-                        String.format("Touch: (%.0f, %.0f) | Map: (%d, %d) to (%d, %d)",
-                                touchX, touchY,
-                                mapLocation[0], mapLocation[1],
-                                mapLocation[0] + mapContainer.getWidth(),
-                                mapLocation[1] + mapContainer.getHeight()));
-            }
-
-        } catch (Exception e) {
-            android.util.Log.e("MapFriendlyScrollView", "Erro no debug: " + e.getMessage());
-        }
-    }
 }
