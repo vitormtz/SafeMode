@@ -12,9 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,18 +22,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * AppSelectionActivity - VERSÃO COM CONTAINER LinearLayout
- * Agora os apps aparecem dentro de uma caixinha personalizada!
- */
 public class AppSelectionActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private ProgressBar progressBar;
     private LinearLayout layoutEmpty;
     private LinearLayout loadingLayout;
-    private LinearLayout containerApps; // ✨ NOVA: Caixinha para os apps
-    private TextView containerTitle;    // ✨ NOVA: Título da caixinha
+    private LinearLayout containerApps;
+    private TextView containerTitle;
     private AppListAdapter adapter;
     private AppPreferences preferences;
     private List<AppInfo> appList;
@@ -52,17 +45,15 @@ public class AppSelectionActivity extends AppCompatActivity {
 
         setupSystemBars();
         initializeViews();
-        setupAppsContainer(); // ✨ NOVA: Configurar a caixinha
+        setupAppsContainer();
         loadInstalledApps();
     }
 
     private void initializeViews() {
         recyclerView = findViewById(R.id.recycler_apps);
-        progressBar = findViewById(R.id.progress_loading);
         layoutEmpty = findViewById(R.id.layout_empty);
         loadingLayout = findViewById(R.id.loading_layout);
 
-        // ✨ NOVA: Pegar referências da caixinha
         containerApps = findViewById(R.id.container_apps);
         containerTitle = findViewById(R.id.container_title);
 
@@ -74,40 +65,28 @@ public class AppSelectionActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    /**
-     * ✨ NOVA FUNÇÃO: Configura a caixinha dos apps
-     */
     private void setupAppsContainer() {
         if (containerApps != null) {
-            // ✨ Personalizar a caixinha
             containerApps.setBackgroundColor(Color.parseColor("#F8FAFC"));
             containerApps.setPadding(24, 20, 24, 20);
 
-            // ✨ Adicionar uma bordinha sutil
             containerApps.setBackground(getResources().getDrawable(R.drawable.card_background));
 
-            // ✨ Adicionar elevação (sombra)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 containerApps.setElevation(4f);
             }
         }
 
         if (containerTitle != null) {
-            // ✨ Personalizar o título movido para o container
             containerTitle.setTextColor(Color.parseColor("#212121"));
             containerTitle.setTextSize(20f);
 
-            // ✨ Manter título fixo
             updateContainerTitle(0);
         }
     }
 
-    /**
-     * ✨ AJUSTADA: Mantém o título fixo
-     */
     private void updateContainerTitle(int appCount) {
         if (containerTitle != null) {
-            // ✨ TÍTULO FIXO: Não mostra mais contadores
             containerTitle.setText("Selecionar Apps para Bloquear");
         }
     }
@@ -122,16 +101,13 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * ✨ ATUALIZADA: Mostra estado de carregamento
-     */
     private void showLoadingState() {
         if (loadingLayout != null) {
             loadingLayout.setVisibility(View.VISIBLE);
         }
 
         if (containerApps != null) {
-            containerApps.setVisibility(View.GONE); // ✨ Esconder caixinha durante carregamento
+            containerApps.setVisibility(View.GONE);
         }
 
         if (layoutEmpty != null) {
@@ -139,16 +115,13 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * ✨ ATUALIZADA: Mostra lista de apps na caixinha
-     */
     private void showAppsList() {
         if (loadingLayout != null) {
             loadingLayout.setVisibility(View.GONE);
         }
 
         if (containerApps != null) {
-            containerApps.setVisibility(View.VISIBLE); // ✨ Mostrar caixinha com apps
+            containerApps.setVisibility(View.VISIBLE);
         }
 
         if (layoutEmpty != null) {
@@ -156,16 +129,13 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * ✨ ATUALIZADA: Mostra estado vazio
-     */
     private void showEmptyState() {
         if (loadingLayout != null) {
             loadingLayout.setVisibility(View.GONE);
         }
 
         if (containerApps != null) {
-            containerApps.setVisibility(View.GONE); // ✨ Esconder caixinha se não há apps
+            containerApps.setVisibility(View.GONE);
         }
 
         if (layoutEmpty != null) {
@@ -184,36 +154,8 @@ public class AppSelectionActivity extends AppCompatActivity {
         } else {
             preferences.removeBlockedApp(appInfo.packageName);
         }
-
-        // ✨ REMOVIDO: Não atualiza mais contador no título
-        // updateAppsCounter(); // Função mantida para futuro uso se necessário
     }
 
-    /**
-     * ✨ FUNÇÃO MANTIDA: Para futuro uso se necessário
-     */
-    private void updateAppsCounter() {
-        Set<String> blockedApps = preferences.getBlockedApps();
-        int selectedCount = 0;
-
-        // Contar quantos da lista atual estão selecionados
-        for (AppInfo app : appList) {
-            if (app.isBlocked) {
-                selectedCount++;
-            }
-        }
-
-        // ✨ REMOVIDO: Não atualiza mais o título
-        // Função mantida apenas para debug se necessário
-    }
-
-    private void showMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * LoadAppsTask - VERSÃO ATUALIZADA para trabalhar com container
-     */
     private class LoadAppsTask extends AsyncTask<Void, Integer, List<AppInfo>> {
 
         @Override
@@ -246,38 +188,31 @@ public class AppSelectionActivity extends AppCompatActivity {
                     ApplicationInfo applicationInfo = info.activityInfo.applicationInfo;
                     String packageName = applicationInfo.packageName;
 
-                    // Publicar progresso a cada 20 apps
                     if (processedApps % 20 == 0) {
                         publishProgress(processedApps, totalApps);
                     }
 
-                    // Verificar duplicatas
                     if (packageNameSet.contains(packageName)) {
                         continue;
                     }
                     packageNameSet.add(packageName);
 
-                    // Verificar se é crítico
                     if (isCriticalSystemApp(packageName)) {
                         continue;
                     }
 
-                    // Verificar se é nosso app
                     if (packageName.equals(getPackageName())) {
                         continue;
                     }
 
-                    // Verificar se tem launcher intent
                     if (!hasLauncherIntent(packageName)) {
                         continue;
                     }
 
-                    // Verificar se está habilitado
                     if (!applicationInfo.enabled) {
                         continue;
                     }
 
-                    // ✨ Criar AppInfo com verificação de bloqueio
                     AppInfo app = new AppInfo();
                     app.packageName = packageName;
                     app.appName = packageManager.getApplicationLabel(applicationInfo).toString();
@@ -289,7 +224,6 @@ public class AppSelectionActivity extends AppCompatActivity {
                     addedApps++;
                 }
 
-                // Ordenar por nome
                 Collections.sort(apps, (a, b) -> a.appName.compareToIgnoreCase(b.appName));
             } catch (Exception e) {
             }
@@ -299,8 +233,6 @@ public class AppSelectionActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            // ✨ REMOVIDO: Não atualiza mais título durante carregamento
-            // Título permanece fixo agora
         }
 
         @Override
@@ -316,18 +248,14 @@ public class AppSelectionActivity extends AppCompatActivity {
                     return;
                 }
 
-                // ✨ ATUALIZADA: Atualizar UI com container
                 runOnUiThread(() -> {
                     try {
-                        // Atualizar lista
                         appList.clear();
                         appList.addAll(apps);
 
                         if (adapter != null) {
                             adapter.notifyDataSetChanged();
                         }
-
-                        // ✨ Mostrar caixinha com apps
                         showAppsList();
 
                     } catch (Exception e) {
