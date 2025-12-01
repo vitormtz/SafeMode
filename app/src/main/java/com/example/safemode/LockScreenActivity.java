@@ -64,13 +64,11 @@ public class LockScreenActivity extends AppCompatActivity {
                     setTurnScreenOn(true);
                 }
                 getWindow().addFlags(
-                    WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 );
             } else {
                 int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                           WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 
                 if (!isScreenOn) {
