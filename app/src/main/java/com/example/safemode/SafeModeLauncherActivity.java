@@ -4,14 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -125,12 +123,10 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         for (ResolveInfo resolveInfo : resolveInfos) {
             String packageName = resolveInfo.activityInfo.packageName;
 
-            // Se modo oculto ativo, ocultar o próprio SafeMode
             if (isHideModeActive && packageName.equals(getPackageName())) {
                 continue;
             }
 
-            // Se modo oculto ativo, filtrar apps da lista de ocultos
             if (isHideModeActive && hiddenApps.contains(packageName)) {
                 continue;
             }
@@ -186,23 +182,12 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         }
     }
 
-    private void openSafeModeSettings() {
-        try {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void updateDateTime() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM", Locale.getDefault());
 
         tvTime.setText(timeFormat.format(new Date()));
         tvDate.setText(dateFormat.format(new Date()));
-
-        // Atualizar a cada minuto
         tvTime.postDelayed(this::updateDateTime, 60000);
     }
 
@@ -227,6 +212,5 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // No launcher, botão voltar não faz nada (comportamento padrão de launcher)
     }
 }
