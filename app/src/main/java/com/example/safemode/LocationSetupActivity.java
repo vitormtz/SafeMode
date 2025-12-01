@@ -3,7 +3,6 @@ package com.example.safemode;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-// ✅ IMPORTS DO GOOGLE MAPS
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,10 +29,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-/**
- * LocationSetupActivity - VERSÃO COMPLETA COM GOOGLE MAPS
- * Agora o usuário pode ver um mapa de verdade e selecionar a área visualmente
- */
 public class LocationSetupActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int PERMISSION_REQUEST_LOCATION = 1001;
@@ -53,10 +46,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
     private Circle safeAreaCircle;
     private LatLng selectedLatLng;
     private int currentRadius = 100;
-
-    // ✅ CLASSES AUXILIARES
     private AppPreferences preferences;
-    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +58,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
 
         setContentView(R.layout.activity_location_setup);
 
-        // Inicializar componentes
         setupSystemBars();
         initializeViews();
         initializeGoogleMaps();
@@ -76,20 +65,15 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         setupListeners();
     }
 
-    /**
-     * ✅ NOVO: Configura o ScrollView para não interferir com o mapa
-     */
     private void setupMapFriendlyScrollView() {
         try {
 
             if (scrollView != null && mapFragment != null) {
-                // Definir o container do mapa para o ScrollView customizado
                 View mapContainer = mapFragment.getView();
 
                 if (mapContainer != null) {
                     scrollView.setMapContainer(mapContainer);
                 } else {
-                    // Tentar novamente após um delay
                     new android.os.Handler().postDelayed(() -> {
                         View delayedMapContainer = mapFragment.getView();
                         if (delayedMapContainer != null) {
@@ -100,13 +84,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            // Erro ao configurar scroll view
         }
     }
 
-    /**
-     * Configura as barras do sistema
-     */
     private void setupSystemBars() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -120,12 +100,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    /**
-     * Inicializa os elementos da interface
-     */
     private void initializeViews() {
         try {
-            // Elementos da interface
             scrollView = findViewById(R.id.scroll_view);
             mapLoadingLayout = findViewById(R.id.map_loading);
             textSelectedLocation = findViewById(R.id.text_selected_location);
@@ -133,100 +109,68 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             seekBarRadius = findViewById(R.id.seekbar_radius);
             btnMyLocation = findViewById(R.id.btn_my_location);
             btnSaveLocation = findViewById(R.id.btn_save_location);
-
-            // Classes auxiliares
             preferences = new AppPreferences(this);
-            locationManager = new LocationManager(this);
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-            // Configurar SeekBar
-            seekBarRadius.setMax(2000); // Máximo 2km
+            seekBarRadius.setMax(2000);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                seekBarRadius.setMin(50); // Mínimo 50m
+                seekBarRadius.setMin(50);
             }
             seekBarRadius.setProgress(currentRadius);
             updateRadiusText(currentRadius);
 
-            // Configurar o ScrollView customizado para não interferir com o mapa
             setupMapFriendlyScrollView();
 
         } catch (Exception e) {
-            // Erro ao inicializar views
         }
     }
 
-    /**
-     * ✅ NOVO: Inicializa o Google Maps
-     */
     private void initializeGoogleMaps() {
 
         try {
-            // Pegar o fragmento do mapa
             mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map_fragment);
 
             if (mapFragment != null) {
-                // Solicitar que o mapa seja carregado
                 mapFragment.getMapAsync(this);
             }
 
         } catch (Exception e) {
-            // Erro ao inicializar mapa
         }
     }
 
-    /**
-     * ✅ CALLBACK QUANDO O MAPA ESTÁ PRONTO
-     */
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         try {
             googleMap = map;
 
-            // Configurar o mapa
             setupMapSettings();
 
-            // Esconder indicador de carregamento
             if (mapLoadingLayout != null) {
                 mapLoadingLayout.setVisibility(View.GONE);
             }
 
-            // Configurar clique no mapa
             googleMap.setOnMapClickListener(this::onMapClick);
 
-            // ✅ NOVO: Reconfigurar ScrollView agora que o mapa está pronto
             setupMapFriendlyScrollView();
 
-            // Tentar ir para a localização atual
             goToCurrentLocation();
 
-            // Carregar área salva (se existir)
             loadSavedArea();
 
         } catch (Exception e) {
-            // Erro ao configurar mapa
         }
     }
 
-    /**
-     * ✅ NOVO: Configura as opções do mapa
-     */
     private void setupMapSettings() {
         try {
-            // Tipo de mapa (normal, satélite, híbrido, terreno)
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-            // Controles da UI
             googleMap.getUiSettings().setZoomControlsEnabled(true);
             googleMap.getUiSettings().setCompassEnabled(true);
-            googleMap.getUiSettings().setMyLocationButtonEnabled(false); // Usaremos nosso próprio botão
-
-            // ✅ NOVO: Desabilitar InfoWindows (janelas de informação dos marcadores)
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             googleMap.setOnMarkerClickListener(marker -> {
                 return true;
             });
-
-            // Habilitar localização se tiver permissão
             if (hasLocationPermission()) {
                 googleMap.setMyLocationEnabled(true);
             }
@@ -236,84 +180,58 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    /**
-     * ✅ NOVO: Chamado quando usuário clica no mapa
-     */
     private void onMapClick(LatLng latLng) {
         try {
-            // Salvar a localização selecionada
             selectedLatLng = latLng;
 
-            // Atualizar marcador
             updateLocationMarker(latLng);
 
-            // Atualizar círculo da área
             updateSafeAreaCircle();
 
-            // Atualizar textos da interface
             updateLocationInfo();
 
-            // Habilitar botões
             enableActionButtons(true);
 
         } catch (Exception e) {
-            // Erro ao processar clique no mapa
         }
     }
 
-    /**
-     * ✅ NOVO: Atualiza ou cria o marcador da localização selecionada
-     */
     private void updateLocationMarker(LatLng latLng) {
         try {
-            // Remover marcador anterior se existir
             if (selectedLocationMarker != null) {
                 selectedLocationMarker.remove();
             }
 
-            // ✅ CORREÇÃO: Criar marcador SEM título e snippet para evitar InfoWindow
             selectedLocationMarker = googleMap.addMarker(new MarkerOptions()
                     .position(latLng));
-            // Removido: .title("Área Segura")
-            // Removido: .snippet("Centro da área onde o Safe Mode ficará desativado")
 
         } catch (Exception e) {
-            // Erro ao atualizar marcador
         }
     }
 
-    /**
-     * ✅ NOVO: Atualiza ou cria o círculo da área segura
-     */
     private void updateSafeAreaCircle() {
         try {
             if (selectedLatLng == null) {
                 return;
             }
 
-            // Remover círculo anterior se existir
             if (safeAreaCircle != null) {
                 safeAreaCircle.remove();
             }
 
-            // Criar novo círculo
             CircleOptions circleOptions = new CircleOptions()
                     .center(selectedLatLng)
-                    .radius(currentRadius) // raio em metros
+                    .radius(currentRadius)
                     .strokeColor(Color.BLUE)
                     .strokeWidth(3)
-                    .fillColor(Color.argb(50, 0, 100, 255)); // Azul semi-transparente
+                    .fillColor(Color.argb(50, 0, 100, 255));
 
             safeAreaCircle = googleMap.addCircle(circleOptions);
 
         } catch (Exception e) {
-            // Erro ao atualizar círculo
         }
     }
 
-    /**
-     * ✅ NOVO: Atualiza as informações da localização na interface
-     */
     private void updateLocationInfo() {
         try {
             if (selectedLatLng != null) {
@@ -328,13 +246,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            // Erro ao atualizar informações
         }
     }
 
-    /**
-     * ✅ NOVO: Habilita ou desabilita os botões de ação
-     */
     private void enableActionButtons(boolean enabled) {
         try {
             btnSaveLocation.setEnabled(enabled);
@@ -349,16 +263,11 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            // Erro ao atualizar botões
         }
     }
 
-    /**
-     * Carrega configurações salvas anteriormente
-     */
     private void loadSavedSettings() {
         try {
-            // Carregar raio salvo
             int savedRadius = preferences.getAllowedRadius();
             if (savedRadius > 0) {
                 currentRadius = savedRadius;
@@ -367,13 +276,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            // Erro ao carregar configurações
         }
     }
 
-    /**
-     * ✅ NOVO: Carrega área segura salva no mapa
-     */
     private void loadSavedArea() {
         try {
             double savedLat = preferences.getAllowedLatitude();
@@ -383,44 +288,33 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 LatLng savedLocation = new LatLng(savedLat, savedLng);
                 selectedLatLng = savedLocation;
 
-                // Atualizar mapa
                 updateLocationMarker(savedLocation);
                 updateSafeAreaCircle();
                 updateLocationInfo();
                 enableActionButtons(true);
 
-                // Mover câmera para a localização salva
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(savedLocation, 15));
             }
 
         } catch (Exception e) {
-            // Erro ao carregar área salva
         }
     }
 
-    /**
-     * Configura os listeners dos controles
-     */
     private void setupListeners() {
         try {
-            // ✅ BOTÃO: Ir para minha localização
             btnMyLocation.setOnClickListener(v -> goToCurrentLocation());
 
-            // ✅ BOTÃO: Salvar localização
             btnSaveLocation.setOnClickListener(v -> saveLocationSettings());
 
-            // ✅ SEEKBAR: Controle do raio
             seekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (fromUser) {
-                        // Garantir valor mínimo
                         if (progress < 50) progress = 50;
 
                         currentRadius = progress;
                         updateRadiusText(progress);
 
-                        // Atualizar círculo no mapa se tiver localização selecionada
                         if (selectedLatLng != null) {
                             updateSafeAreaCircle();
                             updateLocationInfo();
@@ -436,13 +330,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             });
 
         } catch (Exception e) {
-            // Erro ao configurar listeners
         }
     }
 
-    /**
-     * ✅ NOVO: Vai para a localização atual do usuário
-     */
     private void goToCurrentLocation() {
         if (!hasLocationPermission()) {
             requestLocationPermission();
@@ -457,16 +347,13 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                         if (location != null) {
                             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                            // Mover câmera para localização atual
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16));
                         }
 
-                        // Restaurar botão
                         btnMyLocation.setEnabled(true);
                         btnMyLocation.setText("Minha localização");
                     })
                     .addOnFailureListener(e -> {
-                        // Restaurar botão
                         btnMyLocation.setEnabled(true);
                         btnMyLocation.setText("Minha localização");
                     });
@@ -474,51 +361,14 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         } catch (SecurityException e) {
             requestLocationPermission();
 
-            // Restaurar botão
             btnMyLocation.setEnabled(true);
             btnMyLocation.setText("Minha localização");
         } catch (Exception e) {
-            // Restaurar botão
             btnMyLocation.setEnabled(true);
             btnMyLocation.setText("Minha localização");
         }
     }
 
-    /**
-     * ✅ NOVO: Limpa a seleção atual
-     */
-    private void clearSelection() {
-        try {
-            // Limpar variáveis
-            selectedLatLng = null;
-
-            // Remover marcador e círculo do mapa
-            if (selectedLocationMarker != null) {
-                selectedLocationMarker.remove();
-                selectedLocationMarker = null;
-            }
-
-            if (safeAreaCircle != null) {
-                safeAreaCircle.remove();
-                safeAreaCircle = null;
-            }
-
-            // Atualizar interface
-            textSelectedLocation.setText("Toque no mapa para selecionar uma localização");
-
-            // Desabilitar botões
-            enableActionButtons(false);
-
-            showMessage("Seleção limpa");
-
-        } catch (Exception e) {
-            // Erro ao limpar seleção
-        }
-    }
-
-    /**
-     * Salva as configurações da área segura
-     */
     private void saveLocationSettings() {
         try {
             if (selectedLatLng == null) {
@@ -526,14 +376,12 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 return;
             }
 
-            // Salvar usando o método do AppPreferences
             preferences.setAllowedLocation(
                     selectedLatLng.latitude,
                     selectedLatLng.longitude,
                     currentRadius
             );
 
-            // Verificar se salvou corretamente
             double savedLat = preferences.getAllowedLatitude();
             double savedLng = preferences.getAllowedLongitude();
             int savedRadius = preferences.getAllowedRadius();
@@ -553,9 +401,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    /**
-     * Atualiza o texto do raio
-     */
     private void updateRadiusText(int radiusInMeters) {
         try {
             String radiusText;
@@ -568,37 +413,24 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             textRadiusValue.setText(radiusText);
 
         } catch (Exception e) {
-            // Erro ao atualizar texto do raio
         }
     }
 
-    /**
-     * Verifica se tem permissão de localização
-     */
     private boolean hasLocationPermission() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED;
     }
 
-    /**
-     * Solicita permissão de localização
-     */
     private void requestLocationPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 PERMISSION_REQUEST_LOCATION);
     }
 
-    /**
-     * Mostra mensagem na tela
-     */
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    /**
-     * Resultado das permissões
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -607,13 +439,11 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 showMessage("Permissão de localização concedida!");
 
-                // Tentar configurar localização no mapa novamente
                 try {
                     if (googleMap != null) {
                         googleMap.setMyLocationEnabled(true);
                     }
                 } catch (SecurityException e) {
-                    // Erro de permissão
                 }
             } else {
                 showMessage("Permissão de localização negada!");
@@ -621,13 +451,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    /**
-     * Limpeza quando a Activity é destruída
-     */
     @Override
     protected void onDestroy() {
         try {
-            // Limpar referências
             if (selectedLocationMarker != null) {
                 selectedLocationMarker.remove();
                 selectedLocationMarker = null;
@@ -641,23 +467,17 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             selectedLatLng = null;
 
         } catch (Exception e) {
-            // Erro no onDestroy
         }
 
         super.onDestroy();
     }
 
-    /**
-     * ✅ MÉTODO ADICIONAL: Chamado quando Activity volta do background
-     */
     @Override
     protected void onResume() {
         super.onResume();
 
         try {
-            // Verificar se o mapa ainda está funcionando
             if (googleMap != null && selectedLatLng != null) {
-                // Recriar marcador e círculo se necessário
                 if (selectedLocationMarker == null) {
                     updateLocationMarker(selectedLatLng);
                 }
@@ -667,52 +487,14 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             }
 
         } catch (Exception e) {
-            // Erro no onResume
         }
     }
 
-    /**
-     * ✅ MÉTODO ADICIONAL: Para quando Activity vai para background
-     */
     @Override
     protected void onPause() {
         super.onPause();
     }
 
-    /**
-     * ✅ MÉTODO ADICIONAL: Para debug - força atualização da interface
-     */
-    private void forceUIUpdate() {
-        try {
-            if (selectedLatLng != null) {
-                updateLocationInfo();
-                enableActionButtons(true);
-
-                // Recriar elementos visuais no mapa se necessário
-                if (googleMap != null) {
-                    if (selectedLocationMarker == null) {
-                        updateLocationMarker(selectedLatLng);
-                    }
-                    if (safeAreaCircle == null) {
-                        updateSafeAreaCircle();
-                    }
-                }
-            } else {
-                enableActionButtons(false);
-                textSelectedLocation.setText("Toque no mapa para selecionar uma localização");
-            }
-
-            // Atualizar texto do raio
-            updateRadiusText(currentRadius);
-
-        } catch (Exception e) {
-            // Erro ao atualizar UI
-        }
-    }
-
-    /**
-     * ✅ MÉTODO ADICIONAL: Verifica se as configurações estão válidas
-     */
     private boolean isConfigurationValid() {
         try {
             boolean hasLocation = selectedLatLng != null;
@@ -725,33 +507,23 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    /**
-     * ✅ MÉTODO ADICIONAL: Centraliza o mapa na área selecionada
-     */
     private void centerMapOnSelectedArea() {
         try {
             if (googleMap != null && selectedLatLng != null) {
-                // Calcular zoom apropriado baseado no raio
                 float zoom = calculateZoomLevel(currentRadius);
 
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLatLng, zoom));
             }
 
         } catch (Exception e) {
-            // Erro ao centralizar mapa
         }
     }
 
-    /**
-     * ✅ MÉTODO ADICIONAL: Calcula o nível de zoom apropriado baseado no raio
-     */
     private float calculateZoomLevel(int radiusInMeters) {
         try {
-            // Fórmula aproximada para calcular zoom baseado no raio
-            // Quanto maior o raio, menor o zoom (para mostrar mais área)
 
             if (radiusInMeters <= 100) {
-                return 17.0f; // Zoom bem próximo
+                return 17.0f;
             } else if (radiusInMeters <= 300) {
                 return 16.0f;
             } else if (radiusInMeters <= 500) {
@@ -761,17 +533,14 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             } else if (radiusInMeters <= 2000) {
                 return 13.0f;
             } else {
-                return 12.0f; // Zoom mais distante
+                return 12.0f;
             }
 
         } catch (Exception e) {
-            return 15.0f; // Zoom padrão em caso de erro
+            return 15.0f;
         }
     }
 
-    /**
-     * ✅ MÉTODO ADICIONAL: Mostra informações detalhadas sobre a configuração atual
-     */
     private void showConfigurationSummary() {
         try {
             if (!isConfigurationValid()) {
@@ -794,7 +563,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                     Math.PI * Math.pow(currentRadius / 1000.0, 2)
             );
 
-            // Criar um AlertDialog para mostrar o resumo
             new android.app.AlertDialog.Builder(this)
                     .setTitle("Configuração da Área Segura")
                     .setMessage(summary)
@@ -803,71 +571,28 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                     .show();
 
         } catch (Exception e) {
-            // Erro ao mostrar resumo
         }
     }
 
-    /**
-     * ✅ MÉTODO ADICIONAL: Tratamento de erro quando o Google Maps falha
-     */
-    private void handleMapError(String errorMessage) {
-        try {
-            // Mostrar layout de erro ao invés do mapa
-            if (mapLoadingLayout != null) {
-                mapLoadingLayout.setVisibility(View.VISIBLE);
-
-                // Encontrar os elementos dentro do layout de carregamento
-                View progressBar = mapLoadingLayout.findViewById(R.id.progress_loading);
-                TextView loadingText = mapLoadingLayout.findViewById(R.id.text_loading);
-
-                if (progressBar != null) {
-                    progressBar.setVisibility(View.GONE);
-                }
-
-                if (loadingText != null) {
-                    loadingText.setText("❌ Erro ao carregar o mapa\n\n" + errorMessage);
-                    loadingText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                }
-            }
-
-            // Desabilitar funcionalidades que dependem do mapa
-            if (btnMyLocation != null) {
-                btnMyLocation.setEnabled(false);
-                btnMyLocation.setText("❌ Mapa indisponível");
-            }
-
-            showMessage("Erro no mapa: " + errorMessage);
-
-        } catch (Exception e) {
-            // Erro ao tratar erro do mapa
-        }
-    }
-
-    /**
-     * ✅ MÉTODO ADICIONAL: Validação final antes de salvar
-     */
     private boolean validateBeforeSave() {
         try {
-            // Verificar se tem localização selecionada
             if (selectedLatLng == null) {
-                showMessage("❌ Selecione uma localização no mapa primeiro");
+                showMessage("Selecione uma localização no mapa primeiro");
                 return false;
             }
 
-            // Verificar se as coordenadas são válidas
             if (selectedLatLng.latitude < -90 || selectedLatLng.latitude > 90) {
-                showMessage("❌ Latitude inválida");
+                showMessage("Latitude inválida");
                 return false;
             }
 
             if (selectedLatLng.longitude < -180 || selectedLatLng.longitude > 180) {
-                showMessage("❌ Longitude inválida");
+                showMessage("Longitude inválida");
                 return false;
             }
 
-            // Verificar se o raio é válido
             if (currentRadius < 50 || currentRadius > 2000) {
-                showMessage("❌ Raio deve estar entre 50m e 2km");
+                showMessage("Raio deve estar entre 50m e 2km");
                 return false;
             }
 
@@ -879,39 +604,4 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
-    /**
-     * ✅ MÉTODO ADICIONAL: Salvar com validação e confirmação
-     */
-    private void saveWithConfirmation() {
-        try {
-            if (!validateBeforeSave()) {
-                return;
-            }
-
-            // Mostrar diálogo de confirmação com resumo
-            String confirmationMessage = String.format(
-                    "Deseja salvar esta configuração?\n\n" +
-                            "📍 Centro: %.6f, %.6f\n" +
-                            "🎯 Raio: %s\n\n" +
-                            "Quando você estiver dentro desta área, o Safe Mode ficará desativado.",
-                    selectedLatLng.latitude,
-                    selectedLatLng.longitude,
-                    currentRadius >= 1000 ?
-                            String.format("%.1f km", currentRadius / 1000.0) :
-                            currentRadius + " metros"
-            );
-
-            new android.app.AlertDialog.Builder(this)
-                    .setTitle("Confirmar Configuração")
-                    .setMessage(confirmationMessage)
-                    .setPositiveButton("Salvar", (dialog, which) -> saveLocationSettings())
-                    .setNegativeButton("Cancelar", null)
-                    .setNeutralButton("Ver Resumo", (dialog, which) -> showConfigurationSummary())
-                    .show();
-
-        } catch (Exception e) {
-            // Se der erro no diálogo, salvar diretamente
-            saveLocationSettings();
-        }
-    }
 }
