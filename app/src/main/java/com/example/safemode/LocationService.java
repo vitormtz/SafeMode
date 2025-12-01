@@ -15,6 +15,10 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+/**
+ * Service em foreground que monitora continuamente a localização do dispositivo.
+ * Verifica se o usuário está dentro da área permitida e exibe notificações de status.
+ */
 public class LocationService extends Service implements LocationListener {
 
     private static final String CHANNEL_ID = "LocationService";
@@ -26,11 +30,13 @@ public class LocationService extends Service implements LocationListener {
     private Location currentLocation;
     private LocationUpdateListener listener;
 
+    // Interface de callback para notificar mudanças de localização
     public interface LocationUpdateListener {
         void onLocationChanged(boolean isInsideAllowedArea);
         void onLocationError(String error);
     }
 
+    // Inicializa o service e cria o canal de notificações
     @Override
     public void onCreate() {
         super.onCreate();
@@ -41,6 +47,7 @@ public class LocationService extends Service implements LocationListener {
         createNotificationChannel();
     }
 
+    // Inicia o service em foreground e começa o monitoramento de localização
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!preferences.isLocationEnabled()) {
@@ -55,17 +62,20 @@ public class LocationService extends Service implements LocationListener {
         return START_STICKY;
     }
 
+    // Para as atualizações de localização quando o service é destruído
     @Override
     public void onDestroy() {
         super.onDestroy();
         stopLocationUpdates();
     }
 
+    // Retorna o binder para permitir binding com o service
     @Override
     public IBinder onBind(Intent intent) {
         return new LocationBinder();
     }
 
+    // Inicia atualizações contínuas de localização dos provedores GPS e Network
     private void startLocationUpdates() {
         try {
             if (!hasLocationPermission()) {
@@ -103,6 +113,7 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
+    // Para as atualizações contínuas de localização
     private void stopLocationUpdates() {
         try {
             systemLocationManager.removeUpdates(this);
@@ -110,6 +121,7 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
+    // Tenta obter a última localização conhecida dos provedores
     private void tryGetLastKnownLocation() {
         try {
             Location lastGPS = systemLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -133,6 +145,7 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
+    // Callback chamado quando a localização muda
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
@@ -148,6 +161,7 @@ public class LocationService extends Service implements LocationListener {
         sendLocationBroadcast(!isOutside, location);
     }
 
+    // Verifica se a localização está fora da área permitida
     private boolean isOutsideAllowedArea(Location location) {
         double allowedLat = preferences.getAllowedLatitude();
         double allowedLng = preferences.getAllowedLongitude();
@@ -169,6 +183,7 @@ public class LocationService extends Service implements LocationListener {
         return results[0] > allowedRadius;
     }
 
+    // Envia broadcast com informações de localização para outros componentes
     private void sendLocationBroadcast(boolean isInsideArea, Location location) {
         Intent broadcast = new Intent("com.example.safemode.LOCATION_CHANGED");
         broadcast.putExtra("is_inside_area", isInsideArea);
@@ -179,20 +194,24 @@ public class LocationService extends Service implements LocationListener {
         sendBroadcast(broadcast);
     }
 
+    // Notifica erro de localização através do listener
     private void notifyLocationError(String error) {
         if (listener != null) {
             listener.onLocationError(error);
         }
     }
 
+    // Callback chamado quando o status do provedor muda (não implementado)
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
+    // Callback chamado quando um provedor é habilitado (não implementado)
     @Override
     public void onProviderEnabled(String provider) {
     }
 
+    // Callback chamado quando um provedor é desabilitado
     @Override
     public void onProviderDisabled(String provider) {
         if (LocationManager.GPS_PROVIDER.equals(provider)) {
@@ -200,17 +219,20 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
+    // Verifica se o app tem permissão de localização
     private boolean hasLocationPermission() {
         return ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == android.content.pm.PackageManager.PERMISSION_GRANTED;
     }
 
+    // Verifica se pelo menos um provedor de localização está habilitado
     private boolean isLocationEnabled() {
         return systemLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 systemLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
+    // Cria o canal de notificações para Android O e superiores
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -227,10 +249,12 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
+    // Cria a notificação inicial do service
     private Notification createNotification() {
         return createNotificationWithStatus(true);
     }
 
+    // Atualiza a notificação com o status atual da localização
     private void updateNotification(boolean isInsideAllowedArea) {
         Notification notification = createNotificationWithStatus(isInsideAllowedArea);
 
@@ -238,6 +262,7 @@ public class LocationService extends Service implements LocationListener {
         manager.notify(NOTIFICATION_ID, notification);
     }
 
+    // Cria notificação com status indicando se está dentro ou fora da área permitida
     private Notification createNotificationWithStatus(boolean isInsideAllowedArea) {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
@@ -273,6 +298,7 @@ public class LocationService extends Service implements LocationListener {
                 .build();
     }
 
+    // Binder para permitir comunicação com o service
     public class LocationBinder extends android.os.Binder {
     }
 }
