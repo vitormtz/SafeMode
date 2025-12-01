@@ -49,7 +49,6 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         // Verificar se o monitoramento por localização está ativo
         if (!preferences.isLocationEnabled()) {
             stopSelf();
@@ -80,7 +79,6 @@ public class LocationService extends Service implements LocationListener {
      * Inicia o monitoramento de localização
      */
     private void startLocationUpdates() {
-
         try {
             // Verificar permissões
             if (!hasLocationPermission()) {
@@ -113,8 +111,6 @@ public class LocationService extends Service implements LocationListener {
             // Tentar pegar última localização conhecida
             tryGetLastKnownLocation();
 
-            android.util.Log.d("LocationService", "Monitoramento de localização iniciado");
-
         } catch (SecurityException e) {
             notifyLocationError("Permissão de localização negada");
             stopSelf();
@@ -128,12 +124,10 @@ public class LocationService extends Service implements LocationListener {
      * Para o monitoramento de localização
      */
     private void stopLocationUpdates() {
-
         try {
             systemLocationManager.removeUpdates(this);
-            android.util.Log.d("LocationService", "Monitoramento de localização parado");
         } catch (Exception e) {
-            android.util.Log.e("LocationService", "Erro ao parar monitoramento: " + e.getMessage());
+            // Erro ao parar monitoramento
         }
     }
 
@@ -141,7 +135,6 @@ public class LocationService extends Service implements LocationListener {
      * Tenta pegar a última localização conhecida
      */
     private void tryGetLastKnownLocation() {
-
         try {
             Location lastGPS = systemLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             Location lastNetwork = systemLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -171,7 +164,6 @@ public class LocationService extends Service implements LocationListener {
      */
     @Override
     public void onLocationChanged(Location location) {
-
         currentLocation = location;
 
         // Verificar se estamos dentro ou fora da área permitida
@@ -187,18 +179,12 @@ public class LocationService extends Service implements LocationListener {
 
         // Comunicar com SafeModeService via broadcast
         sendLocationBroadcast(!isOutside, location);
-
-        String status = isOutside ? "FORA" : "DENTRO";
-        android.util.Log.d("LocationService",
-                String.format("Localização: %s da área permitida (%.6f, %.6f)",
-                        status, location.getLatitude(), location.getLongitude()));
     }
 
     /**
      * Verifica se a localização está fora da área permitida
      */
     private boolean isOutsideAllowedArea(Location location) {
-
         double allowedLat = preferences.getAllowedLatitude();
         double allowedLng = preferences.getAllowedLongitude();
         int allowedRadius = preferences.getAllowedRadius();
@@ -225,7 +211,6 @@ public class LocationService extends Service implements LocationListener {
      * Envia broadcast com mudança de localização
      */
     private void sendLocationBroadcast(boolean isInsideArea, Location location) {
-
         Intent broadcast = new Intent("com.example.safemode.LOCATION_CHANGED");
         broadcast.putExtra("is_inside_area", isInsideArea);
         broadcast.putExtra("latitude", location.getLatitude());
@@ -239,12 +224,9 @@ public class LocationService extends Service implements LocationListener {
      * Notifica erro de localização
      */
     private void notifyLocationError(String error) {
-
         if (listener != null) {
             listener.onLocationError(error);
         }
-
-        android.util.Log.e("LocationService", "Erro de localização: " + error);
     }
 
     /**
@@ -252,18 +234,16 @@ public class LocationService extends Service implements LocationListener {
      */
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        android.util.Log.d("LocationService", "Status mudou: " + provider + " = " + status);
+        // Status mudou
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        android.util.Log.d("LocationService", "Provedor habilitado: " + provider);
+        // Provedor habilitado
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        android.util.Log.d("LocationService", "Provedor desabilitado: " + provider);
-
         if (LocationManager.GPS_PROVIDER.equals(provider)) {
             notifyLocationError("GPS foi desligado");
         }
@@ -290,7 +270,6 @@ public class LocationService extends Service implements LocationListener {
      * Cria canal de notificação
      */
     private void createNotificationChannel() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
@@ -317,7 +296,6 @@ public class LocationService extends Service implements LocationListener {
      * Atualiza notificação com status atual
      */
     private void updateNotification(boolean isInsideAllowedArea) {
-
         Notification notification = createNotificationWithStatus(isInsideAllowedArea);
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -328,7 +306,6 @@ public class LocationService extends Service implements LocationListener {
      * Cria notificação com status específico
      */
     private Notification createNotificationWithStatus(boolean isInsideAllowedArea) {
-
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, 0, notificationIntent,
