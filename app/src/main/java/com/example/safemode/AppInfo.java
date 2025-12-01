@@ -2,6 +2,10 @@ package com.example.safemode;
 
 import android.graphics.drawable.Drawable;
 
+/**
+ * Classe de modelo que representa as informações de um aplicativo instalado no dispositivo.
+ * Armazena dados como nome do pacote, nome da aplicação, ícone e status de bloqueio.
+ */
 public class AppInfo {
 
     public String packageName;
@@ -10,9 +14,11 @@ public class AppInfo {
     public boolean isBlocked;
     public boolean isSystemApp;
 
+    // Construtor vazio
     public AppInfo() {
     }
 
+    // Construtor que inicializa o aplicativo com nome do pacote, nome da aplicação e ícone
     public AppInfo(String packageName, String appName, Drawable icon) {
         this.packageName = packageName;
         this.appName = appName;
@@ -21,6 +27,7 @@ public class AppInfo {
         this.isSystemApp = false;
     }
 
+    // Compara dois objetos AppInfo baseado no packageName
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -30,11 +37,13 @@ public class AppInfo {
         return packageName != null ? packageName.equals(appInfo.packageName) : appInfo.packageName == null;
     }
 
+    // Retorna o código hash baseado no packageName
     @Override
     public int hashCode() {
         return packageName != null ? packageName.hashCode() : 0;
     }
 
+    // Retorna uma representação em string do objeto AppInfo
     @Override
     public String toString() {
         return "AppInfo{" +
