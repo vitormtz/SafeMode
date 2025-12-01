@@ -11,13 +11,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
 public class BlockLogger {
 
     private static final String PREF_NAME = "BlockLog";
     private static final String KEY_LOG_ENTRIES = "log_entries";
-    private static final int MAX_LOG_ENTRIES = 1000; // Máximo de registros
-
+    private static final int MAX_LOG_ENTRIES = 1000;
     private Context context;
     private SharedPreferences preferences;
 
@@ -26,40 +24,28 @@ public class BlockLogger {
         this.preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    /**
-     * Registra quando um app foi bloqueado
-     * É como escrever no diário: "Bloqueei o WhatsApp às 14:30"
-     */
     public void logBlock(String packageName, long timestamp) {
         try {
-            // Criar um novo registro
             JSONObject logEntry = new JSONObject();
             logEntry.put("package_name", packageName);
             logEntry.put("timestamp", timestamp);
             logEntry.put("app_name", getAppName(packageName));
             logEntry.put("readable_time", formatTimestamp(timestamp));
 
-            // Pegar os registros existentes
             List<JSONObject> existingLogs = getLogEntries();
 
-            // Adicionar o novo registro no início da lista
             existingLogs.add(0, logEntry);
 
-            // Limitar o número de registros (para não ocupar muito espaço)
             if (existingLogs.size() > MAX_LOG_ENTRIES) {
                 existingLogs = existingLogs.subList(0, MAX_LOG_ENTRIES);
             }
 
-            // Salvar de volta
             saveLogEntries(existingLogs);
 
         } catch (JSONException e) {
         }
     }
 
-    /**
-     * Pega todos os registros de bloqueio
-     */
     public List<JSONObject> getLogEntries() {
         List<JSONObject> entries = new ArrayList<>();
 
@@ -77,9 +63,6 @@ public class BlockLogger {
         return entries;
     }
 
-    /**
-     * Pega registros de um período específico
-     */
     public List<JSONObject> getLogEntriesInPeriod(long startTime, long endTime) {
         List<JSONObject> allEntries = getLogEntries();
         List<JSONObject> filteredEntries = new ArrayList<>();
@@ -97,35 +80,12 @@ public class BlockLogger {
         return filteredEntries;
     }
 
-    /**
-     * Conta quantas vezes um app foi bloqueado
-     */
-    public int getBlockCountForApp(String packageName) {
-        List<JSONObject> entries = getLogEntries();
-        int count = 0;
-
-        try {
-            for (JSONObject entry : entries) {
-                if (packageName.equals(entry.getString("package_name"))) {
-                    count++;
-                }
-            }
-        } catch (JSONException e) {
-        }
-
-        return count;
-    }
-
-    /**
-     * Pega estatísticas dos bloqueios de hoje
-     */
     public JSONObject getTodayStats() {
         JSONObject stats = new JSONObject();
 
         try {
-            // Definir o início e fim do dia de hoje
             long startOfDay = getStartOfDay(System.currentTimeMillis());
-            long endOfDay = startOfDay + (24 * 60 * 60 * 1000); // 24 horas
+            long endOfDay = startOfDay + (24 * 60 * 60 * 1000);
 
             List<JSONObject> todayEntries = getLogEntriesInPeriod(startOfDay, endOfDay);
 
@@ -139,38 +99,10 @@ public class BlockLogger {
         return stats;
     }
 
-    /**
-     * Limpa todos os registros
-     */
     public void clearAllLogs() {
         preferences.edit().remove(KEY_LOG_ENTRIES).apply();
     }
 
-    /**
-     * Limpa registros antigos (mais de 30 dias)
-     */
-    public void cleanOldLogs() {
-        long thirtyDaysAgo = System.currentTimeMillis() - (30L * 24 * 60 * 60 * 1000);
-        List<JSONObject> entries = getLogEntries();
-        List<JSONObject> recentEntries = new ArrayList<>();
-
-        try {
-            for (JSONObject entry : entries) {
-                long timestamp = entry.getLong("timestamp");
-                if (timestamp > thirtyDaysAgo) {
-                    recentEntries.add(entry);
-                }
-            }
-
-            saveLogEntries(recentEntries);
-
-        } catch (JSONException e) {
-        }
-    }
-
-    /**
-     * Salva a lista de registros
-     */
     private void saveLogEntries(List<JSONObject> entries) {
         try {
             JSONArray jsonArray = new JSONArray();
@@ -186,9 +118,6 @@ public class BlockLogger {
         }
     }
 
-    /**
-     * Pega o nome amigável do app
-     */
     private String getAppName(String packageName) {
         try {
             android.content.pm.PackageManager pm = context.getPackageManager();
@@ -196,21 +125,15 @@ public class BlockLogger {
             return pm.getApplicationLabel(appInfo).toString();
 
         } catch (Exception e) {
-            return packageName; // Se não conseguir, usar o nome do pacote
+            return packageName;
         }
     }
 
-    /**
-     * Formata timestamp para texto legível
-     */
     private String formatTimestamp(long timestamp) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         return formatter.format(new Date(timestamp));
     }
 
-    /**
-     * Pega o início do dia (00:00:00)
-     */
     private long getStartOfDay(long timestamp) {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTimeInMillis(timestamp);
@@ -221,9 +144,6 @@ public class BlockLogger {
         return calendar.getTimeInMillis();
     }
 
-    /**
-     * Conta quantos apps únicos foram bloqueados
-     */
     private int getUniqueAppsCount(List<JSONObject> entries) {
         java.util.Set<String> uniqueApps = new java.util.HashSet<>();
 
@@ -237,20 +157,15 @@ public class BlockLogger {
         return uniqueApps.size();
     }
 
-    /**
-     * Encontra o app mais bloqueado em uma lista de registros
-     */
     private String getMostBlockedApp(List<JSONObject> entries) {
         java.util.Map<String, Integer> appCounts = new java.util.HashMap<>();
 
         try {
-            // Contar bloqueios por app
             for (JSONObject entry : entries) {
                 String packageName = entry.getString("package_name");
                 appCounts.put(packageName, appCounts.getOrDefault(packageName, 0) + 1);
             }
 
-            // Encontrar o app com mais bloqueios
             String mostBlockedApp = null;
             int maxCount = 0;
 
