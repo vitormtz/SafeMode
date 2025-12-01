@@ -16,7 +16,6 @@ public class LockScreenService extends Service {
 
     private static final String CHANNEL_ID = "LockScreenChannel";
     private static final int NOTIFICATION_ID = 2;
-
     private ScreenReceiver screenReceiver;
     private AppPreferences preferences;
 

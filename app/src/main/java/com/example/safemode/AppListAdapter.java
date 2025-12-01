@@ -10,16 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-/**
- * Adaptador para mostrar a lista de apps na tela
- * É como um assistente que organiza os apps na lista
- */
 public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppViewHolder> {
 
     private List<AppInfo> appList;
     private OnAppToggleListener listener;
 
-    // Interface para avisar quando um app é marcado/desmarcado
     public interface OnAppToggleListener {
         void onAppToggled(AppInfo appInfo, boolean isBlocked);
     }
@@ -48,10 +43,6 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppViewH
         return appList.size();
     }
 
-    /**
-     * Classe que representa cada item na lista
-     * É como um cartãozinho para cada app
-     */
     public class AppViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView iconImageView;
@@ -68,34 +59,20 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppViewH
             blockCheckBox = itemView.findViewById(R.id.checkbox_block);
         }
 
-        /**
-         * Preenche os dados do app no cartãozinho
-         */
         public void bind(AppInfo app) {
 
-            // Mostrar ícone do app
             iconImageView.setImageDrawable(app.icon);
-
-            // Mostrar nome do app
             nameTextView.setText(app.appName);
-
-            // Mostrar nome técnico (opcional, pode ser escondido)
             packageTextView.setText(app.packageName);
-            packageTextView.setVisibility(View.GONE); // Esconder por padrão
-
-            // Configurar checkbox
-            blockCheckBox.setOnCheckedChangeListener(null); // Limpar listener anterior
+            packageTextView.setVisibility(View.GONE);
+            blockCheckBox.setOnCheckedChangeListener(null);
             blockCheckBox.setChecked(app.isBlocked);
-
-            // Configurar o que acontece quando marca/desmarca
             blockCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 app.isBlocked = isChecked;
                 if (listener != null) {
                     listener.onAppToggled(app, isChecked);
                 }
             });
-
-            // Permitir clicar no item inteiro para marcar/desmarcar
             itemView.setOnClickListener(v -> {
                 blockCheckBox.setChecked(!blockCheckBox.isChecked());
             });

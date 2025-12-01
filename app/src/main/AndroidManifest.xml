@@ -3,40 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.safemode">
 
-    <!-- Permissão para ver todos os apps instalados no Android -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
-    <!-- Permissão para serviço de localização -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
-    <!-- Permissões de acesso à localização -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!-- Se SDK >= 33, adiciona também a permissão POST_NOTIFICATIONS -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
-    <!-- Permissões para manter o app funcionando -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
         tools:targetApi="34" />
 
-    <!-- Permissões necessárias -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
         tools:targetApi="29" />
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
-    <!-- Permissão para serviço de acessibilidade -->
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
         tools:ignore="ProtectedPermissions" />
 
-    <!-- Permissões para bloqueio de tela -->
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
@@ -75,7 +74,6 @@
             android:clearTaskOnLaunch="false"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
 
-        <!-- SafeMode Launcher -->
         <activity
             android:name=".SafeModeLauncherActivity"
             android:exported="true"
@@ -90,7 +88,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Activities -->
         <activity
             android:name=".MainActivity"
             android:exported="true"

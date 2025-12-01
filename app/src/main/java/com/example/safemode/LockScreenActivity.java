@@ -17,9 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.List;
 
 public class LockScreenActivity extends AppCompatActivity {
@@ -166,10 +164,8 @@ public class LockScreenActivity extends AppCompatActivity {
             int pinType = pinManager.verifyPinType(enteredPin);
 
             if (pinType == 1) {
-                // PIN principal - desativa modo oculto
                 unlockScreen(false);
             } else if (pinType == 2) {
-                // PIN secundário - ativa modo oculto
                 unlockScreen(true);
             } else {
                 showError();
@@ -346,6 +342,5 @@ public class LockScreenActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Bloqueia o botão voltar
     }
 }
