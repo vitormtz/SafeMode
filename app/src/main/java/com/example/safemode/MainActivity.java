@@ -13,6 +13,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashSet;
 
+/**
+ * Activity principal do aplicativo SafeMode.
+ * Gerencia as funcionalidades principais como ativação do modo seguro, controle de localização,
+ * tela de bloqueio, configuração de PINs e seleção de aplicativos ocultos.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Switch switchSafeMode;
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private AppPreferences preferences;
     private PinManager pinManager;
 
+    // Inicializa a activity, configura views e listeners
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setupClickListeners();
     }
 
+    // Configura as barras do sistema para tela cheia
     private void setupSystemBars() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Inicializa todas as views, preferências e gerenciadores
     private void initializeViews() {
 
         try {
@@ -92,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Configura os listeners dos switches e botões da interface
     private void setupClickListeners() {
 
         try {
@@ -172,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Verifica todas as permissões necessárias antes de ativar o modo seguro
     private void checkPermissionsAndEnableSafeMode() {
 
         try {
@@ -195,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Exibe diálogo com as permissões faltantes que precisam ser concedidas
     private void showPermissionsDialog(boolean hasLocation, boolean hasOverlay, boolean hasUsageStats, boolean hasAccessibility) {
         try {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_permissions, null);
@@ -243,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Exibe diálogo solicitando permissão de localização
     private void showLocationPermissionDialog() {
         try {
             View dialogView = getLayoutInflater().inflate(R.layout.dialog_location_permission, null);
@@ -275,12 +287,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Verifica se a permissão de localização foi concedida
     private boolean hasLocationPermission() {
         return androidx.core.content.ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == android.content.pm.PackageManager.PERMISSION_GRANTED;
     }
 
+    // Verifica se a permissão de sobreposição foi concedida
     private boolean hasOverlayPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return android.provider.Settings.canDrawOverlays(this);
@@ -288,14 +302,17 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // Verifica se o serviço de acessibilidade está habilitado
     private boolean hasAccessibilityPermission() {
         return AccessibilityUtils.isAccessibilityServiceEnabled(this, SafeModeAccessibilityService.class);
     }
 
+    // Verifica se a permissão de estatísticas de uso foi concedida
     private boolean hasUsageStatsPermission() {
         return UsageStatsUtils.hasUsageStatsPermission(this);
     }
 
+    // Verifica se o aplicativo está definido como launcher padrão do sistema
     private boolean isDefaultLauncher() {
         try {
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -315,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Ativa o modo seguro e inicia o serviço de monitoramento
     private void enableSafeMode() {
         try {
             preferences.setSafeModeEnabled(true);
@@ -330,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Desativa o modo seguro e para o serviço de monitoramento
     private void disableSafeMode() {
         try {
             preferences.setSafeModeEnabled(false);
@@ -341,6 +360,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Ativa a tela de bloqueio após verificar requisitos de launcher e PINs
     private void enableLockScreen() {
         try {
             if (!isDefaultLauncher()) {
@@ -415,6 +435,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Desativa a tela de bloqueio e para o serviço correspondente
     private void disableLockScreen() {
         try {
             preferences.setLockScreenEnabled(false);
@@ -429,6 +450,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Salva a configuração do PIN principal após validações
     private void savePinConfiguration() {
         try {
             String pin = etPin.getText().toString();
@@ -457,6 +479,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Salva a configuração do PIN secundário após validações
     private void saveSecondaryPinConfiguration() {
         try {
             String pin = etSecondaryPin.getText().toString();
@@ -488,6 +511,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Abre a tela de seleção de aplicativos ocultos após verificar PIN secundário
     private void openHiddenAppsSelection() {
         try {
             if (!pinManager.hasSecondaryPin()) {
@@ -503,6 +527,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Atualiza o estado dos switches ao retomar a activity
     @Override
     protected void onResume() {
         super.onResume();
@@ -629,6 +654,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Verifica se é a primeira execução do app após instalação
     private boolean isFirstRun() {
         try {
             android.content.SharedPreferences prefs = getSharedPreferences("app_state", MODE_PRIVATE);

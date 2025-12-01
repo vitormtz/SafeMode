@@ -22,6 +22,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Activity responsável por exibir a lista de aplicativos instalados e permitir ao usuário
+ * selecionar quais apps devem ser bloqueados pelo modo seguro.
+ */
 public class AppSelectionActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -33,6 +37,7 @@ public class AppSelectionActivity extends AppCompatActivity {
     private AppPreferences preferences;
     private List<AppInfo> appList;
 
+    // Inicializa a activity, configura views e carrega lista de aplicativos
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,7 @@ public class AppSelectionActivity extends AppCompatActivity {
         loadInstalledApps();
     }
 
+    // Inicializa as views, RecyclerView e o adapter
     private void initializeViews() {
         recyclerView = findViewById(R.id.recycler_apps);
         layoutEmpty = findViewById(R.id.layout_empty);
@@ -65,6 +71,7 @@ public class AppSelectionActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    // Configura o container de aplicativos com estilo e aparência
     private void setupAppsContainer() {
         if (containerApps != null) {
             containerApps.setBackgroundColor(Color.parseColor("#F8FAFC"));
@@ -85,12 +92,14 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
+    // Atualiza o título do container com o número de aplicativos
     private void updateContainerTitle(int appCount) {
         if (containerTitle != null) {
             containerTitle.setText("Selecionar Apps para Bloquear");
         }
     }
 
+    // Configura as barras do sistema para tela cheia
     private void setupSystemBars() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -101,6 +110,7 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
+    // Exibe o estado de carregamento enquanto os apps são carregados
     private void showLoadingState() {
         if (loadingLayout != null) {
             loadingLayout.setVisibility(View.VISIBLE);
@@ -115,6 +125,7 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
+    // Exibe a lista de aplicativos após o carregamento
     private void showAppsList() {
         if (loadingLayout != null) {
             loadingLayout.setVisibility(View.GONE);
@@ -129,6 +140,7 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
+    // Exibe o estado vazio quando não há aplicativos para mostrar
     private void showEmptyState() {
         if (loadingLayout != null) {
             loadingLayout.setVisibility(View.GONE);
@@ -143,11 +155,13 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
+    // Inicia o carregamento assíncrono dos aplicativos instalados
     private void loadInstalledApps() {
         showLoadingState();
         new LoadAppsTask().execute();
     }
 
+    // Callback chamado quando um app é marcado/desmarcado para bloqueio
     private void onAppToggled(AppInfo appInfo, boolean isBlocked) {
         if (isBlocked) {
             preferences.addBlockedApp(appInfo.packageName);
@@ -156,14 +170,17 @@ public class AppSelectionActivity extends AppCompatActivity {
         }
     }
 
+    // AsyncTask para carregar a lista de aplicativos em background
     private class LoadAppsTask extends AsyncTask<Void, Integer, List<AppInfo>> {
 
+        // Prepara a UI antes de iniciar o carregamento
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             runOnUiThread(() -> showLoadingState());
         }
 
+        // Carrega todos os aplicativos instalados em background
         @Override
         protected List<AppInfo> doInBackground(Void... voids) {
             List<AppInfo> apps = new ArrayList<>();
@@ -231,10 +248,12 @@ public class AppSelectionActivity extends AppCompatActivity {
             return apps;
         }
 
+        // Atualiza o progresso do carregamento (não implementado)
         @Override
         protected void onProgressUpdate(Integer... values) {
         }
 
+        // Atualiza a UI com os aplicativos carregados
         @Override
         protected void onPostExecute(List<AppInfo> apps) {
             try {
@@ -268,12 +287,14 @@ public class AppSelectionActivity extends AppCompatActivity {
             }
         }
 
+        // Chamado quando a task é cancelada
         @Override
         protected void onCancelled() {
             super.onCancelled();
             runOnUiThread(() -> showEmptyState());
         }
 
+        // Verifica se um aplicativo é crítico para o sistema e não deve ser bloqueado
         private boolean isCriticalSystemApp(String packageName) {
             String[] criticalSystemApps = {
                     "com.android.systemui",
@@ -298,6 +319,7 @@ public class AppSelectionActivity extends AppCompatActivity {
             return false;
         }
 
+        // Verifica se um aplicativo possui uma intent de launcher
         private boolean hasLauncherIntent(String packageName) {
             try {
                 Intent launchIntent = getPackageManager().getLaunchIntentForPackage(packageName);

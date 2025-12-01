@@ -29,6 +29,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Activity para configurar a área geográfica permitida usando Google Maps.
+ * Permite ao usuário selecionar uma localização no mapa e definir um raio de área segura.
+ */
 public class LocationSetupActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final int PERMISSION_REQUEST_LOCATION = 1001;
@@ -48,6 +52,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
     private int currentRadius = 100;
     private AppPreferences preferences;
 
+    // Inicializa a activity, views, mapa e carrega configurações salvas
+    // Callback chamado quando permissões são concedidas ou negadas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +71,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         setupListeners();
     }
 
+    // Configura o ScrollView para funcionar bem com o mapa
     private void setupMapFriendlyScrollView() {
         try {
 
@@ -87,6 +94,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Configura as barras do sistema para tela cheia
     private void setupSystemBars() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -100,8 +108,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Inicializa todas as views e configura valores iniciais
     private void initializeViews() {
-        try {
+        try{
             scrollView = findViewById(R.id.scroll_view);
             mapLoadingLayout = findViewById(R.id.map_loading);
             textSelectedLocation = findViewById(R.id.text_selected_location);
@@ -124,6 +133,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Inicializa o Google Maps e registra callback para quando o mapa estiver pronto
     private void initializeGoogleMaps() {
 
         try {
@@ -138,6 +148,8 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Callback chamado quando o Google Maps está pronto para uso
+    // Callback chamado quando permissões são concedidas ou negadas
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         try {
@@ -161,6 +173,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Configura as opções do mapa (tipo, controles, localização)
     private void setupMapSettings() {
         try {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -180,6 +193,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Callback chamado quando o usuário clica no mapa
     private void onMapClick(LatLng latLng) {
         try {
             selectedLatLng = latLng;
@@ -196,6 +210,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Atualiza o marcador da localização selecionada
     private void updateLocationMarker(LatLng latLng) {
         try {
             if (selectedLocationMarker != null) {
@@ -209,6 +224,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Atualiza o círculo que representa a área segura
     private void updateSafeAreaCircle() {
         try {
             if (selectedLatLng == null) {
@@ -232,6 +248,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Atualiza as informações de texto da localização selecionada
     private void updateLocationInfo() {
         try {
             if (selectedLatLng != null) {
@@ -249,6 +266,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Habilita ou desabilita os botões de ação
     private void enableActionButtons(boolean enabled) {
         try {
             btnSaveLocation.setEnabled(enabled);
@@ -266,6 +284,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Carrega as configurações salvas anteriormente
     private void loadSavedSettings() {
         try {
             int savedRadius = preferences.getAllowedRadius();
@@ -279,6 +298,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Carrega a área salva anteriormente e exibe no mapa
     private void loadSavedArea() {
         try {
             double savedLat = preferences.getAllowedLatitude();
@@ -300,6 +320,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Configura os listeners dos botões e controles
     private void setupListeners() {
         try {
             btnMyLocation.setOnClickListener(v -> goToCurrentLocation());
@@ -333,6 +354,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Move o mapa para a localização atual do usuário
     private void goToCurrentLocation() {
         if (!hasLocationPermission()) {
             requestLocationPermission();
@@ -369,6 +391,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Salva as configurações de localização e raio nas preferências
     private void saveLocationSettings() {
         try {
             if (selectedLatLng == null) {
@@ -401,6 +424,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Atualiza o texto que exibe o valor do raio
     private void updateRadiusText(int radiusInMeters) {
         try {
             String radiusText;
@@ -416,21 +440,25 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Verifica se o app tem permissão de localização
     private boolean hasLocationPermission() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED;
     }
 
+    // Solicita permissão de localização ao usuário
     private void requestLocationPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 PERMISSION_REQUEST_LOCATION);
     }
 
+    // Exibe uma mensagem Toast para o usuário
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
+    // Callback chamado quando permissões são concedidas ou negadas
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -451,7 +479,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Callback chamado quando permissões são concedidas ou negadas
     @Override
+    // Limpa recursos quando a activity é destruída
     protected void onDestroy() {
         try {
             if (selectedLocationMarker != null) {
@@ -472,7 +502,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         super.onDestroy();
     }
 
+    // Callback chamado quando permissões são concedidas ou negadas
     @Override
+    // Restaura marcadores e círculos ao retomar a activity
     protected void onResume() {
         super.onResume();
 
@@ -490,11 +522,13 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Callback chamado quando permissões são concedidas ou negadas
     @Override
     protected void onPause() {
         super.onPause();
     }
 
+    // Verifica se a configuração atual é válida
     private boolean isConfigurationValid() {
         try {
             boolean hasLocation = selectedLatLng != null;
@@ -507,6 +541,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Centraliza o mapa na área selecionada
     private void centerMapOnSelectedArea() {
         try {
             if (googleMap != null && selectedLatLng != null) {
@@ -519,6 +554,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Calcula o nível de zoom apropriado baseado no raio
     private float calculateZoomLevel(int radiusInMeters) {
         try {
 
@@ -541,6 +577,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Exibe um resumo da configuração atual em um diálogo
     private void showConfigurationSummary() {
         try {
             if (!isConfigurationValid()) {
@@ -574,6 +611,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         }
     }
 
+    // Valida a configuração antes de salvar
     private boolean validateBeforeSave() {
         try {
             if (selectedLatLng == null) {
