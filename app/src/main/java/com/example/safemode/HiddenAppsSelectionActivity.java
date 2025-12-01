@@ -10,9 +10,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,8 +25,6 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
     private LinearLayout containerApps;
     private LinearLayout loadingLayout;
     private LinearLayout layoutEmpty;
-    private ProgressBar progressBar;
-    private TextView containerTitle;
     private Button btnRetry;
     private AppPreferences preferences;
     private List<AppInfo> appList;
@@ -71,8 +66,6 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         containerApps = findViewById(R.id.container_apps);
         loadingLayout = findViewById(R.id.loading_layout);
         layoutEmpty = findViewById(R.id.layout_empty);
-        progressBar = findViewById(R.id.progress_bar);
-        containerTitle = findViewById(R.id.container_title);
         btnRetry = findViewById(R.id.btn_retry);
 
         if (btnRetry != null) {
@@ -87,7 +80,6 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
     }
 
     private void loadInstalledApps() {
-        // Mostrar loading e esconder container
         if (loadingLayout != null) {
             loadingLayout.setVisibility(View.VISIBLE);
         }
@@ -106,12 +98,10 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
                 appList.addAll(apps);
                 adapter.notifyDataSetChanged();
 
-                // Esconder loading
                 if (loadingLayout != null) {
                     loadingLayout.setVisibility(View.GONE);
                 }
 
-                // Mostrar container com apps ou mensagem de vazio
                 if (apps.isEmpty()) {
                     if (layoutEmpty != null) {
                         layoutEmpty.setVisibility(View.VISIBLE);
@@ -129,7 +119,6 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         List<AppInfo> apps = new ArrayList<>();
         PackageManager pm = getPackageManager();
 
-        // ✅ BUG FIX: Usar Intent para pegar APENAS apps com launcher (visíveis ao usuário)
         android.content.Intent mainIntent = new android.content.Intent(android.content.Intent.ACTION_MAIN, null);
         mainIntent.addCategory(android.content.Intent.CATEGORY_LAUNCHER);
         List<android.content.pm.ResolveInfo> launchableApps = pm.queryIntentActivities(mainIntent, 0);
@@ -139,12 +128,10 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         for (android.content.pm.ResolveInfo resolveInfo : launchableApps) {
             String packageName = resolveInfo.activityInfo.packageName;
 
-            // Não mostrar o próprio SafeMode na lista de apps para ocultar
             if (packageName.equals(getPackageName())) {
                 continue;
             }
 
-            // ✅ BUG FIX: Não mostrar apps críticos do sistema
             if (isCriticalSystemApp(packageName)) {
                 continue;
             }
@@ -152,7 +139,6 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
             try {
                 ApplicationInfo appInfo = pm.getApplicationInfo(packageName, 0);
 
-                // ✅ PERMITIR apps do sistema (como Galeria) serem ocultados
                 String appName = appInfo.loadLabel(pm).toString();
                 Drawable icon = appInfo.loadIcon(pm);
 
@@ -162,7 +148,6 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
                 info.isBlocked = isHidden;
                 apps.add(info);
             } catch (PackageManager.NameNotFoundException e) {
-                // App não encontrado, pular
             }
         }
 
@@ -171,9 +156,6 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         return apps;
     }
 
-    /**
-     * Verifica se é um app crítico do sistema que não deve ser ocultado
-     */
     private boolean isCriticalSystemApp(String packageName) {
         String[] criticalSystemApps = {
                 "com.android.systemui",
@@ -201,14 +183,11 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
 
     @Override
     public void onAppToggled(AppInfo appInfo, boolean isBlocked) {
-        // Listener para quando um app é marcado/desmarcado
-        // Não precisa fazer nada aqui, pois o estado já é atualizado no adapter
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // Salvar automaticamente quando o usuário sair da tela
         saveHiddenApps();
     }
 
