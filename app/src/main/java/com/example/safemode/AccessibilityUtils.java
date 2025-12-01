@@ -4,8 +4,14 @@ import android.content.Context;
 import android.provider.Settings;
 import android.text.TextUtils;
 
+/**
+ * Classe utilitária para verificar o status dos serviços de acessibilidade.
+ * Fornece métodos para verificar se um serviço de acessibilidade específico está habilitado
+ * e se o sistema de acessibilidade em geral está ativado no dispositivo.
+ */
 public class AccessibilityUtils {
 
+    // Verifica se um serviço de acessibilidade específico está habilitado no dispositivo
     public static boolean isAccessibilityServiceEnabled(Context context, Class<?> serviceClass) {
 
         String expectedServiceName = context.getPackageName() + "/" + serviceClass.getName();
@@ -32,6 +38,7 @@ public class AccessibilityUtils {
         return false;
     }
 
+    // Verifica se o sistema de acessibilidade está habilitado no dispositivo
     public static boolean isAccessibilityEnabled(Context context) {
 
         int accessibilityEnabled = 0;

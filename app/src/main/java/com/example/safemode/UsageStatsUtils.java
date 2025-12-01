@@ -7,8 +7,14 @@ import android.content.Context;
 import android.os.Build;
 import java.util.List;
 
+/**
+ * Classe utilitária para gerenciar permissões e consultas de estatísticas de uso.
+ * Fornece métodos para verificar permissão de acesso a estatísticas de uso e
+ * obter o aplicativo em primeiro plano usando UsageStatsManager ou métodos legados.
+ */
 public class UsageStatsUtils {
 
+    // Verifica se a permissão de estatísticas de uso foi concedida
     public static boolean hasUsageStatsPermission(Context context) {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -30,6 +36,7 @@ public class UsageStatsUtils {
         }
     }
 
+    // Obtém o package name do aplicativo em primeiro plano
     public static String getCurrentForegroundApp(Context context) {
 
         if (!hasUsageStatsPermission(context)) {
@@ -71,6 +78,7 @@ public class UsageStatsUtils {
         }
     }
 
+    // Obtém o app em primeiro plano usando método legado para Android pré-Lollipop
     private static String getForegroundAppLegacy(Context context) {
 
         try {
