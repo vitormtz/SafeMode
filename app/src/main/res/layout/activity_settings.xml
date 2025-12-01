@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="16dp">
 
                     <ImageView
                         android:id="@+id/icon_accessibility_permission"
@@ -182,7 +182,38 @@
 
                 </LinearLayout>
 
-                <!-- Launcher Padrão (NOVA OPÇÃO) -->
+                <!-- Botão de Permissões (MOVIDO DA TELA PRINCIPAL) -->
+                <Button
+                    android:id="@+id/btn_permissions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Configurar permissões"
+                    android:textColor="@color/button_text_white"
+                    android:background="@drawable/button_orange"
+                    android:padding="12dp"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+            <!-- Seção Launcher Padrão (SEPARADA) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_background"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Launcher Padrão"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#212121"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Status do Launcher -->
                 <LinearLayout
                     android:id="@+id/layout_launcher_option"
                     android:layout_width="match_parent"
@@ -202,7 +233,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Launcher Padrão"
+                        android:text="SafeMode Launcher"
                         android:textSize="16sp"
                         android:textColor="#212121"
                         android:layout_marginStart="12dp" />
@@ -218,12 +249,12 @@
 
                 </LinearLayout>
 
-                <!-- Botão de Permissões (MOVIDO DA TELA PRINCIPAL) -->
+                <!-- Botão para Definir Launcher -->
                 <Button
-                    android:id="@+id/btn_permissions"
+                    android:id="@+id/btn_set_launcher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Configurar permissões"
+                    android:text="Definir como launcher padrão"
                     android:textColor="@color/button_text_white"
                     android:background="@drawable/button_orange"
                     android:padding="12dp"
