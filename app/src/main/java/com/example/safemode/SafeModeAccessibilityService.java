@@ -3,11 +3,17 @@ package com.example.safemode;
 import android.content.Intent;
 import android.view.accessibility.AccessibilityEvent;
 
+/**
+ * Serviço de acessibilidade responsável por monitorar a abertura de aplicativos.
+ * Detecta quando apps bloqueados são abertos e os bloqueia baseado em localização
+ * ou configurações de apps ocultos. Funciona como o núcleo do sistema de bloqueio.
+ */
 public class SafeModeAccessibilityService extends android.accessibilityservice.AccessibilityService {
 
     private AppPreferences preferences;
     private LocationManager locationManager;
 
+    // Inicializa o serviço de acessibilidade e suas dependências
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
@@ -20,6 +26,7 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
         }
     }
 
+    // Monitora eventos de mudança de janela para detectar abertura de apps
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         try {
@@ -69,6 +76,7 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
         }
     }
 
+    // Verifica se o app deve ser bloqueado baseado na localização atual
     private boolean shouldBlockBasedOnLocation() {
 
         if (!preferences.isLocationEnabled()) {
@@ -104,6 +112,7 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
         return isOutside;
     }
 
+    // Obtém a localização atual com timeout e atualização se necessário
     private android.location.Location getCurrentLocationWithTimeout() {
 
         try {
@@ -151,6 +160,7 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
         }
     }
 
+    // Bloqueia o aplicativo abrindo a tela de bloqueio
     private void blockAppWithActivity(String packageName) {
 
         try {
@@ -170,6 +180,7 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
         }
     }
 
+    // Verifica se o aplicativo é crítico para o sistema e não deve ser bloqueado
     private boolean isSystemApp(String packageName) {
         String[] criticalSystemApps = {
                 "com.android.systemui",
@@ -196,6 +207,7 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
         return false;
     }
 
+    // Inicia o serviço de verificação de bloqueio para garantir efetividade
     private void startBlockVerification(String packageName) {
         try {
             Intent verificationIntent = new Intent(this, BlockVerificationService.class);
@@ -205,6 +217,7 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
         }
     }
 
+    // Registra o bloqueio do aplicativo no histórico de logs
     private void logBlockedApp(String packageName) {
         try {
             BlockLogger logger = new BlockLogger(this);
@@ -213,10 +226,12 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
         }
     }
 
+    // Método chamado quando o serviço é interrompido
     @Override
     public void onInterrupt() {
     }
 
+    // Limpa recursos quando o serviço é destruído
     @Override
     public void onDestroy() {
         super.onDestroy();
