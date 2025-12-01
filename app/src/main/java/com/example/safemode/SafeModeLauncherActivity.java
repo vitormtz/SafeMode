@@ -24,6 +24,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+/**
+ * Activity que funciona como launcher customizado do SafeMode.
+ * Exibe todos os aplicativos instalados em formato de grade, permite busca por nome,
+ * oculta apps configurados no modo de ocultação e atualiza a lista dinamicamente
+ * quando apps são instalados ou removidos.
+ */
 public class SafeModeLauncherActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewApps;
@@ -35,6 +41,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
     private List<LauncherAppInfo> allApps;
     private BroadcastReceiver packageChangeReceiver;
 
+    // Inicializa a activity, configura views e carrega aplicativos
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         updateDateTime();
     }
 
+    // Inicializa as views do layout
     private void initializeViews() {
         recyclerViewApps = findViewById(R.id.recycler_apps);
         searchBar = findViewById(R.id.search_bar);
@@ -58,6 +66,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         tvDate = findViewById(R.id.tv_date);
     }
 
+    // Configura o RecyclerView em grade com 4 colunas
     private void setupRecyclerView() {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
         recyclerViewApps.setLayoutManager(layoutManager);
@@ -66,6 +75,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         recyclerViewApps.setAdapter(adapter);
     }
 
+    // Configura a barra de busca com filtro em tempo real
     private void setupSearchBar() {
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,6 +91,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         });
     }
 
+    // Configura o receiver para detectar instalação/remoção de apps
     private void setupPackageChangeReceiver() {
         packageChangeReceiver = new BroadcastReceiver() {
             @Override
@@ -97,6 +108,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         registerReceiver(packageChangeReceiver, filter);
     }
 
+    // Carrega a lista de aplicativos instalados em background
     private void loadApps() {
         new Thread(() -> {
             List<LauncherAppInfo> apps = getInstalledApps();
@@ -109,6 +121,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         }).start();
     }
 
+    // Obtém todos os aplicativos instalados com intent de launcher
     private List<LauncherAppInfo> getInstalledApps() {
         List<LauncherAppInfo> apps = new ArrayList<>();
         PackageManager pm = getPackageManager();
@@ -148,6 +161,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         return apps;
     }
 
+    // Filtra os aplicativos baseado na query de busca
     private void filterApps(String query) {
         List<LauncherAppInfo> filteredApps = new ArrayList<>();
 
@@ -166,11 +180,13 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         adapter.updateApps(filteredApps);
     }
 
+    // Remove acentos do texto para busca mais flexível
     private String removeAccents(String text) {
         String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
         return normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
+    // Abre o aplicativo selecionado
     private void launchApp(LauncherAppInfo app) {
         try {
             Intent intent = getPackageManager().getLaunchIntentForPackage(app.packageName);
@@ -182,6 +198,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         }
     }
 
+    // Atualiza a exibição de data e hora a cada minuto
     private void updateDateTime() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, dd MMMM", Locale.getDefault());
@@ -191,6 +208,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         tvTime.postDelayed(this::updateDateTime, 60000);
     }
 
+    // Recarrega apps e atualiza data/hora ao retomar a activity
     @Override
     protected void onResume() {
         super.onResume();
@@ -198,6 +216,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         updateDateTime();
     }
 
+    // Remove o receiver ao destruir a activity
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -210,6 +229,7 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         }
     }
 
+    // Desabilita o botão voltar para manter o launcher ativo
     @Override
     public void onBackPressed() {
     }
