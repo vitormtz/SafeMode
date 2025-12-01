@@ -11,6 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Classe responsável por registrar e gerenciar logs de bloqueios de aplicativos.
+ * Armazena histórico de bloqueios, estatísticas e permite consultas por período.
+ */
 public class BlockLogger {
 
     private static final String PREF_NAME = "BlockLog";
@@ -19,11 +23,13 @@ public class BlockLogger {
     private Context context;
     private SharedPreferences preferences;
 
+    // Construtor que inicializa o logger com contexto e SharedPreferences
     public BlockLogger(Context context) {
         this.context = context;
         this.preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
+    // Registra um bloqueio de aplicativo com timestamp
     public void logBlock(String packageName, long timestamp) {
         try {
             JSONObject logEntry = new JSONObject();
@@ -46,6 +52,7 @@ public class BlockLogger {
         }
     }
 
+    // Retorna todas as entradas de log armazenadas
     public List<JSONObject> getLogEntries() {
         List<JSONObject> entries = new ArrayList<>();
 
@@ -63,6 +70,7 @@ public class BlockLogger {
         return entries;
     }
 
+    // Retorna entradas de log filtradas por período de tempo
     public List<JSONObject> getLogEntriesInPeriod(long startTime, long endTime) {
         List<JSONObject> allEntries = getLogEntries();
         List<JSONObject> filteredEntries = new ArrayList<>();
@@ -80,6 +88,7 @@ public class BlockLogger {
         return filteredEntries;
     }
 
+    // Retorna estatísticas de bloqueios do dia atual
     public JSONObject getTodayStats() {
         JSONObject stats = new JSONObject();
 
@@ -99,10 +108,12 @@ public class BlockLogger {
         return stats;
     }
 
+    // Limpa todos os logs armazenados
     public void clearAllLogs() {
         preferences.edit().remove(KEY_LOG_ENTRIES).apply();
     }
 
+    // Salva a lista de entradas de log nas SharedPreferences
     private void saveLogEntries(List<JSONObject> entries) {
         try {
             JSONArray jsonArray = new JSONArray();
@@ -118,6 +129,7 @@ public class BlockLogger {
         }
     }
 
+    // Retorna o nome do aplicativo a partir do package name
     private String getAppName(String packageName) {
         try {
             android.content.pm.PackageManager pm = context.getPackageManager();
@@ -129,11 +141,13 @@ public class BlockLogger {
         }
     }
 
+    // Formata um timestamp em string legível
     private String formatTimestamp(long timestamp) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         return formatter.format(new Date(timestamp));
     }
 
+    // Retorna o timestamp do início do dia (00:00:00)
     private long getStartOfDay(long timestamp) {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTimeInMillis(timestamp);
@@ -144,6 +158,7 @@ public class BlockLogger {
         return calendar.getTimeInMillis();
     }
 
+    // Retorna a contagem de aplicativos únicos nas entradas
     private int getUniqueAppsCount(List<JSONObject> entries) {
         java.util.Set<String> uniqueApps = new java.util.HashSet<>();
 
@@ -157,6 +172,7 @@ public class BlockLogger {
         return uniqueApps.size();
     }
 
+    // Retorna o nome do aplicativo mais bloqueado nas entradas
     private String getMostBlockedApp(List<JSONObject> entries) {
         java.util.Map<String, Integer> appCounts = new java.util.HashMap<>();
 
