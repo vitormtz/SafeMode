@@ -13,7 +13,6 @@ public class PinManager {
     private static final String KEY_PIN_SALT = "pin_salt";
     private static final String KEY_SECONDARY_PIN_HASH = "secondary_pin_hash";
     private static final String KEY_SECONDARY_PIN_SALT = "secondary_pin_salt";
-
     private SharedPreferences preferences;
 
     public PinManager(Context context) {
@@ -91,8 +90,6 @@ public class PinManager {
         return Base64.encodeToString(hash, Base64.NO_WRAP);
     }
 
-    // ===== MÉTODOS PARA PIN SECUNDÁRIO =====
-
     public boolean setSecondaryPin(String pin) {
         try {
             if (pin == null || pin.length() != 4) {
@@ -142,19 +139,12 @@ public class PinManager {
         return storedHash != null && !storedHash.isEmpty();
     }
 
-    public void clearSecondaryPin() {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove(KEY_SECONDARY_PIN_HASH);
-        editor.remove(KEY_SECONDARY_PIN_SALT);
-        editor.apply();
-    }
-
     public int verifyPinType(String pin) {
         if (verifyPin(pin)) {
-            return 1; // PIN principal
+            return 1;
         } else if (verifySecondaryPin(pin)) {
-            return 2; // PIN secundário
+            return 2;
         }
-        return 0; // PIN inválido
+        return 0;
     }
 }
