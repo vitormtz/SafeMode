@@ -20,6 +20,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
+/**
+ * Activity que funciona como tela de bloqueio personalizada com PIN de 4 dígitos.
+ * Permanece em foreground e bloqueia o acesso ao dispositivo até o PIN correto ser digitado.
+ */
 public class LockScreenActivity extends AppCompatActivity {
 
     private Handler handler;
@@ -30,6 +34,7 @@ public class LockScreenActivity extends AppCompatActivity {
     private boolean isScreenOn = true;
     private BroadcastReceiver screenReceiver;
 
+    // Inicializa a activity, configura tela de bloqueio e campos PIN
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +49,7 @@ public class LockScreenActivity extends AppCompatActivity {
         setupScreenReceiver();
     }
 
+    // Configura flags da janela para funcionar como tela de bloqueio
     private void setupLockScreenFlags() {
         try {
             KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
@@ -94,6 +100,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Oculta a barra de navegação em modo imersivo
     private void hideNavigationBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             View decorView = getWindow().getDecorView();
@@ -107,6 +114,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Inicializa as views dos campos PIN e mensagem de erro
     private void initializeViews() {
         pin1 = findViewById(R.id.pin1);
         pin2 = findViewById(R.id.pin2);
@@ -115,6 +123,7 @@ public class LockScreenActivity extends AppCompatActivity {
         tvError = findViewById(R.id.tv_error);
     }
 
+    // Configura os 4 campos de entrada do PIN
     private void setupPinFields() {
         setupPinField(pin1, null, pin2);
         setupPinField(pin2, pin1, pin3);
@@ -123,6 +132,7 @@ public class LockScreenActivity extends AppCompatActivity {
         pin1.requestFocus();
     }
 
+    // Configura um campo PIN individual com navegação automática
     private void setupPinField(final EditText current, final EditText previous, final EditText next) {
         current.addTextChangedListener(new TextWatcher() {
             @Override
@@ -154,6 +164,7 @@ public class LockScreenActivity extends AppCompatActivity {
         });
     }
 
+    // Verifica se o PIN digitado está correto
     private void verifyPin() {
         String enteredPin = pin1.getText().toString() +
                            pin2.getText().toString() +
@@ -173,6 +184,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Desbloqueia a tela e opcionalmente ativa o modo oculto
     private void unlockScreen(boolean activateHideMode) {
         AppPreferences prefs = new AppPreferences(this);
         prefs.setHideModeActive(activateHideMode);
@@ -180,6 +192,7 @@ public class LockScreenActivity extends AppCompatActivity {
         finish();
     }
 
+    // Exibe mensagem de erro quando PIN está incorreto
     private void showError() {
         tvError.setVisibility(View.VISIBLE);
         tvError.setText("PIN incorreto!");
@@ -189,6 +202,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }, 1000);
     }
 
+    // Limpa todos os campos PIN
     private void clearPinFields() {
         pin1.setText("");
         pin2.setText("");
@@ -197,6 +211,7 @@ public class LockScreenActivity extends AppCompatActivity {
         pin1.requestFocus();
     }
 
+    // Configura receptor de broadcasts para monitorar estado da tela
     private void setupScreenReceiver() {
         screenReceiver = new BroadcastReceiver() {
             @Override
@@ -215,6 +230,7 @@ public class LockScreenActivity extends AppCompatActivity {
         registerReceiver(screenReceiver, filter);
     }
 
+    // Configura monitoramento para manter a tela de bloqueio em foreground
     private void setupForegroundMonitoring() {
         checkForegroundTask = new Runnable() {
             @Override
@@ -228,6 +244,7 @@ public class LockScreenActivity extends AppCompatActivity {
         };
     }
 
+    // Verifica se este app está em foreground
     private boolean isThisAppInForeground() {
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         if (activityManager == null) return false;
@@ -247,6 +264,7 @@ public class LockScreenActivity extends AppCompatActivity {
         return false;
     }
 
+    // Traz a tela de bloqueio para frente
     private void bringToFront() {
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         if (powerManager != null && !powerManager.isInteractive()) {
@@ -260,6 +278,7 @@ public class LockScreenActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // Bloqueia a tecla de troca de apps
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_APP_SWITCH) {
@@ -268,6 +287,7 @@ public class LockScreenActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    // Reaplica barra de navegação oculta quando a janela ganha foco
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -276,6 +296,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Inicia monitoramento de foreground ao retomar a activity
     @Override
     protected void onResume() {
         super.onResume();
@@ -286,6 +307,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Para monitoramento de foreground ao pausar a activity
     @Override
     protected void onPause() {
         super.onPause();
@@ -294,6 +316,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Traz a tela de bloqueio de volta ao parar a activity
     @Override
     protected void onStop() {
         super.onStop();
@@ -303,6 +326,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Limpa recursos ao destruir a activity
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -318,6 +342,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Traz a tela de bloqueio de volta quando usuário sai da app
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
@@ -327,6 +352,7 @@ public class LockScreenActivity extends AppCompatActivity {
         }
     }
 
+    // Reaplica configurações ao receber nova intent
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -334,12 +360,14 @@ public class LockScreenActivity extends AppCompatActivity {
         hideNavigationBar();
     }
 
+    // Remove animação ao finalizar a activity
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(0, 0);
     }
 
+    // Bloqueia o botão voltar
     @Override
     public void onBackPressed() {
     }

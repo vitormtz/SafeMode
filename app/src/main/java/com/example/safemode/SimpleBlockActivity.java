@@ -9,6 +9,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Activity de bloqueio simples que exibe uma tela sobre aplicativos bloqueados.
+ * Cria um overlay invisível inicial que após 2 segundos exibe uma mensagem de erro,
+ * impedindo o acesso ao app bloqueado e forçando retorno à tela inicial.
+ */
 public class SimpleBlockActivity extends Activity {
 
     private Handler autoCloseHandler;
@@ -16,10 +21,12 @@ public class SimpleBlockActivity extends Activity {
     private static long lastCloseTime = 0;
     private static SimpleBlockActivity currentInstance = null;
 
+    // Verifica se a activity de bloqueio está atualmente ativa
     public static boolean isCurrentlyActive() {
         return isCurrentlyShowing && currentInstance != null;
     }
 
+    // Inicializa a activity, previne múltiplas instâncias e configura o bloqueio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +58,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Configura a janela como invisível e sempre visível sobre outras apps
     private void setupInvisibleWindow() {
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -82,6 +90,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Cria um overlay transparente para cobrir o app bloqueado
     private void createInvisibleOverlay() {
         try {
             android.widget.FrameLayout invisibleLayout = new android.widget.FrameLayout(this);
@@ -101,6 +110,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Agenda a exibição da mensagem de erro após 2 segundos
     private void scheduleErrorMessage() {
         try {
             autoCloseHandler = new Handler();
@@ -117,6 +127,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Exibe a mensagem de erro visual para o usuário
     private void showErrorMessage() {
         try {
             setContentView(R.layout.overlay_block);
@@ -127,6 +138,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Configura a interface com mensagem e botões de ação
     private void setupUI() {
         try {
             String blockedPackage = getIntent().getStringExtra("blocked_package");
@@ -156,6 +168,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Cancela o timer de fechamento automático
     private void cancelAutoClose() {
         if (autoCloseHandler != null) {
             autoCloseHandler.removeCallbacksAndMessages(null);
@@ -163,6 +176,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Obtém o nome do aplicativo a partir do package name
     private String getAppName(String packageName) {
         if (packageName == null || packageName.isEmpty()) {
             return "este aplicativo";
@@ -180,6 +194,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Abre a tela de informações do aplicativo bloqueado
     private void openAppInfo(String packageName) {
         try {
 
@@ -212,6 +227,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Força o fechamento da activity e limpa recursos
     private void forceClose() {
         try {
             cancelAutoClose();
@@ -229,6 +245,7 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Redireciona o usuário para a tela inicial
     private void goHome() {
         try {
 
@@ -247,31 +264,37 @@ public class SimpleBlockActivity extends Activity {
         }
     }
 
+    // Método do ciclo de vida (sem implementação adicional)
     @Override
     protected void onPause() {
         super.onPause();
     }
 
+    // Método do ciclo de vida (sem implementação adicional)
     @Override
     protected void onStop() {
         super.onStop();
     }
 
+    // Método do ciclo de vida (sem implementação adicional)
     @Override
     protected void onRestart() {
         super.onRestart();
     }
 
+    // Método do ciclo de vida (sem implementação adicional)
     @Override
     protected void onResume() {
         super.onResume();
     }
 
+    // Sempre retorna false para impedir que a activity seja finalizada
     @Override
     public boolean isFinishing() {
         return false;
     }
 
+    // Limpa recursos ao destruir a activity
     @Override
     protected void onDestroy() {
         try {
