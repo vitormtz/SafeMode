@@ -10,11 +10,4 @@ public class LauncherAppInfo {
 
     public LauncherAppInfo() {
     }
-
-    public LauncherAppInfo(String packageName, String appName, String activityName, Drawable icon) {
-        this.packageName = packageName;
-        this.appName = appName;
-        this.activityName = activityName;
-        this.icon = icon;
-    }
 }
