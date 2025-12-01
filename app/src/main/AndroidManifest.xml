@@ -3,39 +3,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.safemode">
 
+    <!-- Permissão para consultar todos os pacotes instalados no dispositivo -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
+    <!-- Permissão para executar serviço em foreground com localização -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
+    <!-- Permissão para acessar localização precisa do GPS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <!-- Permissão para acessar localização aproximada da rede -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!-- Permissão para exibir notificações -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
+    <!-- Permissão para ignorar otimizações de bateria -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
+    <!-- Permissão para receber evento de inicialização do dispositivo -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Permissão para executar serviços em foreground -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <!-- Permissão para serviço foreground de uso especial (Android 14+) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
         tools:targetApi="34" />
 
+    <!-- Permissão para exibir janelas sobre outros apps -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <!-- Permissão para acessar localização em background (Android 10+) -->
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
         tools:targetApi="29" />
 
+    <!-- Permissão para manter o dispositivo acordado -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- Permissão para acessar estatísticas de uso de aplicativos -->
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
 
+    <!-- Permissão para vincular serviço de acessibilidade -->
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
         tools:ignore="ProtectedPermissions" />
 
+    <!-- Permissão para desabilitar o bloqueio de tela padrão -->
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
@@ -49,6 +64,7 @@
         android:theme="@style/Theme.SafeMode"
         tools:targetApi="31">
 
+        <!-- Activity de bloqueio com overlay transparente sobre apps bloqueados -->
         <activity
             android:name=".SimpleBlockActivity"
             android:exported="false"
@@ -60,6 +76,7 @@
             android:finishOnTaskLaunch="true"
             android:configChanges="orientation|screenSize|keyboardHidden" />
 
+        <!-- Activity de tela de bloqueio customizada com PIN -->
         <activity
             android:name=".LockScreenActivity"
             android:exported="false"
@@ -74,6 +91,7 @@
             android:clearTaskOnLaunch="false"
             android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
 
+        <!-- Launcher customizado que substitui a tela inicial padrão -->
         <activity
             android:name=".SafeModeLauncherActivity"
             android:exported="true"
@@ -88,6 +106,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Activity principal do aplicativo -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -98,30 +117,35 @@
             </intent-filter>
         </activity>
 
+        <!-- Activity para seleção de apps a serem bloqueados -->
         <activity
             android:name=".AppSelectionActivity"
             android:exported="false"
             android:label="Selecionar Apps"
             android:parentActivityName=".MainActivity" />
 
+        <!-- Activity para configurar localização permitida -->
         <activity
             android:name=".LocationSetupActivity"
             android:exported="false"
             android:label="Configurar Localização"
             android:parentActivityName=".MainActivity" />
 
+        <!-- Activity de configurações e gerenciamento de permissões -->
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="Configurações"
             android:parentActivityName=".MainActivity" />
 
+        <!-- Activity para seleção de apps a serem ocultados -->
         <activity
             android:name=".HiddenAppsSelectionActivity"
             android:exported="false"
             android:label="Apps para Ocultar"
             android:parentActivityName=".MainActivity" />
 
+        <!-- Serviço de acessibilidade para monitorar e bloquear apps -->
         <service
             android:name=".SafeModeAccessibilityService"
             android:exported="false"
@@ -135,24 +159,29 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
+        <!-- Serviço para verificar e garantir que apps bloqueados permaneçam bloqueados -->
         <service
             android:name=".BlockVerificationService"
             android:exported="false" />
 
+        <!-- Serviço foreground para monitoramento contínuo de localização -->
         <service
             android:name=".LocationService"
             android:exported="false"
             android:foregroundServiceType="location" />
 
+        <!-- Serviço foreground principal do modo seguro -->
         <service
             android:name=".SafeModeService"
             android:exported="false"
             android:foregroundServiceType="location" />
 
+        <!-- Serviço para exibir overlay de bloqueio sobre apps -->
         <service
             android:name=".BlockOverlayService"
             android:exported="false" />
 
+        <!-- Serviço foreground para gerenciar tela de bloqueio customizada -->
         <service
             android:name=".LockScreenService"
             android:exported="false"
@@ -162,6 +191,7 @@
                 android:value="Lock screen protection" />
         </service>
 
+        <!-- Receiver para iniciar serviços ao ligar o dispositivo ou atualizar o app -->
         <receiver
             android:name=".BootReceiver"
             android:exported="true">
@@ -173,6 +203,7 @@
             </intent-filter>
         </receiver>
 
+        <!-- Chave da API do Google Maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${mapsApiKey}" />
