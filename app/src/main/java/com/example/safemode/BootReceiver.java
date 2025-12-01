@@ -4,8 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * BroadcastReceiver que inicia os serviços do aplicativo após o boot do dispositivo.
+ * Recebe broadcasts de boot completo e atualização de pacotes para reiniciar os serviços.
+ */
 public class BootReceiver extends BroadcastReceiver {
 
+    // Recebe broadcasts de boot e reinicia os serviços necessários
     @Override
     public void onReceive(Context context, Intent intent) {
 
