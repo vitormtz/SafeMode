@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Layout da tela para selecionar apps - VERSÃO COM CONTAINER -->
+<!-- Layout da tela de seleção de aplicativos para bloquear -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -7,19 +7,20 @@
     android:orientation="vertical"
     android:background="#1F3A5F">
 
+    <!-- Espaçador superior (status bar) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:background="#1F3A5F" />
 
-    <!-- Conteúdo principal -->
+    <!-- Container principal com múltiplos estados -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="16dp">
 
-        <!-- ✨ NOVO: Container LinearLayout para os Apps -->
+        <!-- Container com lista de apps -->
         <LinearLayout
             android:id="@+id/container_apps"
             android:layout_width="match_parent"
@@ -30,7 +31,7 @@
             android:elevation="4dp"
             android:visibility="gone">
 
-            <!-- ✨ MOVIDO: Título do Container -->
+            <!-- Título da tela -->
             <TextView
                 android:id="@+id/container_title"
                 android:layout_width="wrap_content"
@@ -42,7 +43,7 @@
                 android:layout_marginBottom="8dp"
                 android:drawablePadding="8dp" />
 
-            <!-- ✨ MOVIDO: Descrição do que fazer -->
+            <!-- Descrição explicativa -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,14 +53,14 @@
                 android:lineSpacingExtra="2dp"
                 android:layout_marginBottom="16dp" />
 
-            <!-- ✨ NOVO: Linha separadora -->
+            <!-- Divisor horizontal -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#E0E0E0"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Lista de Apps DENTRO do Container -->
+            <!-- RecyclerView com lista de aplicativos -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_apps"
                 android:layout_width="match_parent"
@@ -71,7 +72,7 @@
 
         </LinearLayout>
 
-        <!-- Indicador de Carregamento -->
+        <!-- Layout de carregamento -->
         <LinearLayout
             android:id="@+id/loading_layout"
             android:layout_width="match_parent"
@@ -82,6 +83,7 @@
             android:background="@drawable/card_background"
             android:padding="32dp">
 
+            <!-- Indicador de progresso -->
             <ProgressBar
                 android:id="@+id/progress_loading"
                 android:layout_width="48dp"
@@ -89,6 +91,7 @@
                 android:layout_marginBottom="16dp"
                 android:indeterminateTint="#2196F3" />
 
+            <!-- Texto de carregamento -->
             <TextView
                 android:id="@+id/text_loading"
                 android:layout_width="wrap_content"
@@ -100,7 +103,7 @@
 
         </LinearLayout>
 
-        <!-- Mensagem quando não há apps -->
+        <!-- Layout de lista vazia (erro) -->
         <LinearLayout
             android:id="@+id/layout_empty"
             android:layout_width="match_parent"
@@ -111,6 +114,7 @@
             android:padding="32dp"
             android:background="@drawable/card_background">
 
+            <!-- Ícone de apps -->
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -118,6 +122,7 @@
                 android:layout_marginBottom="16dp"
                 app:tint="#CCCCCC" />
 
+            <!-- Mensagem principal de erro -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,6 +132,7 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Mensagem secundária de erro -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,7 +142,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="2dp" />
 
-            <!-- ✨ NOVO: Botão para tentar novamente -->
+            <!-- Botão para tentar novamente -->
             <Button
                 android:id="@+id/btn_retry"
                 android:layout_width="wrap_content"
@@ -152,6 +158,7 @@
 
     </FrameLayout>
 
+    <!-- Espaçador inferior (navigation bar) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="48dp"
