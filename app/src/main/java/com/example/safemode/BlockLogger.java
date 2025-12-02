@@ -2,9 +2,11 @@ package com.example.safemode;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,8 +22,8 @@ public class BlockLogger {
     private static final String PREF_NAME = "BlockLog";
     private static final String KEY_LOG_ENTRIES = "log_entries";
     private static final int MAX_LOG_ENTRIES = 1000;
-    private Context context;
-    private SharedPreferences preferences;
+    private final Context context;
+    private final SharedPreferences preferences;
 
     // Construtor que inicializa o logger com contexto e SharedPreferences
     public BlockLogger(Context context) {

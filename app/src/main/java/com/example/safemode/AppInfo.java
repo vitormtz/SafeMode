@@ -2,6 +2,8 @@ package com.example.safemode;
 
 import android.graphics.drawable.Drawable;
 
+import java.util.Objects;
+
 /**
  * Classe de modelo que representa as informações de um aplicativo instalado no dispositivo.
  * Armazena dados como nome do pacote, nome da aplicação, ícone e status de bloqueio.
@@ -30,11 +32,15 @@ public class AppInfo {
     // Compara dois objetos AppInfo baseado no packageName
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
 
         AppInfo appInfo = (AppInfo) obj;
-        return packageName != null ? packageName.equals(appInfo.packageName) : appInfo.packageName == null;
+        return Objects.equals(packageName, appInfo.packageName);
     }
 
     // Retorna o código hash baseado no packageName
