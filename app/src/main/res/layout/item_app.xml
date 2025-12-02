@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Layout para cada app na lista de seleção -->
+<?xml version="1.0" encoding="utf-8"?><!-- Layout para cada app na lista de seleção -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    android:gravity="center_vertical"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="16dp">
 
     <!-- Ícone do App -->
     <ImageView
@@ -30,24 +29,24 @@
             android:id="@+id/app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nome do App"
-            android:textSize="16sp"
-            android:textColor="#212121"
-            android:textStyle="normal"
+            android:ellipsize="end"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:text="Nome do App"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:textStyle="normal" />
 
         <!-- Nome do Pacote do App -->
         <TextView
             android:id="@+id/app_package"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="com.exemplo.app"
-            android:textSize="12sp"
-            android:textColor="#666666"
             android:layout_marginTop="2dp"
-            android:maxLines="1"
             android:ellipsize="end"
+            android:maxLines="1"
+            android:text="com.exemplo.app"
+            android:textColor="#666666"
+            android:textSize="12sp"
             android:visibility="gone" />
 
     </LinearLayout>
