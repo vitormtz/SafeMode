@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+
 import androidx.core.app.NotificationCompat;
 
 /**
@@ -66,6 +67,17 @@ public class SafeModeService extends Service implements LocationManager.Location
         return null;
     }
 
+    // Callback chamado quando a localização muda
+    @Override
+    public void onLocationChanged(boolean isInsideAllowedArea) {
+        updateNotification(isInsideAllowedArea);
+    }
+
+    // Callback chamado quando ocorre erro na obtenção de localização
+    @Override
+    public void onLocationError(String error) {
+    }
+
     // Inicia o monitoramento de localização em tempo real
     private void startLocationMonitoring() {
         if (!isLocationMonitoringActive) {
@@ -80,17 +92,6 @@ public class SafeModeService extends Service implements LocationManager.Location
             locationManager.stopLocationUpdates();
             isLocationMonitoringActive = false;
         }
-    }
-
-    // Callback chamado quando a localização muda
-    @Override
-    public void onLocationChanged(boolean isInsideAllowedArea) {
-        updateNotification(isInsideAllowedArea);
-    }
-
-    // Callback chamado quando ocorre erro na obtenção de localização
-    @Override
-    public void onLocationError(String error) {
     }
 
     // Cria o canal de notificação para Android O e superior

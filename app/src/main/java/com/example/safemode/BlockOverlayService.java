@@ -49,6 +49,31 @@ public class BlockOverlayService extends Service {
         return START_NOT_STICKY;
     }
 
+    // Limpa recursos quando o service é destruído
+    @Override
+    public void onDestroy() {
+        try {
+
+            if (timeoutHandler != null) {
+                timeoutHandler.removeCallbacksAndMessages(null);
+            }
+
+            if (overlayView != null) {
+                removeOverlay();
+            }
+
+        } catch (Exception e) {
+        }
+
+        super.onDestroy();
+    }
+
+    // Retorna null pois este service não é bindable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     // Cria e exibe o overlay de bloqueio na tela
     private void createOverlay() {
         try {
@@ -257,30 +282,5 @@ public class BlockOverlayService extends Service {
         } catch (Exception e) {
             return "Sistema Android";
         }
-    }
-
-    // Limpa recursos quando o service é destruído
-    @Override
-    public void onDestroy() {
-        try {
-
-            if (timeoutHandler != null) {
-                timeoutHandler.removeCallbacksAndMessages(null);
-            }
-
-            if (overlayView != null) {
-                removeOverlay();
-            }
-
-        } catch (Exception e) {
-        }
-
-        super.onDestroy();
-    }
-
-    // Retorna null pois este service não é bindable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 }

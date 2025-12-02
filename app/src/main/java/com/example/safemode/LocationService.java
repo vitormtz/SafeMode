@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -29,12 +30,6 @@ public class LocationService extends Service implements LocationListener {
     private AppPreferences preferences;
     private Location currentLocation;
     private LocationUpdateListener listener;
-
-    // Interface de callback para notificar mudanças de localização
-    public interface LocationUpdateListener {
-        void onLocationChanged(boolean isInsideAllowedArea);
-        void onLocationError(String error);
-    }
 
     // Inicializa o service e cria o canal de notificações
     @Override
@@ -73,6 +68,40 @@ public class LocationService extends Service implements LocationListener {
     @Override
     public IBinder onBind(Intent intent) {
         return new LocationBinder();
+    }
+
+    // Callback chamado quando a localização muda
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = location;
+
+        boolean isOutside = isOutsideAllowedArea(location);
+
+        updateNotification(!isOutside);
+
+        if (listener != null) {
+            listener.onLocationChanged(!isOutside);
+        }
+
+        sendLocationBroadcast(!isOutside, location);
+    }
+
+    // Callback chamado quando o status do provedor muda (não implementado)
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
+    // Callback chamado quando um provedor é habilitado (não implementado)
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+
+    // Callback chamado quando um provedor é desabilitado
+    @Override
+    public void onProviderDisabled(String provider) {
+        if (LocationManager.GPS_PROVIDER.equals(provider)) {
+            notifyLocationError("GPS foi desligado");
+        }
     }
 
     // Inicia atualizações contínuas de localização dos provedores GPS e Network
@@ -145,22 +174,6 @@ public class LocationService extends Service implements LocationListener {
         }
     }
 
-    // Callback chamado quando a localização muda
-    @Override
-    public void onLocationChanged(Location location) {
-        currentLocation = location;
-
-        boolean isOutside = isOutsideAllowedArea(location);
-
-        updateNotification(!isOutside);
-
-        if (listener != null) {
-            listener.onLocationChanged(!isOutside);
-        }
-
-        sendLocationBroadcast(!isOutside, location);
-    }
-
     // Verifica se a localização está fora da área permitida
     private boolean isOutsideAllowedArea(Location location) {
         double allowedLat = preferences.getAllowedLatitude();
@@ -198,24 +211,6 @@ public class LocationService extends Service implements LocationListener {
     private void notifyLocationError(String error) {
         if (listener != null) {
             listener.onLocationError(error);
-        }
-    }
-
-    // Callback chamado quando o status do provedor muda (não implementado)
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    // Callback chamado quando um provedor é habilitado (não implementado)
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    // Callback chamado quando um provedor é desabilitado
-    @Override
-    public void onProviderDisabled(String provider) {
-        if (LocationManager.GPS_PROVIDER.equals(provider)) {
-            notifyLocationError("GPS foi desligado");
         }
     }
 
@@ -296,6 +291,13 @@ public class LocationService extends Service implements LocationListener {
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
                 .build();
+    }
+
+    // Interface de callback para notificar mudanças de localização
+    public interface LocationUpdateListener {
+        void onLocationChanged(boolean isInsideAllowedArea);
+
+        void onLocationError(String error);
     }
 
     // Binder para permitir comunicação com o service

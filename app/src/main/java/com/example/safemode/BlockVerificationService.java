@@ -53,6 +53,27 @@ public class BlockVerificationService extends Service {
         return START_NOT_STICKY;
     }
 
+    // Limpa recursos quando o service é destruído
+    @Override
+    public void onDestroy() {
+        try {
+
+            if (verificationHandler != null) {
+                verificationHandler.removeCallbacksAndMessages(null);
+            }
+
+        } catch (Exception e) {
+        }
+
+        super.onDestroy();
+    }
+
+    // Retorna null pois este service não é bindable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     // Inicia o ciclo de verificação periódica do bloqueio
     private void startVerificationCycle() {
         try {
@@ -152,26 +173,5 @@ public class BlockVerificationService extends Service {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    // Limpa recursos quando o service é destruído
-    @Override
-    public void onDestroy() {
-        try {
-
-            if (verificationHandler != null) {
-                verificationHandler.removeCallbacksAndMessages(null);
-            }
-
-        } catch (Exception e) {
-        }
-
-        super.onDestroy();
-    }
-
-    // Retorna null pois este service não é bindable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 }

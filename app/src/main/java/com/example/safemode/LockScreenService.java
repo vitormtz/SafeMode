@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
+
 import androidx.core.app.NotificationCompat;
 
 /**
@@ -112,9 +113,9 @@ public class LockScreenService extends Service {
         private void showLockScreen() {
             Intent lockIntent = new Intent(LockScreenService.this, LockScreenActivity.class);
             lockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                              Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                              Intent.FLAG_ACTIVITY_NO_ANIMATION |
-                              Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                    Intent.FLAG_ACTIVITY_NO_ANIMATION |
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(lockIntent);
         }
     }
