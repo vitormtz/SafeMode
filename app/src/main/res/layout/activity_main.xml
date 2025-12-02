@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Layout da tela principal do SafeMode com todas as configurações -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#1F3A5F">
 
-    <!-- Status Bar Spacer -->
+    <!-- Espaçador superior (status bar) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:background="#1F3A5F" />
 
+    <!-- ScrollView para conteúdo rolável -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -25,7 +26,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- ======== CABEÇALHO ======== -->
+            <!-- Card de cabeçalho com logo e nome do app -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,6 +36,7 @@
                 android:gravity="center"
                 android:layout_marginBottom="20dp">
 
+                <!-- Logo do aplicativo -->
                 <ImageView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
@@ -42,6 +44,7 @@
                     android:layout_marginBottom="12dp"
                     android:contentDescription="@string/app_name" />
 
+                <!-- Nome do aplicativo -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,6 +54,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="6dp" />
 
+                <!-- Descrição do aplicativo -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,7 +65,7 @@
 
             </LinearLayout>
 
-            <!-- ======== BLOQUEIO DE APLICATIVOS ======== -->
+            <!-- Card de bloqueio de aplicativos -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,6 +74,7 @@
                 android:padding="20dp"
                 android:layout_marginBottom="12dp">
 
+                <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -79,7 +84,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Safe Mode Switch -->
+                <!-- Switch para ativar/desativar Safe Mode -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,12 +94,14 @@
                     android:padding="12dp"
                     android:layout_marginBottom="16dp">
 
+                    <!-- Informações do Safe Mode -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
+                        <!-- Título do toggle -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -103,6 +110,7 @@
                             android:textStyle="bold"
                             android:textColor="#212121" />
 
+                        <!-- Descrição do toggle -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -112,6 +120,7 @@
 
                     </LinearLayout>
 
+                    <!-- Switch do Safe Mode -->
                     <Switch
                         android:id="@+id/switch_safe_mode"
                         android:layout_width="wrap_content"
@@ -119,7 +128,7 @@
 
                 </LinearLayout>
 
-                <!-- Botão Selecionar Apps para Bloquear -->
+                <!-- Botão para selecionar apps a bloquear -->
                 <Button
                     android:id="@+id/btn_select_apps"
                     android:layout_width="match_parent"
@@ -132,7 +141,7 @@
                     android:layout_marginBottom="24dp"
                     android:textAllCaps="false"/>
 
-                <!-- Location Control Switch -->
+                <!-- Switch para ativar/desativar controle por localização -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -142,12 +151,14 @@
                     android:padding="12dp"
                     android:layout_marginBottom="16dp">
 
+                    <!-- Informações do controle por localização -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
+                        <!-- Título do toggle -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -156,6 +167,7 @@
                             android:textStyle="bold"
                             android:textColor="#212121"/>
 
+                        <!-- Descrição do toggle -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -165,6 +177,7 @@
 
                     </LinearLayout>
 
+                    <!-- Switch do controle por localização -->
                     <Switch
                         android:id="@+id/switch_location_control"
                         android:layout_width="wrap_content"
@@ -172,7 +185,7 @@
 
                 </LinearLayout>
 
-                <!-- Botão Configurar Área Permitida -->
+                <!-- Botão para configurar área permitida -->
                 <Button
                     android:id="@+id/btn_set_location"
                     android:layout_width="match_parent"
@@ -186,7 +199,7 @@
 
             </LinearLayout>
 
-            <!-- ======== OCULTAÇÃO DE APLICATIVOS ======== -->
+            <!-- Card de ocultação de aplicativos -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -195,6 +208,7 @@
                 android:padding="20dp"
                 android:layout_marginBottom="12dp">
 
+                <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -204,7 +218,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Lock Screen Switch -->
+                <!-- Switch para ativar/desativar ocultação -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -214,12 +228,14 @@
                     android:padding="12dp"
                     android:layout_marginBottom="16dp">
 
+                    <!-- Informações da ocultação -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
+                        <!-- Título do toggle -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -228,6 +244,7 @@
                             android:textStyle="bold"
                             android:textColor="#212121" />
 
+                        <!-- Descrição do toggle -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -237,6 +254,7 @@
 
                     </LinearLayout>
 
+                    <!-- Switch de ocultação -->
                     <Switch
                         android:id="@+id/switch_lock_screen"
                         android:layout_width="wrap_content"
@@ -244,7 +262,7 @@
 
                 </LinearLayout>
 
-                <!-- PIN Principal -->
+                <!-- Título do PIN principal -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -254,6 +272,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="8dp" />
 
+                <!-- Descrição do PIN principal -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -262,6 +281,7 @@
                     android:textColor="#666666"
                     android:layout_marginBottom="8dp" />
 
+                <!-- Container do PIN principal -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -269,6 +289,7 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="16dp">
 
+                    <!-- Campo de entrada do PIN principal -->
                     <EditText
                         android:id="@+id/et_pin"
                         android:layout_width="0dp"
@@ -283,6 +304,7 @@
                         android:textColorHint="#999999"
                         android:importantForAutofill="no" />
 
+                    <!-- Botão para salvar PIN principal -->
                     <Button
                         android:id="@+id/btn_save_pin"
                         android:layout_width="wrap_content"
@@ -297,14 +319,14 @@
 
                 </LinearLayout>
 
-                <!-- Divider -->
+                <!-- Divisor horizontal -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#E0E0E0"
                     android:layout_marginVertical="12dp" />
 
-                <!-- PIN Secundário -->
+                <!-- Título do PIN secundário -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -314,6 +336,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="8dp" />
 
+                <!-- Descrição do PIN secundário -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -322,6 +345,7 @@
                     android:textColor="#666666"
                     android:layout_marginBottom="8dp" />
 
+                <!-- Container do PIN secundário -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -329,6 +353,7 @@
                     android:gravity="center_vertical"
                     android:layout_marginBottom="16dp">
 
+                    <!-- Campo de entrada do PIN secundário -->
                     <EditText
                         android:id="@+id/et_secondary_pin"
                         android:layout_width="0dp"
@@ -343,6 +368,7 @@
                         android:textColorHint="#999999"
                         android:importantForAutofill="no" />
 
+                    <!-- Botão para salvar PIN secundário -->
                     <Button
                         android:id="@+id/btn_save_secondary_pin"
                         android:layout_width="wrap_content"
@@ -357,7 +383,7 @@
 
                 </LinearLayout>
 
-                <!-- Botão Selecionar Apps para Ocultar -->
+                <!-- Botão para selecionar apps a ocultar -->
                 <Button
                     android:id="@+id/btn_select_hidden_apps"
                     android:layout_width="match_parent"
@@ -371,7 +397,7 @@
 
             </LinearLayout>
 
-            <!-- ======== CONFIGURAÇÕES GERAIS ======== -->
+            <!-- Card de configurações gerais -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -380,6 +406,7 @@
                 android:padding="20dp"
                 android:layout_marginBottom="12dp">
 
+                <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -389,7 +416,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Botão Configurações e Permissões -->
+                <!-- Botão para abrir configurações e permissões -->
                 <Button
                     android:id="@+id/btn_settings"
                     android:layout_width="match_parent"
@@ -403,7 +430,7 @@
 
             </LinearLayout>
 
-            <!-- ======== STATUS DA LOCALIZAÇÃO ======== -->
+            <!-- Card de status da localização (visível quando controle por localização está ativo) -->
             <LinearLayout
                 android:id="@+id/layout_location_info"
                 android:layout_width="match_parent"
@@ -413,6 +440,7 @@
                 android:padding="20dp"
                 android:visibility="gone">
 
+                <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -422,6 +450,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="16dp" />
 
+                <!-- Container de informações da localização -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -430,12 +459,14 @@
                     android:background="@drawable/edittext_background"
                     android:padding="12dp">
 
+                    <!-- Textos de status -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
+                        <!-- Texto da localização atual -->
                         <TextView
                             android:id="@+id/text_current_location"
                             android:layout_width="wrap_content"
@@ -445,6 +476,7 @@
                             android:textColor="#212121"
                             android:layout_marginBottom="4dp" />
 
+                        <!-- Texto do status da distância -->
                         <TextView
                             android:id="@+id/text_distance_status"
                             android:layout_width="wrap_content"
@@ -464,7 +496,7 @@
 
     </ScrollView>
 
-    <!-- Bottom Navigation Spacer -->
+    <!-- Espaçador inferior (navigation bar) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="48dp"
