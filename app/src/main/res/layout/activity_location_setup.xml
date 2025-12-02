@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Layout da tela de configuração com Google Maps - BOTÕES REORGANIZADOS -->
+<!-- Layout da tela de configuração de localização segura -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#1F3A5F">
 
-    <!-- Espaçador para barra de status -->
+    <!-- Espaçador superior (status bar) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:background="#1F3A5F" />
 
-    <!-- Container principal com scroll CUSTOMIZADO -->
+    <!-- ScrollView customizado que permite interação com o mapa -->
     <com.example.safemode.MapFriendlyScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -28,7 +26,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- ✅ SEÇÃO DO MAPA (INALTERADA) -->
+            <!-- Card de seleção da área segura -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,6 +35,7 @@
                 android:padding="20dp"
                 android:layout_marginBottom="16dp">
 
+                <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -46,6 +45,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="12dp" />
 
+                <!-- Descrição explicativa -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -54,21 +54,21 @@
                     android:textColor="#666666"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Container do Google Maps -->
+                <!-- Container do mapa com estado de carregamento -->
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:background="#E0E0E0"
                     android:layout_marginBottom="16dp">
 
-                    <!-- ✅ FRAGMENTO DO GOOGLE MAPS -->
+                    <!-- Fragment do Google Maps -->
                     <fragment
                         android:id="@+id/map_fragment"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
 
-                    <!-- Indicador de carregamento do mapa -->
+                    <!-- Overlay de carregamento do mapa -->
                     <LinearLayout
                         android:id="@+id/map_loading"
                         android:layout_width="match_parent"
@@ -78,12 +78,14 @@
                         android:background="#FFFFFF"
                         android:visibility="visible">
 
+                        <!-- Indicador de progresso -->
                         <ProgressBar
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_marginBottom="16dp"
                             android:indeterminateTint="#2196F3" />
 
+                        <!-- Texto de carregamento -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -95,7 +97,7 @@
 
                 </FrameLayout>
 
-                <!-- Informações da localização selecionada -->
+                <!-- Texto mostrando a localização selecionada -->
                 <TextView
                     android:id="@+id/text_selected_location"
                     android:layout_width="match_parent"
@@ -109,13 +111,13 @@
                     android:minHeight="60dp"
                     android:layout_marginBottom="16dp" />
 
-                <!-- BOTÕES REORGANIZADOS - AGORA LADO A LADO -->
+                <!-- Container dos botões de ação -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Botão Minha Localização -->
+                    <!-- Botão para usar localização atual -->
                     <Button
                         android:id="@+id/btn_my_location"
                         android:layout_width="0dp"
@@ -128,7 +130,7 @@
                         android:layout_marginEnd="8dp"
                         android:textAllCaps="false"/>
 
-                    <!-- 🆕 BOTÃO SALVAR - MOVIDO PARA FICAR LADO A LADO -->
+                    <!-- Botão para salvar localização selecionada -->
                     <Button
                         android:id="@+id/btn_save_location"
                         android:layout_width="0dp"
@@ -147,7 +149,7 @@
 
             </LinearLayout>
 
-            <!-- ✅ SEÇÃO DO RAIO (INALTERADA) -->
+            <!-- Card de configuração do raio da área segura -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -156,6 +158,7 @@
                 android:padding="20dp"
                 android:layout_marginBottom="16dp">
 
+                <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -165,6 +168,7 @@
                     android:textColor="#212121"
                     android:layout_marginBottom="12dp" />
 
+                <!-- Descrição explicativa -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -173,7 +177,7 @@
                     android:textColor="#666666"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Valor atual do raio -->
+                <!-- Exibição do valor atual do raio -->
                 <TextView
                     android:id="@+id/text_radius_value"
                     android:layout_width="wrap_content"
@@ -185,7 +189,7 @@
                     android:layout_marginBottom="12dp"
                     android:layout_gravity="center" />
 
-                <!-- Controle deslizante do raio -->
+                <!-- Slider para ajustar o raio (50m a 2km) -->
                 <SeekBar
                     android:id="@+id/seekbar_radius"
                     android:layout_width="match_parent"
@@ -197,12 +201,13 @@
                     android:thumbTint="#2196F3"
                     android:layout_marginBottom="8dp" />
 
-                <!-- Labels min/max -->
+                <!-- Indicadores dos valores mínimo e máximo -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+                    <!-- Valor mínimo -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -210,11 +215,13 @@
                         android:textSize="12sp"
                         android:textColor="#999999" />
 
+                    <!-- Espaçador -->
                     <View
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:layout_weight="1" />
 
+                    <!-- Valor máximo -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -230,7 +237,7 @@
 
     </com.example.safemode.MapFriendlyScrollView>
 
-    <!-- Espaçador inferior -->
+    <!-- Espaçador inferior (navigation bar) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="48dp"
