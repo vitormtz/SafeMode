@@ -5,6 +5,7 @@ import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.os.Build;
+
 import java.util.List;
 
 /**
@@ -78,7 +79,7 @@ public class UsageStatsUtils {
         }
     }
 
-    // Obtém o app em primeiro plano usando método legado para Android pré-Lollipop
+    // Obtem o app em primeiro plano usando metodo legado para Android pré-Lollipop
     private static String getForegroundAppLegacy(Context context) {
 
         try {

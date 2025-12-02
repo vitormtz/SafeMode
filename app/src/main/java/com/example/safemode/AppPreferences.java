@@ -2,6 +2,7 @@ package com.example.safemode;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,11 +24,18 @@ public class AppPreferences {
     private static final String KEY_HIDDEN_APPS = "hidden_apps";
     private static final String KEY_HIDE_MODE_ACTIVE = "hide_mode_active";
 
-    private SharedPreferences preferences;
+    private final SharedPreferences preferences;
 
     // Construtor que inicializa as SharedPreferences
     public AppPreferences(Context context) {
         preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    // Retorna uma cópia do conjunto de aplicativos bloqueados
+    public Set<String> getBlockedApps() {
+        Set<String> originalSet = preferences.getStringSet(KEY_BLOCKED_APPS, new HashSet<>());
+        Set<String> copySet = new HashSet<>(originalSet);
+        return copySet;
     }
 
     // Salva o conjunto de aplicativos bloqueados, removendo espaços extras
@@ -45,13 +53,6 @@ public class AppPreferences {
 
         editor.putStringSet(KEY_BLOCKED_APPS, cleanSet);
         editor.apply();
-    }
-
-    // Retorna uma cópia do conjunto de aplicativos bloqueados
-    public Set<String> getBlockedApps() {
-        Set<String> originalSet = preferences.getStringSet(KEY_BLOCKED_APPS, new HashSet<>());
-        Set<String> copySet = new HashSet<>(originalSet);
-        return copySet;
     }
 
     // Verifica se um aplicativo específico está bloqueado
@@ -87,17 +88,17 @@ public class AppPreferences {
         setBlockedApps(blockedApps);
     }
 
+    // Retorna se o modo seguro está ativado
+    public boolean isSafeModeEnabled() {
+        boolean enabled = preferences.getBoolean(KEY_SAFE_MODE_ENABLED, false);
+        return enabled;
+    }
+
     // Define se o modo seguro está ativado ou desativado
     public void setSafeModeEnabled(boolean enabled) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_SAFE_MODE_ENABLED, enabled);
         editor.apply();
-    }
-
-    // Retorna se o modo seguro está ativado
-    public boolean isSafeModeEnabled() {
-        boolean enabled = preferences.getBoolean(KEY_SAFE_MODE_ENABLED, false);
-        return enabled;
     }
 
     // Retorna a latitude da localização permitida
@@ -128,17 +129,17 @@ public class AppPreferences {
         return value;
     }
 
+    // Retorna se o bloqueio por localização está ativado
+    public boolean isLocationEnabled() {
+        boolean value = preferences.getBoolean(KEY_LOCATION_ENABLED, false);
+        return value;
+    }
+
     // Define se o bloqueio por localização está ativado ou desativado
     public void setLocationEnabled(boolean enabled) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_LOCATION_ENABLED, enabled);
         editor.apply();
-    }
-
-    // Retorna se o bloqueio por localização está ativado
-    public boolean isLocationEnabled() {
-        boolean value = preferences.getBoolean(KEY_LOCATION_ENABLED, false);
-        return value;
     }
 
     // Define a localização permitida com latitude, longitude e raio em metros
@@ -157,6 +158,11 @@ public class AppPreferences {
         }
     }
 
+    // Retorna se a tela de bloqueio está ativada
+    public boolean isLockScreenEnabled() {
+        return preferences.getBoolean(KEY_LOCK_SCREEN_ENABLED, false);
+    }
+
     // Define se a tela de bloqueio está ativada ou desativada
     public void setLockScreenEnabled(boolean enabled) {
         SharedPreferences.Editor editor = preferences.edit();
@@ -164,9 +170,11 @@ public class AppPreferences {
         editor.apply();
     }
 
-    // Retorna se a tela de bloqueio está ativada
-    public boolean isLockScreenEnabled() {
-        return preferences.getBoolean(KEY_LOCK_SCREEN_ENABLED, false);
+    // Retorna uma cópia do conjunto de aplicativos ocultos
+    public Set<String> getHiddenApps() {
+        Set<String> originalSet = preferences.getStringSet(KEY_HIDDEN_APPS, new HashSet<>());
+        Set<String> copySet = new HashSet<>(originalSet);
+        return copySet;
     }
 
     // Salva o conjunto de aplicativos ocultos, removendo espaços extras
@@ -185,13 +193,6 @@ public class AppPreferences {
         editor.apply();
     }
 
-    // Retorna uma cópia do conjunto de aplicativos ocultos
-    public Set<String> getHiddenApps() {
-        Set<String> originalSet = preferences.getStringSet(KEY_HIDDEN_APPS, new HashSet<>());
-        Set<String> copySet = new HashSet<>(originalSet);
-        return copySet;
-    }
-
     // Verifica se um aplicativo específico está oculto
     public boolean isAppHidden(String packageName) {
         String cleanPackageName = packageName.trim();
@@ -199,16 +200,16 @@ public class AppPreferences {
         return hiddenApps.contains(cleanPackageName);
     }
 
+    // Retorna se o modo de ocultar aplicativos está ativo
+    public boolean isHideModeActive() {
+        boolean active = preferences.getBoolean(KEY_HIDE_MODE_ACTIVE, false);
+        return active;
+    }
+
     // Define se o modo de ocultar aplicativos está ativo ou inativo
     public void setHideModeActive(boolean active) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_HIDE_MODE_ACTIVE, active);
         editor.apply();
-    }
-
-    // Retorna se o modo de ocultar aplicativos está ativo
-    public boolean isHideModeActive() {
-        boolean active = preferences.getBoolean(KEY_HIDE_MODE_ACTIVE, false);
-        return active;
     }
 }

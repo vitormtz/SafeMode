@@ -3,6 +3,8 @@ package com.example.safemode;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
+
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
@@ -18,7 +20,7 @@ public class PinManager {
     private static final String KEY_PIN_SALT = "pin_salt";
     private static final String KEY_SECONDARY_PIN_HASH = "secondary_pin_hash";
     private static final String KEY_SECONDARY_PIN_SALT = "secondary_pin_salt";
-    private SharedPreferences preferences;
+    private final SharedPreferences preferences;
 
     // Inicializa o gerenciador de PINs com contexto e SharedPreferences
     public PinManager(Context context) {
@@ -85,23 +87,6 @@ public class PinManager {
         editor.apply();
     }
 
-    // Gera um salt aleatório de 16 bytes para aumentar a segurança do hash
-    private byte[] generateSalt() {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        return salt;
-    }
-
-    // Gera o hash SHA-256 do PIN combinado com o salt
-    private String hashPin(String pin, byte[] salt) throws Exception {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        digest.reset();
-        digest.update(salt);
-        byte[] hash = digest.digest(pin.getBytes("UTF-8"));
-        return Base64.encodeToString(hash, Base64.NO_WRAP);
-    }
-
     // Define o PIN secundário de 4 dígitos com hash seguro usando SHA-256
     public boolean setSecondaryPin(String pin) {
         try {
@@ -162,5 +147,22 @@ public class PinManager {
             return 2;
         }
         return 0;
+    }
+
+    // Gera um salt aleatório de 16 bytes para aumentar a segurança do hash
+    private byte[] generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return salt;
+    }
+
+    // Gera o hash SHA-256 do PIN combinado com o salt
+    private String hashPin(String pin, byte[] salt) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        digest.reset();
+        digest.update(salt);
+        byte[] hash = digest.digest(pin.getBytes(StandardCharsets.UTF_8));
+        return Base64.encodeToString(hash, Base64.NO_WRAP);
     }
 }

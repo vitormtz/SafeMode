@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+
 import androidx.core.content.ContextCompat;
 
 /**
@@ -11,20 +12,14 @@ import androidx.core.content.ContextCompat;
  * Implementa LocationListener para receber atualizações de localização em tempo real.
  */
 public class LocationManager implements LocationListener {
-    private Context context;
-    private android.location.LocationManager systemLocationManager;
-    private AppPreferences preferences;
-    private Location currentLocation;
-    private LocationUpdateListener listener;
     private static final long LOCATION_MAX_AGE = 300000;
     private static final long UPDATE_INTERVAL = 15000;
     private static final float MIN_DISTANCE = 5;
-
-    // Interface de callback para notificar mudanças de localização
-    public interface LocationUpdateListener {
-        void onLocationChanged(boolean isInsideAllowedArea);
-        void onLocationError(String error);
-    }
+    private final Context context;
+    private final android.location.LocationManager systemLocationManager;
+    private final AppPreferences preferences;
+    private Location currentLocation;
+    private LocationUpdateListener listener;
 
     // Construtor que inicializa o LocationManager com contexto e preferências
     public LocationManager(Context context) {
@@ -64,127 +59,6 @@ public class LocationManager implements LocationListener {
                 listener.onLocationError("Erro de permissão de localização");
             }
         }
-    }
-
-    // Requisita localização de todos os provedores disponíveis (GPS, Network, Passive)
-    private void requestLocationFromAllProviders() {
-
-        try {
-            Location bestLastKnown = getBestLastKnownLocation();
-            if (bestLastKnown != null) {
-                long age = System.currentTimeMillis() - bestLastKnown.getTime();
-                if (age < LOCATION_MAX_AGE) {
-                    onLocationChanged(bestLastKnown);
-                    return;
-                }
-            }
-            boolean gpsRequested = false;
-            boolean networkRequested = false;
-
-            if (systemLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                try {
-                    systemLocationManager.requestSingleUpdate(
-                            android.location.LocationManager.GPS_PROVIDER,
-                            new SingleUpdateLocationListener("GPS"),
-                            null
-                    );
-                    gpsRequested = true;
-                } catch (Exception e) {
-                }
-            }
-
-            if (systemLocationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)) {
-                try {
-                    systemLocationManager.requestSingleUpdate(
-                            android.location.LocationManager.NETWORK_PROVIDER,
-                            new SingleUpdateLocationListener("Network"),
-                            null
-                    );
-                    networkRequested = true;
-                } catch (Exception e) {
-                }
-            }
-
-            try {
-                systemLocationManager.requestSingleUpdate(
-                        android.location.LocationManager.PASSIVE_PROVIDER,
-                        new SingleUpdateLocationListener("Passive"),
-                        null
-                );
-            } catch (Exception e) {
-            }
-
-            if (!gpsRequested && !networkRequested) {
-                if (listener != null) {
-                    listener.onLocationError("Nenhum provedor de localização disponível");
-                }
-            }
-
-        } catch (SecurityException e) {
-            if (listener != null) {
-                listener.onLocationError("Erro de permissão");
-            }
-        }
-    }
-
-    // LocationListener interno para receber uma única atualização de localização
-    private class SingleUpdateLocationListener implements android.location.LocationListener {
-        private String providerName;
-
-        public SingleUpdateLocationListener(String providerName) {
-            this.providerName = providerName;
-        }
-
-        // Recebe atualização de localização e verifica se é melhor que a atual
-        @Override
-        public void onLocationChanged(Location location) {
-
-            if (isBetterLocation(location, currentLocation)) {
-                LocationManager.this.onLocationChanged(location);
-            }
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-        @Override
-        public void onProviderEnabled(String provider) {}
-
-        @Override
-        public void onProviderDisabled(String provider) {}
-    }
-
-    // Verifica se uma localização é melhor que a atual baseada em tempo e precisão
-    private boolean isBetterLocation(Location location, Location currentBestLocation) {
-        if (currentBestLocation == null) {
-            return true;
-        }
-
-        long timeDelta = location.getTime() - currentBestLocation.getTime();
-        boolean isSignificantlyNewer = timeDelta > 2 * 60 * 1000;
-        boolean isSignificantlyOlder = timeDelta < -2 * 60 * 1000;
-
-        if (isSignificantlyNewer) {
-            return true;
-        } else if (isSignificantlyOlder) {
-            return false;
-        }
-
-        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-        boolean isLessAccurate = accuracyDelta > 0;
-        boolean isMoreAccurate = accuracyDelta < 0;
-        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
-
-        boolean isFromSameProvider = location.getProvider() != null &&
-                location.getProvider().equals(currentBestLocation.getProvider());
-
-        if (isMoreAccurate) {
-            return true;
-        } else if (!isSignificantlyLessAccurate && !isFromSameProvider) {
-            return true;
-        }
-
-        return false;
     }
 
     // Inicia atualizações contínuas de localização dos provedores GPS e Network
@@ -326,6 +200,98 @@ public class LocationManager implements LocationListener {
         getLocationOnce();
     }
 
+    // Requisita localização de todos os provedores disponíveis (GPS, Network, Passive)
+    private void requestLocationFromAllProviders() {
+
+        try {
+            Location bestLastKnown = getBestLastKnownLocation();
+            if (bestLastKnown != null) {
+                long age = System.currentTimeMillis() - bestLastKnown.getTime();
+                if (age < LOCATION_MAX_AGE) {
+                    onLocationChanged(bestLastKnown);
+                    return;
+                }
+            }
+            boolean gpsRequested = false;
+            boolean networkRequested = false;
+
+            if (systemLocationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+                try {
+                    systemLocationManager.requestSingleUpdate(
+                            android.location.LocationManager.GPS_PROVIDER,
+                            new SingleUpdateLocationListener("GPS"),
+                            null
+                    );
+                    gpsRequested = true;
+                } catch (Exception e) {
+                }
+            }
+
+            if (systemLocationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)) {
+                try {
+                    systemLocationManager.requestSingleUpdate(
+                            android.location.LocationManager.NETWORK_PROVIDER,
+                            new SingleUpdateLocationListener("Network"),
+                            null
+                    );
+                    networkRequested = true;
+                } catch (Exception e) {
+                }
+            }
+
+            try {
+                systemLocationManager.requestSingleUpdate(
+                        android.location.LocationManager.PASSIVE_PROVIDER,
+                        new SingleUpdateLocationListener("Passive"),
+                        null
+                );
+            } catch (Exception e) {
+            }
+
+            if (!gpsRequested && !networkRequested) {
+                if (listener != null) {
+                    listener.onLocationError("Nenhum provedor de localização disponível");
+                }
+            }
+
+        } catch (SecurityException e) {
+            if (listener != null) {
+                listener.onLocationError("Erro de permissão");
+            }
+        }
+    }
+
+    // Verifica se uma localização é melhor que a atual baseada em tempo e precisão
+    private boolean isBetterLocation(Location location, Location currentBestLocation) {
+        if (currentBestLocation == null) {
+            return true;
+        }
+
+        long timeDelta = location.getTime() - currentBestLocation.getTime();
+        boolean isSignificantlyNewer = timeDelta > 2 * 60 * 1000;
+        boolean isSignificantlyOlder = timeDelta < -2 * 60 * 1000;
+
+        if (isSignificantlyNewer) {
+            return true;
+        } else if (isSignificantlyOlder) {
+            return false;
+        }
+
+        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        boolean isFromSameProvider = location.getProvider() != null &&
+                location.getProvider().equals(currentBestLocation.getProvider());
+
+        if (isMoreAccurate) {
+            return true;
+        } else {
+            return !isSignificantlyLessAccurate && !isFromSameProvider;
+        }
+    }
+
     // Verifica se o app tem permissão de localização
     private boolean hasLocationPermission() {
         return ContextCompat.checkSelfPermission(context,
@@ -384,6 +350,43 @@ public class LocationManager implements LocationListener {
             return null;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    // Interface de callback para notificar mudanças de localização
+    public interface LocationUpdateListener {
+        void onLocationChanged(boolean isInsideAllowedArea);
+
+        void onLocationError(String error);
+    }
+
+    // LocationListener interno para receber uma única atualização de localização
+    private class SingleUpdateLocationListener implements android.location.LocationListener {
+        private final String providerName;
+
+        public SingleUpdateLocationListener(String providerName) {
+            this.providerName = providerName;
+        }
+
+        // Recebe atualização de localização e verifica se é melhor que a atual
+        @Override
+        public void onLocationChanged(Location location) {
+
+            if (isBetterLocation(location, currentLocation)) {
+                LocationManager.this.onLocationChanged(location);
+            }
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
         }
     }
 }
