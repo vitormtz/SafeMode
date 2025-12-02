@@ -16,14 +16,20 @@ import android.widget.TextView;
  */
 public class SimpleBlockActivity extends Activity {
 
-    private Handler autoCloseHandler;
     private static boolean isCurrentlyShowing = false;
     private static long lastCloseTime = 0;
     private static SimpleBlockActivity currentInstance = null;
+    private Handler autoCloseHandler;
 
     // Verifica se a activity de bloqueio está atualmente ativa
     public static boolean isCurrentlyActive() {
         return isCurrentlyShowing && currentInstance != null;
+    }
+
+    // Sempre retorna false para impedir que a activity seja finalizada
+    @Override
+    public boolean isFinishing() {
+        return false;
     }
 
     // Inicializa a activity, previne múltiplas instâncias e configura o bloqueio
@@ -56,6 +62,45 @@ public class SimpleBlockActivity extends Activity {
         } catch (Exception e) {
             finish();
         }
+    }
+
+    // Metodo do ciclo de vida (sem implementação adicional)
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    // Metodo do ciclo de vida (sem implementação adicional)
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    // Metodo do ciclo de vida (sem implementação adicional)
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    // Metodo do ciclo de vida (sem implementação adicional)
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    // Limpa recursos ao destruir a activity
+    @Override
+    protected void onDestroy() {
+        try {
+            cancelAutoClose();
+
+            lastCloseTime = System.currentTimeMillis();
+            isCurrentlyShowing = false;
+            currentInstance = null;
+
+        } catch (Exception e) {
+        }
+        super.onDestroy();
     }
 
     // Configura a janela como invisível e sempre visível sobre outras apps
@@ -262,50 +307,5 @@ public class SimpleBlockActivity extends Activity {
         } catch (Exception e) {
             forceClose();
         }
-    }
-
-    // Método do ciclo de vida (sem implementação adicional)
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    // Método do ciclo de vida (sem implementação adicional)
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    // Método do ciclo de vida (sem implementação adicional)
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    // Método do ciclo de vida (sem implementação adicional)
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    // Sempre retorna false para impedir que a activity seja finalizada
-    @Override
-    public boolean isFinishing() {
-        return false;
-    }
-
-    // Limpa recursos ao destruir a activity
-    @Override
-    protected void onDestroy() {
-        try {
-            cancelAutoClose();
-
-            lastCloseTime = System.currentTimeMillis();
-            isCurrentlyShowing = false;
-            currentInstance = null;
-
-        } catch (Exception e) {
-        }
-        super.onDestroy();
     }
 }

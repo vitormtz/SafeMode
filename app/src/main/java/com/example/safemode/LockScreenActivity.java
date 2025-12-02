@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.List;
 
 /**
@@ -34,6 +36,36 @@ public class LockScreenActivity extends AppCompatActivity {
     private boolean isScreenOn = true;
     private BroadcastReceiver screenReceiver;
 
+    // Bloqueia a tecla de troca de apps
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_APP_SWITCH) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    // Reaplica barra de navegação oculta quando a janela ganha foco
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideNavigationBar();
+        }
+    }
+
+    // Remove animação ao finalizar a activity
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
+
+    // Bloqueia o botão voltar
+    @Override
+    public void onBackPressed() {
+    }
+
     // Inicializa a activity, configura tela de bloqueio e campos PIN
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +79,70 @@ public class LockScreenActivity extends AppCompatActivity {
         handler = new Handler();
         setupForegroundMonitoring();
         setupScreenReceiver();
+    }
+
+    // Inicia monitoramento de foreground ao retomar a activity
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideNavigationBar();
+        AppPreferences prefs = new AppPreferences(this);
+        if (prefs.isLockScreenEnabled() && checkForegroundTask != null) {
+            handler.post(checkForegroundTask);
+        }
+    }
+
+    // Para monitoramento de foreground ao pausar a activity
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (checkForegroundTask != null) {
+            handler.removeCallbacks(checkForegroundTask);
+        }
+    }
+
+    // Traz a tela de bloqueio de volta ao parar a activity
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AppPreferences prefs = new AppPreferences(this);
+        if (prefs.isLockScreenEnabled() && !isFinishing() && isScreenOn) {
+            bringToFront();
+        }
+    }
+
+    // Limpa recursos ao destruir a activity
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handler != null && checkForegroundTask != null) {
+            handler.removeCallbacks(checkForegroundTask);
+        }
+        if (screenReceiver != null) {
+            try {
+                unregisterReceiver(screenReceiver);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Traz a tela de bloqueio de volta quando usuário sai da app
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        AppPreferences prefs = new AppPreferences(this);
+        if (prefs.isLockScreenEnabled() && !isFinishing() && isScreenOn) {
+            bringToFront();
+        }
+    }
+
+    // Reaplica configurações ao receber nova intent
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        overridePendingTransition(0, 0);
+        hideNavigationBar();
     }
 
     // Configura flags da janela para funcionar como tela de bloqueio
@@ -68,12 +164,12 @@ public class LockScreenActivity extends AppCompatActivity {
                     setTurnScreenOn(true);
                 }
                 getWindow().addFlags(
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 );
             } else {
                 int flags = WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                           WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
-                           WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 
                 if (!isScreenOn) {
                     flags |= WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
@@ -83,14 +179,14 @@ public class LockScreenActivity extends AppCompatActivity {
             }
 
             getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN |
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN |
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                            WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
             );
 
             getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
             );
 
             hideNavigationBar();
@@ -136,7 +232,8 @@ public class LockScreenActivity extends AppCompatActivity {
     private void setupPinField(final EditText current, final EditText previous, final EditText next) {
         current.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -150,7 +247,8 @@ public class LockScreenActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         current.setOnKeyListener((v, keyCode, event) -> {
@@ -167,9 +265,9 @@ public class LockScreenActivity extends AppCompatActivity {
     // Verifica se o PIN digitado está correto
     private void verifyPin() {
         String enteredPin = pin1.getText().toString() +
-                           pin2.getText().toString() +
-                           pin3.getText().toString() +
-                           pin4.getText().toString();
+                pin2.getText().toString() +
+                pin3.getText().toString() +
+                pin4.getText().toString();
 
         if (enteredPin.length() == 4) {
             int pinType = pinManager.verifyPinType(enteredPin);
@@ -247,11 +345,15 @@ public class LockScreenActivity extends AppCompatActivity {
     // Verifica se este app está em foreground
     private boolean isThisAppInForeground() {
         ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        if (activityManager == null) return false;
+        if (activityManager == null) {
+            return false;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-            if (appProcesses == null) return false;
+            if (appProcesses == null) {
+                return false;
+            }
 
             final String packageName = getPackageName();
             for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
@@ -273,102 +375,8 @@ public class LockScreenActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, LockScreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                       Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                       Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+                Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
-    }
-
-    // Bloqueia a tecla de troca de apps
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_APP_SWITCH) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    // Reaplica barra de navegação oculta quando a janela ganha foco
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            hideNavigationBar();
-        }
-    }
-
-    // Inicia monitoramento de foreground ao retomar a activity
-    @Override
-    protected void onResume() {
-        super.onResume();
-        hideNavigationBar();
-        AppPreferences prefs = new AppPreferences(this);
-        if (prefs.isLockScreenEnabled() && checkForegroundTask != null) {
-            handler.post(checkForegroundTask);
-        }
-    }
-
-    // Para monitoramento de foreground ao pausar a activity
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (checkForegroundTask != null) {
-            handler.removeCallbacks(checkForegroundTask);
-        }
-    }
-
-    // Traz a tela de bloqueio de volta ao parar a activity
-    @Override
-    protected void onStop() {
-        super.onStop();
-        AppPreferences prefs = new AppPreferences(this);
-        if (prefs.isLockScreenEnabled() && !isFinishing() && isScreenOn) {
-            bringToFront();
-        }
-    }
-
-    // Limpa recursos ao destruir a activity
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (handler != null && checkForegroundTask != null) {
-            handler.removeCallbacks(checkForegroundTask);
-        }
-        if (screenReceiver != null) {
-            try {
-                unregisterReceiver(screenReceiver);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // Traz a tela de bloqueio de volta quando usuário sai da app
-    @Override
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-        AppPreferences prefs = new AppPreferences(this);
-        if (prefs.isLockScreenEnabled() && !isFinishing() && isScreenOn) {
-            bringToFront();
-        }
-    }
-
-    // Reaplica configurações ao receber nova intent
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        overridePendingTransition(0, 0);
-        hideNavigationBar();
-    }
-
-    // Remove animação ao finalizar a activity
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
-    }
-
-    // Bloqueia o botão voltar
-    @Override
-    public void onBackPressed() {
     }
 }

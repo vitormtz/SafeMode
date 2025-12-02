@@ -12,9 +12,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +43,11 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
     private List<LauncherAppInfo> allApps;
     private BroadcastReceiver packageChangeReceiver;
 
+    // Desabilita o botão voltar para manter o launcher ativo
+    @Override
+    public void onBackPressed() {
+    }
+
     // Inicializa a activity, configura views e carrega aplicativos
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,27 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         setupPackageChangeReceiver();
         loadApps();
         updateDateTime();
+    }
+
+    // Recarrega apps e atualiza data/hora ao retomar a activity
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadApps();
+        updateDateTime();
+    }
+
+    // Remove o receiver ao destruir a activity
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (packageChangeReceiver != null) {
+            try {
+                unregisterReceiver(packageChangeReceiver);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // Inicializa as views do layout
@@ -79,7 +107,8 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
     private void setupSearchBar() {
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -87,7 +116,8 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
@@ -206,31 +236,5 @@ public class SafeModeLauncherActivity extends AppCompatActivity {
         tvTime.setText(timeFormat.format(new Date()));
         tvDate.setText(dateFormat.format(new Date()));
         tvTime.postDelayed(this::updateDateTime, 60000);
-    }
-
-    // Recarrega apps e atualiza data/hora ao retomar a activity
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadApps();
-        updateDateTime();
-    }
-
-    // Remove o receiver ao destruir a activity
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (packageChangeReceiver != null) {
-            try {
-                unregisterReceiver(packageChangeReceiver);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    // Desabilita o botão voltar para manter o launcher ativo
-    @Override
-    public void onBackPressed() {
     }
 }

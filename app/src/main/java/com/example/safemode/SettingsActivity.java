@@ -15,10 +15,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import org.json.JSONObject;
 
 /**
@@ -50,6 +52,24 @@ public class SettingsActivity extends AppCompatActivity {
     private AppPreferences preferences;
     private BlockLogger blockLogger;
 
+    // Processa o resultado da solicitação de permissões
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        try {
+            if (requestCode == PERMISSION_REQUEST_LOCATION) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                }
+            }
+
+            checkAllPermissions();
+
+        } catch (Exception e) {
+        }
+    }
+
     // Inicializa a activity e configura views e permissões
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +87,32 @@ public class SettingsActivity extends AppCompatActivity {
         setupListeners();
 
         checkAllPermissions();
+    }
+
+    // Verifica permissões após retornar de outras activities
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        try {
+            new android.os.Handler().postDelayed(() -> {
+                checkAllPermissions();
+            }, 1000);
+
+        } catch (Exception e) {
+        }
+    }
+
+    // Recarrega configurações e verifica permissões ao retomar a activity
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            loadCurrentSettings();
+            checkAllPermissions();
+        } catch (Exception e) {
+        }
     }
 
     // Configura as barras do sistema para tela cheia
@@ -222,7 +268,7 @@ public class SettingsActivity extends AppCompatActivity {
             intent.addCategory(Intent.CATEGORY_HOME);
 
             android.content.pm.ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent,
-                android.content.pm.PackageManager.MATCH_DEFAULT_ONLY);
+                    android.content.pm.PackageManager.MATCH_DEFAULT_ONLY);
 
             if (resolveInfo != null && resolveInfo.activityInfo != null) {
                 String currentLauncher = resolveInfo.activityInfo.packageName;
@@ -324,38 +370,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    // Processa o resultado da solicitação de permissões
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        try {
-            if (requestCode == PERMISSION_REQUEST_LOCATION) {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                }
-            }
-
-            checkAllPermissions();
-
-        } catch (Exception e) {
-        }
-    }
-
-    // Verifica permissões após retornar de outras activities
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        try {
-            new android.os.Handler().postDelayed(() -> {
-                checkAllPermissions();
-            }, 1000);
-
-        } catch (Exception e) {
-        }
-    }
-
     // Exibe o histórico de bloqueios dos últimos 7 dias
     private void showBlockLogs() {
 
@@ -396,14 +410,14 @@ public class SettingsActivity extends AppCompatActivity {
 
             dialog.show();
 
-             GradientDrawable gradient = new GradientDrawable();
-             gradient.setColors(new int[]{
-                 getResources().getColor(R.color.primary_dark_blue),
-                 getResources().getColor(R.color.blue_medium)
-             });
-             gradient.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
-             gradient.setCornerRadius(15f);
-             dialog.getWindow().setBackgroundDrawable(gradient);
+            GradientDrawable gradient = new GradientDrawable();
+            gradient.setColors(new int[]{
+                    getResources().getColor(R.color.primary_dark_blue),
+                    getResources().getColor(R.color.blue_medium)
+            });
+            gradient.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
+            gradient.setCornerRadius(15f);
+            dialog.getWindow().setBackgroundDrawable(gradient);
 
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.white));
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(android.R.color.white));
@@ -481,18 +495,6 @@ public class SettingsActivity extends AppCompatActivity {
             } catch (Exception e2) {
                 showMessage("Erro ao abrir configurações de launcher");
             }
-        }
-    }
-
-    // Recarrega configurações e verifica permissões ao retomar a activity
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        try {
-            loadCurrentSettings();
-            checkAllPermissions();
-        } catch (Exception e) {
         }
     }
 }

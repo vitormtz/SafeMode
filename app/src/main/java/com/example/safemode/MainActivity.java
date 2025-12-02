@@ -9,8 +9,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Switch;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.HashSet;
 
 /**
@@ -61,6 +63,133 @@ public class MainActivity extends AppCompatActivity {
 
         initializeViews();
         setupClickListeners();
+    }
+
+    // Atualiza o estado dos switches ao retomar a activity
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            if (isFirstRun()) {
+                preferences.setSafeModeEnabled(false);
+                preferences.setLocationEnabled(false);
+                preferences.setBlockedApps(new HashSet<>());
+                preferences.setHiddenApps(new HashSet<>());
+            }
+
+            boolean safeModeEnabled = preferences.isSafeModeEnabled();
+            boolean locationEnabled = preferences.isLocationEnabled();
+
+            if (switchSafeMode != null) {
+                boolean currentSafeModeState = switchSafeMode.isChecked();
+
+                if (currentSafeModeState != safeModeEnabled) {
+
+                    switchSafeMode.setOnCheckedChangeListener(null);
+
+                    switchSafeMode.setChecked(safeModeEnabled);
+
+                    switchSafeMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+                        if (isChecked) {
+                            checkPermissionsAndEnableSafeMode();
+                        } else {
+                            disableSafeMode();
+                        }
+                    });
+                } else {
+
+                    switchSafeMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+                        if (isChecked) {
+                            checkPermissionsAndEnableSafeMode();
+                        } else {
+                            disableSafeMode();
+                        }
+                    });
+                }
+            }
+
+            if (switchLocationControl != null) {
+                boolean currentLocationState = switchLocationControl.isChecked();
+
+                if (currentLocationState != locationEnabled) {
+
+                    switchLocationControl.setOnCheckedChangeListener(null);
+
+                    switchLocationControl.setChecked(locationEnabled);
+
+                    switchLocationControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            if (!hasLocationPermission()) {
+                                showLocationPermissionDialog();
+                                switchLocationControl.setChecked(false);
+                                return;
+                            }
+                        }
+                        preferences.setLocationEnabled(isChecked);
+                    });
+
+                } else {
+                    switchLocationControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            if (!hasLocationPermission()) {
+                                showLocationPermissionDialog();
+                                switchLocationControl.setChecked(false);
+                                return;
+                            }
+                        }
+                        preferences.setLocationEnabled(isChecked);
+                    });
+                }
+            }
+
+            boolean lockScreenEnabled = preferences.isLockScreenEnabled();
+            if (switchLockScreen != null) {
+                boolean currentLockScreenState = switchLockScreen.isChecked();
+
+                if (currentLockScreenState != lockScreenEnabled) {
+                    switchLockScreen.setOnCheckedChangeListener(null);
+                    switchLockScreen.setChecked(lockScreenEnabled);
+
+                    switchLockScreen.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            enableLockScreen();
+                        } else {
+                            disableLockScreen();
+                        }
+                    });
+                } else {
+                    switchLockScreen.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            enableLockScreen();
+                        } else {
+                            disableLockScreen();
+                        }
+                    });
+                }
+            }
+
+        } catch (Exception e) {
+
+            try {
+                if (switchSafeMode != null) {
+                    switchSafeMode.setOnCheckedChangeListener(null);
+                    switchSafeMode.setChecked(false);
+                }
+
+                if (switchLocationControl != null) {
+                    switchLocationControl.setOnCheckedChangeListener(null);
+                    switchLocationControl.setChecked(false);
+                }
+
+                preferences.setSafeModeEnabled(false);
+                preferences.setLocationEnabled(false);
+
+            } catch (Exception secondaryError) {
+            }
+        }
     }
 
     // Configura as barras do sistema para tela cheia
@@ -319,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
             intent.addCategory(Intent.CATEGORY_HOME);
 
             android.content.pm.ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent,
-                android.content.pm.PackageManager.MATCH_DEFAULT_ONLY);
+                    android.content.pm.PackageManager.MATCH_DEFAULT_ONLY);
 
             if (resolveInfo != null && resolveInfo.activityInfo != null) {
                 String currentLauncher = resolveInfo.activityInfo.packageName;
@@ -527,133 +656,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Atualiza o estado dos switches ao retomar a activity
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        try {
-            if (isFirstRun()) {
-                preferences.setSafeModeEnabled(false);
-                preferences.setLocationEnabled(false);
-                preferences.setBlockedApps(new HashSet<>());
-                preferences.setHiddenApps(new HashSet<>());
-            }
-
-            boolean safeModeEnabled = preferences.isSafeModeEnabled();
-            boolean locationEnabled = preferences.isLocationEnabled();
-
-            if (switchSafeMode != null) {
-                boolean currentSafeModeState = switchSafeMode.isChecked();
-
-                if (currentSafeModeState != safeModeEnabled) {
-
-                    switchSafeMode.setOnCheckedChangeListener(null);
-
-                    switchSafeMode.setChecked(safeModeEnabled);
-
-                    switchSafeMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
-                        if (isChecked) {
-                            checkPermissionsAndEnableSafeMode();
-                        } else {
-                            disableSafeMode();
-                        }
-                    });
-                } else {
-
-                    switchSafeMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
-                        if (isChecked) {
-                            checkPermissionsAndEnableSafeMode();
-                        } else {
-                            disableSafeMode();
-                        }
-                    });
-                }
-            }
-
-            if (switchLocationControl != null) {
-                boolean currentLocationState = switchLocationControl.isChecked();
-
-                if (currentLocationState != locationEnabled) {
-
-                    switchLocationControl.setOnCheckedChangeListener(null);
-
-                    switchLocationControl.setChecked(locationEnabled);
-
-                    switchLocationControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (isChecked) {
-                            if (!hasLocationPermission()) {
-                                showLocationPermissionDialog();
-                                switchLocationControl.setChecked(false);
-                                return;
-                            }
-                        }
-                        preferences.setLocationEnabled(isChecked);
-                    });
-
-                } else {
-                    switchLocationControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (isChecked) {
-                            if (!hasLocationPermission()) {
-                                showLocationPermissionDialog();
-                                switchLocationControl.setChecked(false);
-                                return;
-                            }
-                        }
-                        preferences.setLocationEnabled(isChecked);
-                    });
-                }
-            }
-
-            boolean lockScreenEnabled = preferences.isLockScreenEnabled();
-            if (switchLockScreen != null) {
-                boolean currentLockScreenState = switchLockScreen.isChecked();
-
-                if (currentLockScreenState != lockScreenEnabled) {
-                    switchLockScreen.setOnCheckedChangeListener(null);
-                    switchLockScreen.setChecked(lockScreenEnabled);
-
-                    switchLockScreen.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (isChecked) {
-                            enableLockScreen();
-                        } else {
-                            disableLockScreen();
-                        }
-                    });
-                } else {
-                    switchLockScreen.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                        if (isChecked) {
-                            enableLockScreen();
-                        } else {
-                            disableLockScreen();
-                        }
-                    });
-                }
-            }
-
-        } catch (Exception e) {
-
-            try {
-                if (switchSafeMode != null) {
-                    switchSafeMode.setOnCheckedChangeListener(null);
-                    switchSafeMode.setChecked(false);
-                }
-
-                if (switchLocationControl != null) {
-                    switchLocationControl.setOnCheckedChangeListener(null);
-                    switchLocationControl.setChecked(false);
-                }
-
-                preferences.setSafeModeEnabled(false);
-                preferences.setLocationEnabled(false);
-
-            } catch (Exception secondaryError) {
-            }
-        }
-    }
-
     // Verifica se é a primeira execução do app após instalação
     private boolean isFirstRun() {
         try {
@@ -666,9 +668,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (isFirst) {
                 prefs.edit()
-                    .putBoolean("is_first_run", false)
-                    .putLong("last_install_time", installTime)
-                    .apply();
+                        .putBoolean("is_first_run", false)
+                        .putLong("last_install_time", installTime)
+                        .apply();
             }
 
             return isFirst;

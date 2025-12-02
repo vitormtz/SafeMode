@@ -10,9 +10,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +35,11 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
     private AppPreferences preferences;
     private List<AppInfo> appList;
 
+    // Callback chamado quando um app é marcado/desmarcado (não implementado)
+    @Override
+    public void onAppToggled(AppInfo appInfo, boolean isBlocked) {
+    }
+
     // Inicializa a activity, configura views e carrega lista de aplicativos
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,13 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         initializeViews();
         setupRecyclerView();
         loadInstalledApps();
+    }
+
+    // Salva os aplicativos ocultos quando a activity é pausada
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveHiddenApps();
     }
 
     // Configura as barras do sistema para tela cheia
@@ -190,18 +204,6 @@ public class HiddenAppsSelectionActivity extends AppCompatActivity implements Ap
         }
 
         return false;
-    }
-
-    // Callback chamado quando um app é marcado/desmarcado (não implementado)
-    @Override
-    public void onAppToggled(AppInfo appInfo, boolean isBlocked) {
-    }
-
-    // Salva os aplicativos ocultos quando a activity é pausada
-    @Override
-    protected void onPause() {
-        super.onPause();
-        saveHiddenApps();
     }
 
     // Salva a lista de aplicativos marcados como ocultos nas preferências

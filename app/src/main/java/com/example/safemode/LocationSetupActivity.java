@@ -13,10 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -52,6 +54,52 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
     private int currentRadius = 100;
     private AppPreferences preferences;
 
+    // Callback chamado quando o Google Maps está pronto para uso
+    // Callback chamado quando permissões são concedidas ou negadas
+    @Override
+    public void onMapReady(@NonNull GoogleMap map) {
+        try {
+            googleMap = map;
+
+            setupMapSettings();
+
+            if (mapLoadingLayout != null) {
+                mapLoadingLayout.setVisibility(View.GONE);
+            }
+
+            googleMap.setOnMapClickListener(this::onMapClick);
+
+            setupMapFriendlyScrollView();
+
+            goToCurrentLocation();
+
+            loadSavedArea();
+
+        } catch (Exception e) {
+        }
+    }
+
+    // Callback chamado quando permissões são concedidas ou negadas
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showMessage("Permissão de localização concedida!");
+
+                try {
+                    if (googleMap != null) {
+                        googleMap.setMyLocationEnabled(true);
+                    }
+                } catch (SecurityException e) {
+                }
+            } else {
+                showMessage("Permissão de localização negada!");
+            }
+        }
+    }
+
     // Inicializa a activity, views, mapa e carrega configurações salvas
     // Callback chamado quando permissões são concedidas ou negadas
     @Override
@@ -69,6 +117,55 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
         initializeGoogleMaps();
         loadSavedSettings();
         setupListeners();
+    }
+
+    // Callback chamado quando permissões são concedidas ou negadas
+    @Override
+    // Limpa recursos quando a activity é destruída
+    protected void onDestroy() {
+        try {
+            if (selectedLocationMarker != null) {
+                selectedLocationMarker.remove();
+                selectedLocationMarker = null;
+            }
+            if (safeAreaCircle != null) {
+                safeAreaCircle.remove();
+                safeAreaCircle = null;
+            }
+
+            googleMap = null;
+            selectedLatLng = null;
+
+        } catch (Exception e) {
+        }
+
+        super.onDestroy();
+    }
+
+    // Callback chamado quando permissões são concedidas ou negadas
+    @Override
+    // Restaura marcadores e círculos ao retomar a activity
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            if (googleMap != null && selectedLatLng != null) {
+                if (selectedLocationMarker == null) {
+                    updateLocationMarker(selectedLatLng);
+                }
+                if (safeAreaCircle == null) {
+                    updateSafeAreaCircle();
+                }
+            }
+
+        } catch (Exception e) {
+        }
+    }
+
+    // Callback chamado quando permissões são concedidas ou negadas
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     // Configura o ScrollView para funcionar bem com o mapa
@@ -110,7 +207,7 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
 
     // Inicializa todas as views e configura valores iniciais
     private void initializeViews() {
-        try{
+        try {
             scrollView = findViewById(R.id.scroll_view);
             mapLoadingLayout = findViewById(R.id.map_loading);
             textSelectedLocation = findViewById(R.id.text_selected_location);
@@ -143,31 +240,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
             if (mapFragment != null) {
                 mapFragment.getMapAsync(this);
             }
-
-        } catch (Exception e) {
-        }
-    }
-
-    // Callback chamado quando o Google Maps está pronto para uso
-    // Callback chamado quando permissões são concedidas ou negadas
-    @Override
-    public void onMapReady(@NonNull GoogleMap map) {
-        try {
-            googleMap = map;
-
-            setupMapSettings();
-
-            if (mapLoadingLayout != null) {
-                mapLoadingLayout.setVisibility(View.GONE);
-            }
-
-            googleMap.setOnMapClickListener(this::onMapClick);
-
-            setupMapFriendlyScrollView();
-
-            goToCurrentLocation();
-
-            loadSavedArea();
 
         } catch (Exception e) {
         }
@@ -331,7 +403,9 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (fromUser) {
-                        if (progress < 50) progress = 50;
+                        if (progress < 50) {
+                            progress = 50;
+                        }
 
                         currentRadius = progress;
                         updateRadiusText(progress);
@@ -344,10 +418,12 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
                 }
 
                 @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {}
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
                 @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {}
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
             });
 
         } catch (Exception e) {
@@ -456,76 +532,6 @@ public class LocationSetupActivity extends AppCompatActivity implements OnMapRea
     // Exibe uma mensagem Toast para o usuário
     private void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-    // Callback chamado quando permissões são concedidas ou negadas
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_REQUEST_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                showMessage("Permissão de localização concedida!");
-
-                try {
-                    if (googleMap != null) {
-                        googleMap.setMyLocationEnabled(true);
-                    }
-                } catch (SecurityException e) {
-                }
-            } else {
-                showMessage("Permissão de localização negada!");
-            }
-        }
-    }
-
-    // Callback chamado quando permissões são concedidas ou negadas
-    @Override
-    // Limpa recursos quando a activity é destruída
-    protected void onDestroy() {
-        try {
-            if (selectedLocationMarker != null) {
-                selectedLocationMarker.remove();
-                selectedLocationMarker = null;
-            }
-            if (safeAreaCircle != null) {
-                safeAreaCircle.remove();
-                safeAreaCircle = null;
-            }
-
-            googleMap = null;
-            selectedLatLng = null;
-
-        } catch (Exception e) {
-        }
-
-        super.onDestroy();
-    }
-
-    // Callback chamado quando permissões são concedidas ou negadas
-    @Override
-    // Restaura marcadores e círculos ao retomar a activity
-    protected void onResume() {
-        super.onResume();
-
-        try {
-            if (googleMap != null && selectedLatLng != null) {
-                if (selectedLocationMarker == null) {
-                    updateLocationMarker(selectedLatLng);
-                }
-                if (safeAreaCircle == null) {
-                    updateSafeAreaCircle();
-                }
-            }
-
-        } catch (Exception e) {
-        }
-    }
-
-    // Callback chamado quando permissões são concedidas ou negadas
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     // Verifica se a configuração atual é válida
