@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Layout para cada aplicativo no launcher -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,6 +8,7 @@
     android:gravity="center"
     android:background="?attr/selectableItemBackground">
 
+    <!-- Ícone do aplicativo -->
     <ImageView
         android:id="@+id/app_icon"
         android:layout_width="56dp"
@@ -14,6 +16,7 @@
         android:scaleType="fitCenter"
         android:layout_marginBottom="8dp" />
 
+    <!-- Nome do aplicativo -->
     <TextView
         android:id="@+id/app_name"
         android:layout_width="match_parent"

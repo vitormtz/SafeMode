@@ -37,7 +37,7 @@
             android:maxLines="1"
             android:ellipsize="end" />
 
-        <!-- Nome do Pacote (geralmente escondido) -->
+        <!-- Nome do Pacote do App -->
         <TextView
             android:id="@+id/app_package"
             android:layout_width="wrap_content"
