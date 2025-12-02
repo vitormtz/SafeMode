@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Dialog para solicitar múltiplas permissões necessárias -->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -14,7 +15,7 @@
         android:orientation="vertical"
         android:padding="0dp">
 
-        <!-- Header Section with Icon -->
+        <!-- Cabeçalho do dialog com ícone e título -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
             android:paddingEnd="24dp"
             android:paddingBottom="16dp">
 
-            <!-- Icon Container with Circle Background -->
+            <!-- Container circular do ícone -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/iconContainer"
                 android:layout_width="72dp"
@@ -33,6 +34,7 @@
                 app:cardCornerRadius="36dp"
                 app:cardElevation="4dp">
 
+                <!-- Ícone de escudo/proteção -->
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -41,7 +43,7 @@
                     android:tint="#FFFFFF" />
             </androidx.cardview.widget.CardView>
 
-            <!-- Title -->
+            <!-- Título do dialog -->
             <TextView
                 android:id="@+id/dialogTitle"
                 android:layout_width="wrap_content"
@@ -57,7 +59,7 @@
 
         </RelativeLayout>
 
-        <!-- Content Section -->
+        <!-- Container do conteúdo explicativo -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,6 +68,7 @@
             android:paddingEnd="24dp"
             android:paddingBottom="8dp">
 
+            <!-- Texto explicativo -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,7 +78,7 @@
                 android:textColor="#607D8B"
                 android:textSize="15sp" />
 
-            <!-- Permissions List -->
+            <!-- Container dinâmico das permissões -->
             <LinearLayout
                 android:id="@+id/permissionsContainer"
                 android:layout_width="match_parent"
@@ -83,7 +86,7 @@
                 android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
-                <!-- Location Permission Card -->
+                <!-- Card de permissão de localização (visível quando necessária) -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/locationPermissionCard"
                     android:layout_width="match_parent"
@@ -101,12 +104,14 @@
                         android:orientation="horizontal"
                         android:padding="14dp">
 
+                        <!-- Ícone de localização -->
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:src="@drawable/ic_location"
                             android:tint="@color/blue_normal" />
 
+                        <!-- Texto da permissão -->
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -120,7 +125,7 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Overlay Permission Card -->
+                <!-- Card de permissão de sobreposição (visível quando necessária) -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/overlayPermissionCard"
                     android:layout_width="match_parent"
@@ -138,12 +143,14 @@
                         android:orientation="horizontal"
                         android:padding="14dp">
 
+                        <!-- Ícone de apps -->
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:src="@drawable/ic_apps"
                             android:tint="@color/blue_normal" />
 
+                        <!-- Texto da permissão -->
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -157,7 +164,7 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Usage Stats Permission Card -->
+                <!-- Card de permissão de estatísticas de uso (visível quando necessária) -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/usageStatsPermissionCard"
                     android:layout_width="match_parent"
@@ -175,12 +182,14 @@
                         android:orientation="horizontal"
                         android:padding="14dp">
 
+                        <!-- Ícone de gráfico -->
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:src="@drawable/ic_chart"
                             android:tint="@color/blue_normal" />
 
+                        <!-- Texto da permissão -->
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -194,7 +203,7 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Accessibility Permission Card -->
+                <!-- Card de permissão de acessibilidade (visível quando necessária) -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/accessibilityPermissionCard"
                     android:layout_width="match_parent"
@@ -212,12 +221,14 @@
                         android:orientation="horizontal"
                         android:padding="14dp">
 
+                        <!-- Ícone de acessibilidade -->
                         <ImageView
                             android:layout_width="28dp"
                             android:layout_height="28dp"
                             android:src="@drawable/ic_accessibility"
                             android:tint="@color/blue_normal" />
 
+                        <!-- Texto da permissão -->
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -235,7 +246,7 @@
 
         </LinearLayout>
 
-        <!-- Buttons Section -->
+        <!-- Container dos botões de ação -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -245,7 +256,7 @@
             android:paddingEnd="24dp"
             android:paddingBottom="24dp">
 
-            <!-- Primary Button -->
+            <!-- Botão primário para ir às configurações -->
             <Button
                 android:id="@+id/btnGoToSettings"
                 android:layout_width="match_parent"
@@ -257,7 +268,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <!-- Secondary Button -->
+            <!-- Botão secundário para cancelar -->
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="match_parent"

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Dialog para solicitar definição do SafeMode como launcher padrão -->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -14,7 +15,7 @@
         android:orientation="vertical"
         android:padding="0dp">
 
-        <!-- Header Section with Icon -->
+        <!-- Cabeçalho do dialog com ícone e título -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
             android:paddingEnd="24dp"
             android:paddingBottom="16dp">
 
-            <!-- Icon Container with Circle Background -->
+            <!-- Container circular do ícone -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/iconContainer"
                 android:layout_width="72dp"
@@ -33,6 +34,7 @@
                 app:cardCornerRadius="36dp"
                 app:cardElevation="4dp">
 
+                <!-- Ícone de home -->
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -41,7 +43,7 @@
                     android:tint="#FFFFFF" />
             </androidx.cardview.widget.CardView>
 
-            <!-- Title -->
+            <!-- Título do dialog -->
             <TextView
                 android:id="@+id/dialogTitle"
                 android:layout_width="wrap_content"
@@ -57,7 +59,7 @@
 
         </RelativeLayout>
 
-        <!-- Content Section -->
+        <!-- Container do conteúdo explicativo -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,6 +68,7 @@
             android:paddingEnd="24dp"
             android:paddingBottom="8dp">
 
+            <!-- Texto explicativo principal -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,6 +78,7 @@
                 android:textColor="#607D8B"
                 android:textSize="15sp" />
 
+            <!-- Texto explicativo secundário -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,7 +89,7 @@
                 android:textColor="#607D8B"
                 android:textSize="15sp" />
 
-            <!-- Info Card -->
+            <!-- Card de informação adicional -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -100,6 +104,7 @@
                     android:orientation="horizontal"
                     android:padding="14dp">
 
+                    <!-- Ícone de informação -->
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -107,6 +112,7 @@
                         android:src="@drawable/ic_info"
                         android:tint="@color/blue_normal" />
 
+                    <!-- Texto informativo -->
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -122,7 +128,7 @@
 
         </LinearLayout>
 
-        <!-- Buttons Section -->
+        <!-- Container dos botões de ação -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +138,7 @@
             android:paddingEnd="24dp"
             android:paddingBottom="24dp">
 
-            <!-- Primary Button -->
+            <!-- Botão primário para ir às configurações -->
             <Button
                 android:id="@+id/btnGoToSettings"
                 android:layout_width="match_parent"
@@ -144,7 +150,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <!-- Secondary Button -->
+            <!-- Botão secundário para cancelar -->
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="match_parent"
