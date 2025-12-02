@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Layout da tela launcher personalizada do SafeMode -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#1F3A5F">
 
-    <!-- Status Bar Spacer -->
+    <!-- Espaçador superior (status bar) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="28dp"
         android:background="#1F3A5F" />
 
-    <!-- Header com Relógio e Data -->
+    <!-- Cabeçalho com relógio e data -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +20,7 @@
         android:padding="24dp"
         android:gravity="center">
 
+        <!-- Horário atual -->
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
@@ -29,6 +31,7 @@
             android:textColor="#FFFFFF"
             android:layout_marginBottom="4dp" />
 
+        <!-- Data atual -->
         <TextView
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
@@ -39,7 +42,7 @@
 
     </LinearLayout>
 
-    <!-- Barra de Busca -->
+    <!-- Barra de busca de aplicativos -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,6 +53,7 @@
         android:padding="8dp"
         android:gravity="center_vertical">
 
+        <!-- Campo de busca -->
         <EditText
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
@@ -64,7 +68,7 @@
 
     </LinearLayout>
 
-    <!-- Grid de Apps -->
+    <!-- RecyclerView com lista de aplicativos instalados -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_apps"
         android:layout_width="match_parent"
@@ -73,7 +77,7 @@
         android:padding="8dp"
         android:clipToPadding="false" />
 
-    <!-- Navigation Bar Spacer -->
+    <!-- Espaçador inferior (navigation bar) -->
     <View
         android:layout_width="match_parent"
         android:layout_height="48dp"
