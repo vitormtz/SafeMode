@@ -13,19 +13,6 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
     private AppPreferences preferences;
     private LocationManager locationManager;
 
-    // Inicializa o serviço de acessibilidade e suas dependências
-    @Override
-    protected void onServiceConnected() {
-        super.onServiceConnected();
-
-        try {
-            preferences = new AppPreferences(this);
-            locationManager = new LocationManager(this);
-
-        } catch (Exception e) {
-        }
-    }
-
     // Monitora eventos de mudança de janela para detectar abertura de apps
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -71,6 +58,30 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
             if (shouldBlockBasedOnLocation()) {
                 blockAppWithActivity(packageName);
             }
+
+        } catch (Exception e) {
+        }
+    }
+
+    // Metodo chamado quando o serviço é interrompido
+    @Override
+    public void onInterrupt() {
+    }
+
+    // Limpa recursos quando o serviço é destruído
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    // Inicializa o serviço de acessibilidade e suas dependências
+    @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+
+        try {
+            preferences = new AppPreferences(this);
+            locationManager = new LocationManager(this);
 
         } catch (Exception e) {
         }
@@ -224,16 +235,5 @@ public class SafeModeAccessibilityService extends android.accessibilityservice.A
             logger.logBlock(packageName, System.currentTimeMillis());
         } catch (Exception e) {
         }
-    }
-
-    // Método chamado quando o serviço é interrompido
-    @Override
-    public void onInterrupt() {
-    }
-
-    // Limpa recursos quando o serviço é destruído
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

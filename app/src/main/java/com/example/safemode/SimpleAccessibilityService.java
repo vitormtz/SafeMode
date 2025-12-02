@@ -10,15 +10,17 @@ import android.view.accessibility.AccessibilityEvent;
  */
 public class SimpleAccessibilityService extends AccessibilityService {
 
-    // Método chamado quando eventos de acessibilidade são detectados (sem implementação)
+    // Metodo chamado quando eventos de acessibilidade são detectados (sem implementação)
     @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {}
+    public void onAccessibilityEvent(AccessibilityEvent event) {
+    }
 
-    // Método chamado quando o serviço é interrompido (sem implementação)
+    // Metodo chamado quando o serviço é interrompido (sem implementação)
     @Override
-    public void onInterrupt() {}
+    public void onInterrupt() {
+    }
 
-    // Método chamado quando o serviço é conectado ao sistema (sem implementação)
+    // Metodo chamado quando o serviço é conectado ao sistema (sem implementação)
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
