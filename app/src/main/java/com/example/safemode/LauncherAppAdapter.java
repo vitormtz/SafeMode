@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 /**
@@ -16,14 +18,9 @@ import java.util.List;
  */
 public class LauncherAppAdapter extends RecyclerView.Adapter<LauncherAppAdapter.AppViewHolder> {
 
-    private Context context;
-    private List<LauncherAppInfo> apps;
-    private OnAppClickListener listener;
-
-    // Interface de callback para notificar quando um app é clicado
-    public interface OnAppClickListener {
-        void onAppClick(LauncherAppInfo app);
-    }
+    private final Context context;
+    private final List<LauncherAppInfo> apps;
+    private final OnAppClickListener listener;
 
     // Construtor que inicializa o adapter com contexto, lista de apps e listener
     public LauncherAppAdapter(Context context, List<LauncherAppInfo> apps, OnAppClickListener listener) {
@@ -60,11 +57,16 @@ public class LauncherAppAdapter extends RecyclerView.Adapter<LauncherAppAdapter.
         notifyDataSetChanged();
     }
 
+    // Interface de callback para notificar quando um app é clicado
+    public interface OnAppClickListener {
+        void onAppClick(LauncherAppInfo app);
+    }
+
     // ViewHolder que mantém as referências das views de cada item da lista
     class AppViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView iconView;
-        private TextView nameView;
+        private final ImageView iconView;
+        private final TextView nameView;
 
         // Construtor que inicializa as views do item
         public AppViewHolder(@NonNull View itemView) {

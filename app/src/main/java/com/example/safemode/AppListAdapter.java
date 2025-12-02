@@ -6,8 +6,10 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 /**
@@ -16,13 +18,8 @@ import java.util.List;
  */
 public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppViewHolder> {
 
-    private List<AppInfo> appList;
-    private OnAppToggleListener listener;
-
-    // Interface de callback para notificar quando um app é marcado/desmarcado para bloqueio
-    public interface OnAppToggleListener {
-        void onAppToggled(AppInfo appInfo, boolean isBlocked);
-    }
+    private final List<AppInfo> appList;
+    private final OnAppToggleListener listener;
 
     // Construtor que inicializa o adapter com a lista de apps e o listener
     public AppListAdapter(List<AppInfo> appList, OnAppToggleListener listener) {
@@ -52,13 +49,18 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppViewH
         return appList.size();
     }
 
+    // Interface de callback para notificar quando um app é marcado/desmarcado para bloqueio
+    public interface OnAppToggleListener {
+        void onAppToggled(AppInfo appInfo, boolean isBlocked);
+    }
+
     // ViewHolder que mantém as referências das views de cada item da lista
     public class AppViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView iconImageView;
-        private TextView nameTextView;
-        private TextView packageTextView;
-        private CheckBox blockCheckBox;
+        private final ImageView iconImageView;
+        private final TextView nameTextView;
+        private final TextView packageTextView;
+        private final CheckBox blockCheckBox;
 
         // Construtor que inicializa as views do item
         public AppViewHolder(@NonNull View itemView) {
