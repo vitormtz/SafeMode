@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Layout da tela de seleção de aplicativos para bloquear -->
+<?xml version="1.0" encoding="utf-8"?><!-- Layout da tela de seleção de aplicativos para bloquear -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#1F3A5F">
+    android:background="#1F3A5F"
+    android:orientation="vertical">
 
     <!-- Espaçador superior (status bar) -->
     <View
@@ -25,10 +24,10 @@
             android:id="@+id/container_apps"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:background="@drawable/card_background"
-            android:padding="20dp"
             android:elevation="4dp"
+            android:orientation="vertical"
+            android:padding="20dp"
             android:visibility="gone">
 
             <!-- Título da tela -->
@@ -36,29 +35,29 @@
                 android:id="@+id/container_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Selecionar Apps para Bloquear"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#212121"
                 android:layout_marginBottom="8dp"
-                android:drawablePadding="8dp" />
+                android:drawablePadding="8dp"
+                android:text="Selecionar Apps para Bloquear"
+                android:textColor="#212121"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <!-- Descrição explicativa -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Marque os aplicativos que devem ser bloqueados quando você estiver fora da área permitida."
-                android:textSize="14sp"
-                android:textColor="#666666"
+                android:layout_marginBottom="16dp"
                 android:lineSpacingExtra="2dp"
-                android:layout_marginBottom="16dp" />
+                android:text="Marque os aplicativos que devem ser bloqueados quando você estiver fora da área permitida."
+                android:textColor="#666666"
+                android:textSize="14sp" />
 
             <!-- Divisor horizontal -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#E0E0E0"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:background="#E0E0E0" />
 
             <!-- RecyclerView com lista de aplicativos -->
             <androidx.recyclerview.widget.RecyclerView
@@ -66,9 +65,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:scrollbars="vertical"
                 android:clipToPadding="false"
-                android:padding="4dp" />
+                android:padding="4dp"
+                android:scrollbars="vertical" />
 
         </LinearLayout>
 
@@ -77,11 +76,11 @@
             android:id="@+id/loading_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="visible"
             android:background="@drawable/card_background"
-            android:padding="32dp">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:visibility="visible">
 
             <!-- Indicador de progresso -->
             <ProgressBar
@@ -97,8 +96,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Carregando aplicativos..."
-                android:textSize="16sp"
                 android:textColor="#666666"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -108,51 +107,51 @@
             android:id="@+id/layout_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:background="@drawable/card_background"
             android:gravity="center"
-            android:visibility="gone"
+            android:orientation="vertical"
             android:padding="32dp"
-            android:background="@drawable/card_background">
+            android:visibility="gone">
 
             <!-- Ícone de apps -->
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/ic_apps"
                 android:layout_marginBottom="16dp"
+                android:src="@drawable/ic_apps"
                 app:tint="#CCCCCC" />
 
             <!-- Mensagem principal de erro -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="😔 Nenhum aplicativo encontrado"
-                android:textSize="18sp"
                 android:textColor="#666666"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <!-- Mensagem secundária de erro -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Não foi possível carregar a lista de aplicativos instalados no seu dispositivo."
-                android:textSize="14sp"
-                android:textColor="#999999"
                 android:gravity="center"
-                android:lineSpacingExtra="2dp" />
+                android:lineSpacingExtra="2dp"
+                android:text="Não foi possível carregar a lista de aplicativos instalados no seu dispositivo."
+                android:textColor="#999999"
+                android:textSize="14sp" />
 
             <!-- Botão para tentar novamente -->
             <Button
                 android:id="@+id/btn_retry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🔄 Tentar Novamente"
-                android:textColor="#2196F3"
-                android:background="@drawable/button_outline"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/button_outline"
                 android:padding="12dp"
-                android:textAllCaps="false" />
+                android:text="🔄 Tentar Novamente"
+                android:textAllCaps="false"
+                android:textColor="#2196F3" />
 
         </LinearLayout>
 

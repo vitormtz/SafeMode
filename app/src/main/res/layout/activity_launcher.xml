@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Layout da tela launcher personalizada do SafeMode -->
+<?xml version="1.0" encoding="utf-8"?><!-- Layout da tela launcher personalizada do SafeMode -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#1F3A5F">
+    android:background="#1F3A5F"
+    android:orientation="vertical">
 
     <!-- Espaçador superior (status bar) -->
     <View
@@ -16,20 +15,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center">
+        android:padding="24dp">
 
         <!-- Horário atual -->
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
             android:text="12:00"
-            android:textSize="56sp"
-            android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:layout_marginBottom="4dp" />
+            android:textSize="56sp"
+            android:textStyle="bold" />
 
         <!-- Data atual -->
         <TextView
@@ -37,8 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Segunda, 06 Janeiro"
-            android:textSize="16sp"
-            android:textColor="#B0BEC5" />
+            android:textColor="#B0BEC5"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -46,25 +45,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/edittext_background"
-        android:padding="8dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
         <!-- Campo de busca -->
         <EditText
             android:id="@+id/search_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Buscar aplicativos..."
-            android:textColorHint="#999999"
-            android:textColor="#212121"
             android:background="@android:color/transparent"
-            android:padding="8dp"
+            android:hint="Buscar aplicativos..."
             android:inputType="text"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:padding="8dp"
+            android:textColor="#212121"
+            android:textColorHint="#999999" />
 
     </LinearLayout>
 
@@ -74,8 +73,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"
+        android:padding="8dp" />
 
     <!-- Espaçador inferior (navigation bar) -->
     <View

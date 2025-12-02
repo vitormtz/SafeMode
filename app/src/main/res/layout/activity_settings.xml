@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Layout da tela de configurações e permissões -->
+<?xml version="1.0" encoding="utf-8"?><!-- Layout da tela de configurações e permissões -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#1F3A5F">
+    android:background="#1F3A5F"
+    android:orientation="vertical">
 
     <!-- Espaçador superior (status bar) -->
     <View
@@ -30,28 +29,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/card_background"
-                android:padding="20dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="vertical"
+                android:padding="20dp">
 
                 <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:text="Status das Permissões"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     android:textColor="#212121"
-                    android:layout_marginBottom="16dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <!-- Status da permissão de localização -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:orientation="horizontal">
 
                     <!-- Ícone de localização -->
                     <ImageView
@@ -65,11 +64,11 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:text="Localização"
-                        android:textSize="16sp"
                         android:textColor="#212121"
-                        android:layout_marginStart="12dp" />
+                        android:textSize="16sp" />
 
                     <!-- Status da permissão -->
                     <TextView
@@ -77,9 +76,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negada"
+                        android:textColor="#F44336"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#F44336" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -87,9 +86,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:orientation="horizontal">
 
                     <!-- Ícone de sobreposição -->
                     <ImageView
@@ -103,11 +102,11 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:text="Sobreposição"
-                        android:textSize="16sp"
                         android:textColor="#212121"
-                        android:layout_marginStart="12dp" />
+                        android:textSize="16sp" />
 
                     <!-- Status da permissão -->
                     <TextView
@@ -115,9 +114,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negada"
+                        android:textColor="#F44336"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#F44336" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -125,9 +124,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
+                    android:orientation="horizontal">
 
                     <!-- Ícone de estatísticas -->
                     <ImageView
@@ -141,11 +140,11 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:text="Estatísticas de Uso"
-                        android:textSize="16sp"
                         android:textColor="#212121"
-                        android:layout_marginStart="12dp" />
+                        android:textSize="16sp" />
 
                     <!-- Status da permissão -->
                     <TextView
@@ -153,9 +152,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Negada"
+                        android:textColor="#F44336"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#F44336" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -163,9 +162,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
+                    android:orientation="horizontal">
 
                     <!-- Ícone de acessibilidade -->
                     <ImageView
@@ -179,11 +178,11 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:text="Acessibilidade"
-                        android:textSize="16sp"
                         android:textColor="#212121"
-                        android:layout_marginStart="12dp" />
+                        android:textSize="16sp" />
 
                     <!-- Status da permissão -->
                     <TextView
@@ -191,9 +190,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Inativo"
+                        android:textColor="#F44336"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#F44336" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -202,11 +201,11 @@
                     android:id="@+id/btn_permissions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Configurar permissões"
-                    android:textColor="@color/button_text_white"
                     android:background="@drawable/button_orange"
                     android:padding="12dp"
-                    android:textAllCaps="false" />
+                    android:text="Configurar permissões"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_text_white" />
 
             </LinearLayout>
 
@@ -214,29 +213,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/card_background"
-                android:padding="20dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="vertical"
+                android:padding="20dp">
 
                 <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:text="Launcher Padrão"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     android:textColor="#212121"
-                    android:layout_marginBottom="16dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <!-- Status do launcher -->
                 <LinearLayout
                     android:id="@+id/layout_launcher_option"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="16dp">
+                    android:orientation="horizontal">
 
                     <!-- Ícone de home -->
                     <ImageView
@@ -250,11 +249,11 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
                         android:layout_weight="1"
                         android:text="SafeMode Launcher"
-                        android:textSize="16sp"
                         android:textColor="#212121"
-                        android:layout_marginStart="12dp" />
+                        android:textSize="16sp" />
 
                     <!-- Status do launcher -->
                     <TextView
@@ -262,9 +261,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Não Definido"
+                        android:textColor="#F44336"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="#F44336" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -273,11 +272,11 @@
                     android:id="@+id/btn_set_launcher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Definir como launcher padrão"
-                    android:textColor="@color/button_text_white"
                     android:background="@drawable/button_orange"
                     android:padding="12dp"
-                    android:textAllCaps="false" />
+                    android:text="Definir como launcher padrão"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_text_white" />
 
             </LinearLayout>
 
@@ -285,35 +284,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/card_background"
-                android:padding="20dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="vertical"
+                android:padding="20dp">
 
                 <!-- Título da seção -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:text="Estatísticas"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     android:textColor="#212121"
-                    android:layout_marginBottom="16dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <!-- Contagem de apps bloqueados -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:orientation="horizontal">
 
                     <!-- Ícone de apps -->
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_apps"
                         android:layout_marginEnd="12dp"
+                        android:src="@drawable/ic_apps"
                         app:tint="#2196F3" />
 
                     <!-- Texto com contagem de apps -->
@@ -322,8 +321,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0 apps selecionados para bloqueio"
-                        android:textSize="14sp"
-                        android:textColor="#666666" />
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -331,17 +330,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="16dp"
                     android:gravity="top"
-                    android:layout_marginBottom="16dp">
+                    android:orientation="horizontal">
 
                     <!-- Ícone de estatísticas -->
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_usage_stats"
-                        android:layout_marginEnd="12dp"
                         android:layout_marginTop="2dp"
+                        android:layout_marginEnd="12dp"
+                        android:src="@drawable/ic_usage_stats"
                         app:tint="#4CAF50" />
 
                     <!-- Texto com estatísticas do dia -->
@@ -349,10 +348,10 @@
                         android:id="@+id/text_today_stats"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:lineSpacingExtra="2dp"
                         android:text="Hoje: 0 bloqueios\nMais bloqueado: Nenhum"
-                        android:textSize="14sp"
                         android:textColor="#666666"
-                        android:lineSpacingExtra="2dp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -361,11 +360,11 @@
                     android:id="@+id/btn_view_logs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/view_blocked_logs"
-                    android:textColor="@color/button_text_white"
                     android:background="@drawable/button_rounded"
                     android:padding="12dp"
-                    android:textAllCaps="false" />
+                    android:text="@string/view_blocked_logs"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_text_white" />
 
             </LinearLayout>
 
