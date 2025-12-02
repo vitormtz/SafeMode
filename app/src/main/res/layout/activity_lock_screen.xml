@@ -12,95 +12,95 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <!-- Logo -->
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/ic_logo_safe_mode"
             android:layout_marginBottom="24dp"
-            android:contentDescription="Logo SafeMode" />
+            android:contentDescription="Logo SafeMode"
+            android:src="@drawable/ic_logo_safe_mode" />
 
         <!-- Título -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Safe Mode"
-            android:textSize="32sp"
-            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:layout_marginBottom="8dp" />
+            android:textSize="32sp"
+            android:textStyle="bold" />
 
         <!-- Subtítulo -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Digite seu PIN para desbloquear"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
+            android:layout_marginBottom="48dp"
             android:alpha="0.8"
-            android:layout_marginBottom="48dp" />
+            android:text="Digite seu PIN para desbloquear"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <!-- Campos de PIN -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/pin1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_margin="8dp"
                 android:background="@drawable/pin_field_background"
                 android:gravity="center"
                 android:inputType="numberPassword"
                 android:maxLength="1"
-                android:textSize="24sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_margin="8dp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/pin2"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_margin="8dp"
                 android:background="@drawable/pin_field_background"
                 android:gravity="center"
                 android:inputType="numberPassword"
                 android:maxLength="1"
-                android:textSize="24sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_margin="8dp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/pin3"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_margin="8dp"
                 android:background="@drawable/pin_field_background"
                 android:gravity="center"
                 android:inputType="numberPassword"
                 android:maxLength="1"
-                android:textSize="24sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_margin="8dp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/pin4"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:layout_margin="8dp"
                 android:background="@drawable/pin_field_background"
                 android:gravity="center"
                 android:inputType="numberPassword"
                 android:maxLength="1"
-                android:textSize="24sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_margin="8dp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -109,10 +109,10 @@
             android:id="@+id/tv_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PIN incorreto!"
-            android:textSize="14sp"
-            android:textColor="#FF5252"
             android:layout_marginTop="16dp"
+            android:text="PIN incorreto!"
+            android:textColor="#FF5252"
+            android:textSize="14sp"
             android:visibility="gone" />
 
     </LinearLayout>
