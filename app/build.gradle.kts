@@ -5,17 +5,16 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
-// ===== CARREGANDO SECRETS.PROPERTIES =====
 val secretsPropertiesFile = rootProject.file("secrets.properties")
 val secretsProperties = Properties()
 
 if (secretsPropertiesFile.exists()) {
     secretsProperties.load(FileInputStream(secretsPropertiesFile))
-    println("✅ secrets.properties carregado com sucesso!")
+    println("secrets.properties carregado com sucesso")
 } else {
-    println("Arquivo secrets.properties não encontrado!")
+    println("Arquivo secrets.properties não encontrado")
     println("Crie o arquivo na raiz do projeto com o conteúdo:")
-    println("   MAPS_API_KEY=sua_chave_aqui")
+    println("MAPS_API_KEY=sua_chave_aqui")
 }
 
 android {
@@ -31,7 +30,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // ===== CONFIGURANDO A API KEY =====
         val mapsApiKey = secretsProperties.getProperty("MAPS_API_KEY", "")
 
         buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
@@ -39,7 +37,7 @@ android {
         manifestPlaceholders["mapsApiKey"] = mapsApiKey
 
         if (mapsApiKey.isEmpty()) {
-            println("MAPS_API_KEY não encontrada em secrets.properties!")
+            println("MAPS_API_KEY não encontrada em secrets.properties")
         } else {
             println("MAPS_API_KEY configurada: ${mapsApiKey.take(10)}...")
         }
