@@ -106,3 +106,6 @@ lint/
 
 # Arquivos específicos do projeto que não devem ser versionados
 secrets.properties
+# --- Extras: build (adicionados) ---
+key.properties
+.kotlin/
